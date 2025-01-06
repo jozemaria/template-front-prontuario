@@ -49,30 +49,32 @@
             <input matInput />
           </mat-form-field>
         </div>
-        <div class="col-12 d-flex justify-content-evenly">
-          <div class="col-12 col-md-6">
-            <mat-form-field class="w-100" appearance="fill">
-              <mat-label>Email</mat-label>
-              <input matInput />
-            </mat-form-field>
-          </div>
-          <div class="col-12 col-md-3">
-            <mat-form-field>
-              <mat-label>Senha</mat-label>
-              <input matInput [type]="hide ? 'password' : 'text'" />
-              <button
-                mat-icon-button
-                matSuffix
-                (click)="hide = !hide"
-                [attr.aria-label]="'Hide password'"
-                [attr.aria-pressed]="hide"
-              >
-                <mat-icon>{{
-                  hide ? "visibility_off" : "visibility"
-                }}</mat-icon>
-              </button>
-            </mat-form-field>
-          </div>
+        <div class="col-12 col-md-6">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Email</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-3">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Senha</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'" />
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="hide = !hide"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide"
+            >
+              <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-3">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Enviar Foto</mat-label>
+            <input matInput type="text" />
+          </mat-form-field>
         </div>
 
         <div class="col-12 col-md-12 d-flex justify-content-end">
