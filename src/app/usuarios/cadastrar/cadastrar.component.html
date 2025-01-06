@@ -1,0 +1,90 @@
+<div
+  class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4"
+>
+  <div>
+    <h3 class="mb-2">Cadastrar Usuários</h3>
+    <p class="mb-1">Listagem de usuários do sistema</p>
+  </div>
+</div>
+
+<hr />
+
+<div class="col-12">
+  <mat-card>
+    <mat-card-content>
+      <div class="row g-3">
+        <div class="col-12 col-md-3">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Matrícula</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-6">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Nome</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-3">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Telefone</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-4">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Graduação</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-4">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Cargo</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-4">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>CRM</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 d-flex justify-content-evenly">
+          <div class="col-12 col-md-6">
+            <mat-form-field class="w-100" appearance="fill">
+              <mat-label>Email</mat-label>
+              <input matInput />
+            </mat-form-field>
+          </div>
+          <div class="col-12 col-md-3">
+            <mat-form-field>
+              <mat-label>Senha</mat-label>
+              <input matInput [type]="hide ? 'password' : 'text'" />
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="hide = !hide"
+                [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hide"
+              >
+                <mat-icon>{{
+                  hide ? "visibility_off" : "visibility"
+                }}</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-12 d-flex justify-content-end">
+          <div class="d-flex gap-3">
+            <button mat-stroked-button class="px-4" (click)="botaoVoltar()">
+              Voltar
+            </button>
+            <button mat-flat-button color="primary" class="px-4">Salvar</button>
+          </div>
+        </div>
+      </div>
+      <!--end row-->
+    </mat-card-content>
+  </mat-card>
+</div>

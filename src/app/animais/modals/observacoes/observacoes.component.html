@@ -1,0 +1,15 @@
+<div style="width: 550px">
+  <mat-dialog-content>
+    <p>Observações sobre o atendimento</p>
+    <div class="mt-4">
+      <mat-form-field style="width: 500px">
+        <mat-label>Observação</mat-label>
+        <textarea matInput></textarea>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onNoClick()">Fechar</button>
+    <button mat-button cdkFocusInitial>Salvar</button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,239 @@
+<aside
+  class="sidebar-wrapper mat-elevation-z9"
+  [ngClass]="{ 'mini-sidebar': getSideBarSate() }"
+>
+  <div class="sidebar-header">
+    <img
+      src="https://pbs.twimg.com/profile_images/1633789332803682305/EzE1zTnC_400x400.jpg"
+      width="30"
+    />
+    <div class="logo-name">Cavalaria RN</div>
+  </div>
+  <nav class="sidebar-menu">
+    <mat-accordion class="example-headers-align" multi>
+      <mat-nav-list>
+        <a mat-list-item routerLink="dashboard/geral"
+          ><mat-icon class="material-icons-outlined">home</mat-icon>Inicio</a
+        >
+      </mat-nav-list>
+      <mat-nav-list>
+        <a mat-list-item routerLink="animais"
+          ><mat-icon class="material-icons-outlined">description</mat-icon
+          >Animais</a
+        >
+      </mat-nav-list>
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header>
+          <mat-icon class="material-icons-outlined">account_circle</mat-icon
+          >Usuários
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="usuarios/cadastrar"
+            ><mat-icon>arrow_right</mat-icon>Cadastrar Novo</a
+          >
+          <a mat-list-item routerLink="usuarios/listar"
+            ><mat-icon>arrow_right</mat-icon>Listar Todos</a
+          >
+        </mat-nav-list>
+      </mat-expansion-panel>
+      <!--
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header>
+          <mat-icon class="material-icons-outlined">dashboard</mat-icon
+          >Dashboard
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="dashboard/e-commerce"
+            ><mat-icon>arrow_right</mat-icon>eCommerce</a
+          >
+          <a mat-list-item routerLink="dashboard/analytics"
+            ><mat-icon>arrow_right</mat-icon>Analytics</a
+          >
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header>
+          <mat-icon class="material-icons-outlined">widgets</mat-icon>Widgets
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="widgets/static"
+            ><mat-icon>arrow_right</mat-icon>Static</a
+          >
+          <a mat-list-item routerLink="widgets/data"
+            ><mat-icon>arrow_right</mat-icon>Data</a
+          >
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header>
+          <mat-icon class="material-icons-outlined">redeem</mat-icon>Components
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="components/badges"
+            ><mat-icon>arrow_right</mat-icon>Badges</a
+          >
+          <a mat-list-item routerLink="components/buttons"
+            ><mat-icon>arrow_right</mat-icon>Buttons</a
+          >
+          <a mat-list-item routerLink="components/cards"
+            ><mat-icon>arrow_right</mat-icon>Cards</a
+          >
+          <a mat-list-item routerLink="components/chips"
+            ><mat-icon>arrow_right</mat-icon>Chips</a
+          >
+          <a mat-list-item routerLink="components/expansion"
+            ><mat-icon>arrow_right</mat-icon>Expansion</a
+          >
+          <a mat-list-item routerLink="components/menu"
+            ><mat-icon>arrow_right</mat-icon>Menu</a
+          >
+          <a mat-list-item routerLink="components/list"
+            ><mat-icon>arrow_right</mat-icon>List</a
+          >
+          <a mat-list-item routerLink="components/tabs"
+            ><mat-icon>arrow_right</mat-icon>Tabs</a
+          >
+          <a mat-list-item routerLink="components/toolbar"
+            ><mat-icon>arrow_right</mat-icon>Toolbar</a
+          >
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header>
+          <mat-icon class="material-icons-outlined">description</mat-icon>Forms
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="forms/elements"
+            ><mat-icon>arrow_right</mat-icon>Elements</a
+          >
+          <a mat-list-item routerLink="forms/layouts"
+            ><mat-icon>arrow_right</mat-icon>Layouts</a
+          >
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header>
+          <mat-icon class="material-icons-outlined">privacy_tip</mat-icon>Tables
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="tables/basic-table"
+            ><mat-icon>arrow_right</mat-icon>Basic Tables</a
+          >
+          <a mat-list-item routerLink="tables/paging-table"
+            ><mat-icon>arrow_right</mat-icon>Paging Table</a
+          >
+          <a mat-list-item routerLink="tables/sorting-table"
+            ><mat-icon>arrow_right</mat-icon>Sorting Table</a
+          >
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header>
+          <mat-icon class="material-icons-outlined">lock</mat-icon
+          >Authentication
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="auth/sign-in" target="_blank"
+            ><mat-icon>arrow_right</mat-icon>SignIn</a
+          >
+          <a mat-list-item routerLink="auth/cover-signin" target="_blank"
+            ><mat-icon>arrow_right</mat-icon>SignIn Cover</a
+          >
+          <a mat-list-item routerLink="auth/sign-up" target="_blank"
+            ><mat-icon>arrow_right</mat-icon>SignUp</a
+          >
+          <a mat-list-item routerLink="auth/cover-signup" target="_blank"
+            ><mat-icon>arrow_right</mat-icon>SignUp Cover</a
+          >
+          <a mat-list-item routerLink="auth/forgot-password" target="_blank"
+            ><mat-icon>arrow_right</mat-icon>Forgot Password</a
+          >
+          <a
+            mat-list-item
+            routerLink="auth/cover-forgot-password"
+            target="_blank"
+            ><mat-icon>arrow_right</mat-icon>Forgot Password Cover</a
+          >
+          <a mat-list-item routerLink="auth/reset-password" target="_blank"
+            ><mat-icon>arrow_right</mat-icon>Reset Password</a
+          >
+          <a
+            mat-list-item
+            routerLink="auth/cover-reset-password"
+            target="_blank"
+            ><mat-icon>arrow_right</mat-icon>Reset Password Cover</a
+          >
+          <a mat-list-item routerLink="auth/lock-screen" target="_blank"
+            ><mat-icon>arrow_right</mat-icon>Lock Screen</a
+          >
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-nav-list>
+        <a mat-list-item routerLink="profile/user-profile"
+          ><mat-icon class="material-icons-outlined">account_circle</mat-icon
+          >User Profile</a
+        >
+      </mat-nav-list>
+      <mat-nav-list>
+        <a mat-list-item routerLink="pricing/pricing"
+          ><mat-icon class="material-icons-outlined">credit_card</mat-icon
+          >Pricing</a
+        >
+      </mat-nav-list>
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header>
+          <mat-icon class="material-icons-outlined">report_problem</mat-icon
+          >Pages
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="pages/error-404" target="_blank"
+            ><mat-icon>arrow_right</mat-icon>404 Error</a
+          >
+          <a mat-list-item routerLink="pages/error-505" target="_blank"
+            ><mat-icon>arrow_right</mat-icon>505 Error</a
+          >
+          <a mat-list-item routerLink="pages/coming-soon" target="_blank"
+            ><mat-icon>arrow_right</mat-icon>Coming Soon</a
+          >
+        </mat-nav-list>
+      </mat-expansion-panel>
+      <mat-nav-list>
+        <a mat-list-item routerLink="faq/faq"
+          ><mat-icon class="material-icons-outlined">help_outline</mat-icon
+          >FAQ</a
+        >
+      </mat-nav-list>
+
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header>
+          <mat-icon class="material-icons-outlined">leaderboard</mat-icon>Charts
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="charts/chart-js"
+            ><mat-icon>arrow_right</mat-icon>Chart Js</a
+          >
+          <a mat-list-item routerLink="charts/apex-chart"
+            ><mat-icon>arrow_right</mat-icon>Apex Chart</a
+          >
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-nav-list>
+        <a
+          mat-list-item
+          href="https://codervent.com/matzon/doc/"
+          target="_blank"
+          ><mat-icon class="material-icons-outlined">description</mat-icon
+          >Documentation</a
+        >
+      </mat-nav-list>
+      -->
+    </mat-accordion>
+  </nav>
+</aside>

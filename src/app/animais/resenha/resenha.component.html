@@ -1,0 +1,195 @@
+<div
+  class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4"
+>
+  <div>
+    <h3 class="mb-2">Cadastrar Resenha</h3>
+    <p class="mb-1">Ficha Técnica do Animal</p>
+  </div>
+  <div>
+    <button
+      mat-flat-button
+      color="primary"
+      class="rounded-pill px-3"
+      (click)="botaoVoltar()"
+    >
+      Voltar
+    </button>
+  </div>
+</div>
+
+<hr />
+
+<mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Informação do Proprietário</ng-template>
+      <div class="row g-3 mt-2">
+        <div class="col-12 col-md-4">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Proprietário do Animal</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-3">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>CEP</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-3">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Logradouro</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-2">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Nº</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-4">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Bairro</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-4">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Cidade</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-4">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>UF</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div>
+        <button mat-button matStepperNext color="primary">Próximo</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Informação Sobre o Animal</ng-template>
+      <div class="row g-3 mt-2">
+        <div class="col-12 col-md-5">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Nome do Animal</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-3">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Número</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-2">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Baia</mat-label>
+            <mat-select>
+              <mat-option value="b1">Baia 1</mat-option>
+              <mat-option value="b2">Baia 2</mat-option>
+              <mat-option value="b3">Baia 3</mat-option>
+              <mat-option value="b4">Baia 4</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-2">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Peso</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-4">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Espécie</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-4">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Sexo</mat-label>
+            <mat-select>
+              <mat-option value="m">Masculino</mat-option>
+              <mat-option value="f">Feminino</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-4">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Identificação</mat-label>
+            <mat-select>
+              <mat-option value="mc">Microchip</mat-option>
+              <mat-option value="b">Brinco</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-4">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Pelagem</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-4">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Raça</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-4">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Data de Nascimento</mat-label>
+            <input matInput [matDatepicker]="picker" />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Pai</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-6">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Mãe</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-12">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Descrição</mat-label>
+            <textarea matInput></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+      <div>
+        <button mat-button matStepperPrevious>Voltar</button>
+        <button mat-button matStepperNext color="primary">Próximo</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Finalizar</ng-template>
+    <p class="my-3">Confirma que preencheu todas as informações</p>
+    <div>
+      <button mat-button matStepperPrevious>Voltar</button>
+      <button mat-button>Finalizar</button>
+    </div>
+    <!--(click)="stepper.reset()"-->
+  </mat-step>
+</mat-stepper>
+
+<hr />

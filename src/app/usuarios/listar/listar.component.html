@@ -1,0 +1,79 @@
+<div
+  class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4"
+>
+  <div>
+    <h3 class="mb-2">Usuários</h3>
+    <p class="mb-1">Listagem de usuários do sistema</p>
+  </div>
+  <button mat-flat-button color="primary" (click)="editarUsuario()">
+    <mat-icon class="material-icon-outlined"> add </mat-icon>
+    CADASTRAR NOVO USUÁRIO
+  </button>
+</div>
+
+<hr />
+
+<mat-card>
+  <mat-card-content>
+    <div class="paging-table">
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="matricula">
+          <th mat-header-cell *matHeaderCellDef>Matricula</th>
+          <td mat-cell *matCellDef="let element">{{ element.matricula }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="nome">
+          <th mat-header-cell *matHeaderCellDef>Nome</th>
+          <td mat-cell *matCellDef="let element">{{ element.nome }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="cargo">
+          <th mat-header-cell *matHeaderCellDef>Cargo</th>
+          <td mat-cell *matCellDef="let element">{{ element.cargo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="criacao">
+          <th mat-header-cell *matHeaderCellDef>Data da Criação</th>
+          <td mat-cell *matCellDef="let element">{{ element.criacao }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Ações</th>
+          <td mat-cell *matCellDef="let row">
+            <button
+              mat-icon-button
+              matTooltip="Editar"
+              color="warn"
+              class="mr-2"
+              (click)="editarUsuario()"
+            >
+              <mat-icon>rebase_edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="Excluir Registro"
+              color="warn"
+              class="ml-2"
+              aria-label="Example icon-button with a heart icon"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator
+        [pageSizeOptions]="[5, 10, 20]"
+        showFirstLastButtons
+        itemsPerPageLabel="Linhas exibidas"
+        nextPageLabel="Proximo"
+        items-per-page-label="teste"
+        aria-label="Selecione a quantidade de usuários para exibição"
+      >
+      </mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,151 @@
+<div class="container pt-2">
+  <mat-card class="rounded-4">
+    <mat-card-content
+      class="d-flex align-items-center justify-content-start p-4"
+    >
+      <img
+        src="https://placehold.co/110x110"
+        width="120"
+        height="120"
+        class="rounded-circle raised p-1 mat-bg-white mat-elevation-z8"
+        alt=""
+      />
+      <div
+        class="d-flex flex-column flex-lg-row align-items-start justify-content-start gap-4"
+        style="margin-left: 25px"
+      >
+        <div class="">
+          <h3 class="mb-2">Nome do Cavalo ALalal - B3</h3>
+          <p class="mb-1">Nome do Propriétario</p>
+          <p class="mb-1">Sexo: M, Peso: 15k, Pelagem: Tipo</p>
+          <p class="mb-1">Data de Nascimento: 05/05/2000</p>
+          <div
+            class="d-flex align-items-center flex-column flex-lg-row gap-3 mt-3"
+          >
+            <button
+              mat-stroked-button
+              class="rounded-pill px-3"
+              (click)="openDialogMedicamentos()"
+            >
+              Medicamentos
+            </button>
+            <button
+              mat-stroked-button
+              class="rounded-pill px-3"
+              (click)="openDialogObservacao()"
+            >
+              Observações
+            </button>
+            <button
+              mat-stroked-button
+              class="rounded-pill px-3"
+              (click)="openDialogAlta()"
+            >
+              Alta Clínica
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              class="rounded-pill px-3"
+              (click)="botaoVoltar()"
+            >
+              Voltar
+            </button>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <div class="row">
+    <div class="col-12 col-xl-8">
+      <mat-card class="rounded-4">
+        <mat-card-content
+          class="d-flex align-items-center justify-content-between p-4"
+        >
+          <cdk-accordion class="example-accordion">
+            @for (item of items; track item; let index = $index) {
+            <cdk-accordion-item
+              #accordionItem="cdkAccordionItem"
+              class="example-accordion-item"
+              role="button"
+              tabindex="0"
+              [attr.id]="'accordion-header-' + index"
+              [attr.aria-expanded]="accordionItem.expanded"
+              [attr.aria-controls]="'accordion-body-' + index"
+            >
+              <div
+                class="example-accordion-item-header"
+                (click)="accordionItem.toggle()"
+              >
+                <h6>{{ item }}</h6>
+                <span
+                  class="example-accordion-item-description material-icons-outlined fs-4"
+                >
+                  {{
+                    accordionItem.expanded
+                      ? "keyboard_arrow_up"
+                      : "keyboard_arrow_down"
+                  }}
+                </span>
+              </div>
+              <div
+                class="example-accordion-item-body"
+                role="region"
+                [style.display]="accordionItem.expanded ? '' : 'none'"
+                [attr.id]="'accordion-body-' + index"
+                [attr.aria-labelledby]="'accordion-header-' + index"
+              >
+                <div>
+                  <h6>Prescrição e Orientação:</h6>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                  Perferendis excepturi incidunt ipsum deleniti labore, tempore
+                  non nam doloribus blanditiis veritatis illo autem iure aliquid
+                  ullam rem tenetur deserunt velit culpa?
+                  <p class="mb-0 mt-2 text-green" style="font-size: small">
+                    Dr. Jomar Freitas - CRM: 2515 | 12:33h
+                  </p>
+                </div>
+                <div class="mt-4">
+                  <h6>Medicamento:</h6>
+                  Dipirona - 3x ao dia - Observação de medicação
+                  <p class="mb-0 mt-2 text-green" style="font-size: small">
+                    Dr. Jomar Freitas - CRM: 2515 | 18:43h
+                  </p>
+                </div>
+              </div>
+            </cdk-accordion-item>
+            }
+          </cdk-accordion>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-12 col-xl-4">
+      <mat-card class="rounded-4 border-3 border-start border-green">
+        <mat-card-content>
+          <div class="d-flex align-items-center justify-content-start">
+            <div class="">
+              <h6 class="mb-0">Prontuario N: 20250102-5</h6>
+              <p class="mb-0 mt-2" style="font-size: small">
+                Aberto por: Dr. Jomar Freitas - CRM: 2515
+              </p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="rounded-4 border-3 border-start border-green">
+        <mat-card-content>
+          <div class="d-flex align-items-center justify-content-around">
+            <div class="">
+              <h6 class="mb-0">Entrada</h6>
+              <p class="mb-0 mt-2">20/05/2003</p>
+            </div>
+            <div class="">
+              <h6 class="mb-0">Alta Clínica</h6>
+              <p class="mb-0 mt-2">-</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

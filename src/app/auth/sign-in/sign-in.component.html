@@ -1,0 +1,62 @@
+<div
+  class="login-bg position-fixed top-0 start-0 end-0 bottom-0"
+  style="background-image: url(assets/images/gallery/login-bg.png)"
+></div>
+
+<div
+  class="auth-box d-flex align-items-center justify-content-center my-5 my-lg-0"
+>
+  <div class="container-fluid">
+    <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
+      <div class="col mx-auto">
+        <mat-card class="rounded-4 m-2">
+          <mat-card-content class="p-5">
+            <div class="text-center">
+              <img
+                src="https://i.ibb.co/F79G0sy/Captura-de-Tela-2025-01-05-a-s-23-41-18.png"
+                class="mb-3"
+                width="75"
+                alt=""
+              />
+              <h4 class="mb-2">PMRN</h4>
+              <p class="mb-4">Bem vindo ao sistema da Cavalaria-RN</p>
+            </div>
+            <div class="row g-3">
+              <div class="col-12 col-md-12">
+                <mat-form-field class="w-100 mb-0" appearance="outline">
+                  <mat-label>Insira sua Matricula</mat-label>
+                  <input matInput />
+                </mat-form-field>
+              </div>
+              <div class="col-12 col-md-12">
+                <mat-form-field class="w-100 mb-0" appearance="outline">
+                  <mat-label>Insira sua senha</mat-label>
+                  <input matInput [type]="hide ? 'password' : 'text'" />
+                  <button
+                    mat-icon-button
+                    matSuffix
+                    (click)="hide = !hide"
+                    [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hide"
+                  >
+                    <mat-icon>{{
+                      hide ? "visibility_off" : "visibility"
+                    }}</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+              <div class="col-12 col-md-12">
+                <div class="d-grid">
+                  <button mat-flat-button color="primary" (click)="onLogin()">
+                    Entrar
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!--end row-->
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
