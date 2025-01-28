@@ -26,9 +26,16 @@ jobs:
       - name: Install rsync
         run: sudo apt-get update && sudo apt-get install -y rsync
 
+      - name: Save SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DO_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
+
       - name: Deploy to Server using rsync
         run: |
-          rsync -avz --delete -e "ssh -i ${{ secrets.DO_SSH_KEY }}" \
+          rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa" \
           dist/* \
           ${{ secrets.DO_USERNAME }}@${{ secrets.DO_HOST }}:${{ secrets.DO_DEPLOY_PATH }}
 
