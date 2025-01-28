@@ -19,22 +19,22 @@
       <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="matricula">
           <th mat-header-cell *matHeaderCellDef>Matricula</th>
-          <td mat-cell *matCellDef="let element">{{ element.matricula }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.document }}</td>
         </ng-container>
 
         <ng-container matColumnDef="nome">
           <th mat-header-cell *matHeaderCellDef>Nome</th>
-          <td mat-cell *matCellDef="let element">{{ element.nome }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
         </ng-container>
 
         <ng-container matColumnDef="cargo">
           <th mat-header-cell *matHeaderCellDef>Cargo</th>
-          <td mat-cell *matCellDef="let element">{{ element.cargo }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.graduation }}</td>
         </ng-container>
 
         <ng-container matColumnDef="criacao">
           <th mat-header-cell *matHeaderCellDef>Data da Criação</th>
-          <td mat-cell *matCellDef="let element">{{ element.criacao }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.created_at }}</td>
         </ng-container>
 
         <ng-container matColumnDef="actions">
@@ -45,7 +45,7 @@
               matTooltip="Editar"
               color="warn"
               class="mr-2"
-              (click)="editarUsuario()"
+              (click)="onEditUser(row.id)"
             >
               <mat-icon>rebase_edit</mat-icon>
             </button>
