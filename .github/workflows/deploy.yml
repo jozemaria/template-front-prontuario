@@ -23,23 +23,14 @@ jobs:
       - name: Build project
         run: npm run build -- --configuration production
 
-      - name: Clean Deploy Directory
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.DO_HOST }}
-          username: ${{ secrets.DO_USERNAME }}
-          key: ${{ secrets.DO_SSH_KEY }}
-          script: rm -rf /var/www/html/*
+      - name: Install rsync
+        run: sudo apt-get update && sudo apt-get install -y rsync
 
-      - name: Deploy to Server
-        uses: appleboy/scp-action@v0.1.6
-        with:
-          host: ${{ secrets.DO_HOST }}
-          username: ${{ secrets.DO_USERNAME }}
-          key: ${{ secrets.DO_SSH_KEY }}
-          source: "dist/cavalaria/*"
-          target: ${{ secrets.DO_DEPLOY_PATH }}
-          overwrite: true
+      - name: Deploy to Server using rsync
+        run: |
+          rsync -avz --delete -e "ssh -i ${{ secrets.DO_SSH_KEY }}" \
+          dist/* \
+          ${{ secrets.DO_USERNAME }}@${{ secrets.DO_HOST }}:${{ secrets.DO_DEPLOY_PATH }}
 
       - name: Reload Nginx
         uses: appleboy/ssh-action@v0.1.10
