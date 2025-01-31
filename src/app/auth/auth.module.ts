@@ -15,19 +15,20 @@ import { CoverForgotPasswordComponent } from './cover-forgot-password/cover-forg
 import { CoverResetPasswordComponent } from './cover-reset-password/cover-reset-password.component';
 import { CoverSigninComponent } from './cover-signin/cover-signin.component';
 import { CoverSignupComponent } from './cover-signup/cover-signup.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
 @NgModule({
   declarations: [
-    SignInComponent, 
+    SignInComponent,
     SignUpComponent,
-    ForgotPasswordComponent, 
-    ResetPasswordComponent, 
-    LockScreenComponent, 
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    LockScreenComponent,
     SigninWithHeaderFooterComponent,
     SignupWithHeaderFooterComponent,
-   
+
   ],
   imports: [
     CommonModule,
@@ -36,7 +37,8 @@ import { CoverSignupComponent } from './cover-signup/cover-signup.component';
     CoverSigninComponent,
     CoverSignupComponent,
     CoverForgotPasswordComponent,
-    CoverResetPasswordComponent
+    CoverResetPasswordComponent,
+    ReactiveFormsModule
 
   ]
 })
