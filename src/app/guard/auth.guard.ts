@@ -8,7 +8,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService)
   const sweetAlertService = inject(SweetalertService)
 
-  if (state.url === '/pages/resenha') return true
   if (authService.isLoggedIn !== true) {
     console.log(`dentro do if`)
     sweetAlertService.alert('error', 'Opss!', 'Faça login para continuar')

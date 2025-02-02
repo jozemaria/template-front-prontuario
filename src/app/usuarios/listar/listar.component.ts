@@ -7,6 +7,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { UsuariosService } from '../service/usuarios.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environment/environment';
+import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
 
 
 export interface IUsuario {
@@ -27,23 +28,20 @@ export interface IUsuario {
   styleUrl: './listar.component.scss'
 })
 export class ListarComponent implements OnInit, AfterViewInit {
+  readonly router = inject(Router)
+  readonly usersService = inject(UsuariosService)
+  readonly sweetalertService = inject(SweetalertService)
+  readonly http = inject(HttpClient)
+
   ELEMENT_DATA: IUsuario[]
   displayedColumns: string[] = ['matricula', 'nome', 'cargo', 'criacao', 'actions'];
-  readonly router = inject(Router)
   dataSource = new MatTableDataSource<IUsuario>;
   lista_usuarios: IUsuario
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private usuarioService: UsuariosService,
-    private http: HttpClient) { }
-  // IMPLANTAR LOADING E SWEETALERT
-  // private router: Router,
-  // private loadingService: LoadingService,
-  // private sweetalertService: SweetalertService
-
   ngOnInit(): void {
-    this.usuarioService.getAllUser().subscribe(res => this.dataSource = res)
+    this.usersService.getAllUser().subscribe(res => this.dataSource = res)
   }
 
 
@@ -56,13 +54,29 @@ export class ListarComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-
-  onEditUser(value: number) {
-    console.log(`value`, value)
-    // this.router.navigateByUrl(`/usuario/editar/${value}`)
+  cadastrarUsuario() {
+    this.router.navigateByUrl(`usuarios/cadastrar`)
   }
 
-  editarUsuario() {
-    this.router.navigateByUrl('usuarios/cadastrar')
+  onEditUser(value: number) {
+    this.router.navigateByUrl(`usuarios/editar/${value}`)
+  }
+
+  onDeleteUser(value: number) {
+    this.sweetalertService.confirmAlert('warning', 'Deletar usuário?', 'Deseja deletar o usuário?').subscribe(
+      (res: any) => {
+        if (res) {
+          this.usersService.deleteUser(value).subscribe({
+            error: (err: any) => {
+              this.sweetalertService.alert('error', 'Ops...', 'Erro: ' + err.error.error)
+            },
+            complete: () => {
+              this.sweetalertService.alert('success', 'sucesso', 'Usuário deletado!'),
+                this.ngOnInit()
+            }
+          })
+        }
+      }
+    )
   }
 }
