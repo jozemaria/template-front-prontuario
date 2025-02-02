@@ -26,7 +26,9 @@ const routes: Routes = [
         }
       }
     ]
-  }
+  },
+  { path: 'editar/:id', component: CadastrarComponent }, //redirecionar o form de atualiação do user
+
 ];
 
 @NgModule({

@@ -47,7 +47,8 @@ export class UsuariosService {
     return this.http.delete(this.urlAPI + '/' + id, { headers: { 'Authorization': environment.TOKEN_TEST } })
   }
 
-  updateUser(userUpdate: any): any {
-    return this.http.patch(this.urlAPI + '/' + userUpdate.user.id, userUpdate, { headers: { 'Authorization': environment.TOKEN_TEST } })
+  updateUser(idUser: number, userUpdate: any): any {
+    console.log(userUpdate, `<< NOME`)
+    return this.http.put(this.urlAPI + '/' + idUser, userUpdate, { headers: { 'Authorization': environment.TOKEN_TEST } })
   }
 }
