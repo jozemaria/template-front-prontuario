@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from "@angular/router";
 import { AuthService } from './service/auth.service';
+import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
 
 
 @Component({
@@ -17,7 +18,11 @@ export class SignInComponent implements OnInit {
   });
 
   hide = true;
-  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) { }
+  constructor(
+    private authService: AuthService,
+    private sweetalertService: SweetalertService,
+    private router: Router,
+    private route: ActivatedRoute) { }
 
   // On Forgotpassword link click
   onForgotpassword() {
@@ -30,31 +35,21 @@ export class SignInComponent implements OnInit {
     this.router.navigate(['sign-up'], { relativeTo: this.route.parent });
   }
 
-  // onLogin() {
-  //   console.log('chamou aqui')
-  //
-  // }
-
 
   ngOnInit(): void {
   }
 
 
   onLogin() {
-    console.log(`chamou enviando`)
-    console.log(this.loginUser.value)
     this.authService.loginClient(this.loginUser.value).subscribe({
       next: (res: any) => {
         localStorage.setItem('access_token', res.token)
-
       },
       error: err => {
-        // this.sweetalertService.alert('error', 'Ops...', 'Erro: ' + err.error.error)
-        // this.loadingService.hide()
+        this.sweetalertService.alert('error', 'Ops...', 'Erro: ' + err.error.error)
       },
       complete: () => {
         this.router.navigate(['/'], { relativeTo: this.route.parent });
-        // this.loadingService.hide()
       }
     })
   }
