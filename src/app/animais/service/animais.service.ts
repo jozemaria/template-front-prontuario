@@ -9,33 +9,39 @@ import { environment } from 'src/environment/environment';
 export class AnimaisService {
   readonly http = inject(HttpClient)
 
-  private readonly urlAPI = environment.URL_BASE + 'horse_records'
+  private readonly urlAPIHorseRecor = environment.URL_BASE + 'horse_records'
+  private readonly urlAPIHorse = environment.URL_BASE + 'horses'
 
 
   getAllAnimal(): Observable<any> {
-    return this.http.get(environment.URL_BASE + 'users', {
+    return this.http.get(this.urlAPIHorse, {
       headers:
         { 'Authorization': environment.TOKEN_TEST }
     })
   }
 
   getAnimalById(id: number): any {
-    return this.http.get(this.urlAPI + '/' + id, { headers: { 'Authorization': environment.TOKEN_TEST } })
+    return this.http.get(this.urlAPIHorse + '/' + id, { headers: { 'Authorization': environment.TOKEN_TEST } })
   }
 
-  saveNewAnimal(user: any): any {
-    return this.http.post(this.urlAPI, user, { headers: { 'Authorization': environment.TOKEN_TEST } })
+  saveNewAnimal(horse: any): any {
+    return this.http.post(this.urlAPIHorse, horse, { headers: { 'Authorization': environment.TOKEN_TEST } })
   }
 
   deleteAnimal(id: number): any {
-    return this.http.delete(this.urlAPI + '/' + id, { headers: { 'Authorization': environment.TOKEN_TEST } })
+    return this.http.delete(this.urlAPIHorse + '/' + id, { headers: { 'Authorization': environment.TOKEN_TEST } })
   }
 
-  updateAnimal(idUser: number, userUpdate: any): any {
-    return this.http.put(this.urlAPI + '/' + idUser, userUpdate, { headers: { 'Authorization': environment.TOKEN_TEST } })
+  updateAnimal(idHorse: number, horseUpdate: any): any {
+    return this.http.put(this.urlAPIHorse + '/' + idHorse, horseUpdate, { headers: { 'Authorization': environment.TOKEN_TEST } })
   }
 
-  openMedicalRecord(idUser: number): any {
-    return this.http.get(this.urlAPI + '/' + idUser + '/is_active', { headers: { 'Authorization': environment.TOKEN_TEST } })
+  openMedicalRecord(idHorse: number): any {
+    return this.http.get(this.urlAPIHorseRecor + '/' + idHorse + '/is_active', { headers: { 'Authorization': environment.TOKEN_TEST } })
   }
+
+  get baiasCadastradas(): any {
+    return this.http.get(environment.URL_BASE + 'baias', { headers: { 'Authorization': environment.TOKEN_TEST } })
+  }
+
 }

@@ -20,50 +20,104 @@
 <hr />
 
 <mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
-  <mat-step [stepControl]="firstFormGroup">
-    <form [formGroup]="firstFormGroup">
+  <mat-step [stepControl]="horse_owner_attributes">
+    <form [formGroup]="horse_owner_attributes">
       <ng-template matStepLabel>Informação do Proprietário</ng-template>
       <div class="row g-3 mt-2">
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Proprietário do Animal</mat-label>
-            <input matInput />
+            <input
+              matInput
+              formControlName="name"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse_owner_attributes.controls.name.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col-12 col-md-3">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>CEP</mat-label>
-            <input matInput />
+            <input
+              type="text"
+              inputmode="numeric"
+              formControlName="cep"
+              matInput
+              mask="00000-000"
+              (input)="consultaCEP($event.target.value)"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse_owner_attributes.controls.cep.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col-12 col-md-3">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Logradouro</mat-label>
-            <input matInput />
+            <input
+              matInput
+              formControlName="street"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse_owner_attributes.controls.street.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col-12 col-md-2">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Nº</mat-label>
-            <input matInput />
+            <input
+              matInput
+              formControlName="number"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse_owner_attributes.controls.number.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Bairro</mat-label>
-            <input matInput />
+            <input
+              matInput
+              formControlName="district"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse_owner_attributes.controls.district.hasError('required'))
+            {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Cidade</mat-label>
-            <input matInput />
+            <input
+              matInput
+              formControlName="city"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse_owner_attributes.controls.city.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>UF</mat-label>
-            <input matInput />
+            <input
+              matInput
+              formControlName="state"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse_owner_attributes.controls.state.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
       </div>
@@ -73,69 +127,70 @@
       </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="secondFormGroup">
-    <form [formGroup]="secondFormGroup">
+  <mat-step [stepControl]="horse">
+    <form [formGroup]="horse">
       <ng-template matStepLabel>Informação Sobre o Animal</ng-template>
       <div class="row g-3 mt-2">
         <div class="col-12 col-md-5">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Nome do Animal</mat-label>
-            <input matInput />
+            <input matInput formControlName="name" />
           </mat-form-field>
         </div>
         <div class="col-12 col-md-3">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Número</mat-label>
-            <input matInput />
+            <input matInput formControlName="registration" />
           </mat-form-field>
         </div>
         <div class="col-12 col-md-2">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Baia</mat-label>
-            <mat-select>
-              <mat-option value="b1">Baia 1</mat-option>
-              <mat-option value="b2">Baia 2</mat-option>
-              <mat-option value="b3">Baia 3</mat-option>
-              <mat-option value="b4">Baia 4</mat-option>
+            <mat-select formControlName="baia_id">
+              @for (item of baias; track item.id) {
+              <mat-option [value]="item.id">{{ item.name }}</mat-option>
+              }
             </mat-select>
           </mat-form-field>
         </div>
         <div class="col-12 col-md-2">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Peso</mat-label>
-            <input matInput />
+            <input matInput formControlName="weight" />
           </mat-form-field>
         </div>
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Espécie</mat-label>
-            <input matInput />
+            <input matInput formControlName="kind" />
           </mat-form-field>
         </div>
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Sexo</mat-label>
-            <mat-select>
-              <mat-option value="m">Masculino</mat-option>
-              <mat-option value="f">Feminino</mat-option>
+            <mat-select formControlName="gender">
+              <mat-option value="masculino">Masculino</mat-option>
+              <mat-option value="feminino">Feminino</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Identificação</mat-label>
-            <mat-select>
-              <mat-option value="mc">Microchip</mat-option>
-              <mat-option value="b">Brinco</mat-option>
+            <mat-select formControlName="identification">
+              <mat-option value="microchip">Microchip</mat-option>
+              <mat-option value="brinco">Brinco</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Pelagem</mat-label>
-            <input matInput />
+            <input matInput formControlName="hair" />
           </mat-form-field>
         </div>
+
+        <!-- FALTA RAÇA-->
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Raça</mat-label>
@@ -146,7 +201,11 @@
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Data de Nascimento</mat-label>
-            <input matInput [matDatepicker]="picker" />
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="birthday"
+            />
             <mat-datepicker-toggle
               matIconSuffix
               [for]="picker"
@@ -158,20 +217,20 @@
         <div class="col-12 col-md-6">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Pai</mat-label>
-            <input matInput />
+            <input matInput formControlName="father" />
           </mat-form-field>
         </div>
         <div class="col-12 col-md-6">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Mãe</mat-label>
-            <input matInput />
+            <input matInput formControlName="mother" />
           </mat-form-field>
         </div>
 
         <div class="col-12 col-md-12">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Descrição</mat-label>
-            <textarea matInput></textarea>
+            <textarea matInput formControlName="description"></textarea>
           </mat-form-field>
         </div>
       </div>
@@ -186,7 +245,14 @@
     <p class="my-3">Confirma que preencheu todas as informações</p>
     <div>
       <button mat-button matStepperPrevious>Voltar</button>
-      <button mat-button>Finalizar</button>
+      <button
+        mat-button
+        color="primary"
+        [disabled]="!horse.valid && !horse_owner_attributes.valid"
+        (click)="save()"
+      >
+        Finalizar
+      </button>
     </div>
     <!--(click)="stepper.reset()"-->
   </mat-step>
