@@ -66,7 +66,7 @@ export class AnimaisComponent implements OnInit {
           this.sweetalertService.confirmAlert('warning', 'Já existe prontunário aberto!', 'Deseja continuar o preenchimento do prontuário?').subscribe(
             (res: any) => {
               if (res) {
-                this.router.navigateByUrl('animais/prontuario')
+                this.router.navigateByUrl('animais/prontuario/' + idHorse)
               }
             }
           )
