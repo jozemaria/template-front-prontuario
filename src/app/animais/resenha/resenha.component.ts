@@ -1,9 +1,9 @@
-import { Component, Inject, inject } from '@angular/core';
+import { Component, Inject, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatModule } from 'src/app/appModules/mat.module';
 import { FormBuilder, FormControl, FormGroup, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DateAdapter, ErrorStateMatcher, MAT_DATE_LOCALE } from '@angular/material/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AnimaisService } from '../service/animais.service';
 import { NgxMaskDirective } from 'ngx-mask';
 import { HttpClient } from '@angular/common/http';
@@ -32,16 +32,23 @@ export interface IBaias {
   styleUrl: './resenha.component.scss',
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }]
 })
-export class ResenhaComponent {
+export class ResenhaComponent implements OnInit {
   readonly router = inject(Router)
+  readonly route = inject(ActivatedRoute)
   readonly http = inject(HttpClient)
   readonly animaisService = inject(AnimaisService)
   readonly sweetalertService = inject(SweetalertService)
 
   matcher = new MyErrorStateMatcher();
 
+  titulo = this.route.snapshot.paramMap.get('id') === null ? 'Cadastrar Resenha' : 'Editar Resenha'
+  subtitulopage = this.route.snapshot.paramMap.get('id') === null
+    ? 'Cadastro de nova resenha.'
+    : 'Edição de resenha.'
+
   baias: Array<IBaias>
-  isLinear = false;
+  isLinear = false
+  idResenha: number
 
   constructor(
     private _adapter: DateAdapter<any>,
@@ -49,6 +56,7 @@ export class ResenhaComponent {
   ) { }
 
   ngOnInit() {
+    this.idResenha = parseInt(this.route.snapshot.paramMap.get('id'))
     this._locale = 'pt-BR';
     this._adapter.setLocale(this._locale);
     this.animaisService.baiasCadastradas.subscribe((res: any) => this.baias = res)
@@ -108,11 +116,24 @@ export class ResenhaComponent {
 
   save() {
     const dataToSend = this.prepareDataForApi(this.horse, this.horse_owner_attributes)
-    // if (this.idUser) {
-    //   this.updateUser(userData)
-    // } else {
-    this.saveHorse(dataToSend)
-    // }
+    if (this.idResenha) {
+      this.updateResenha(dataToSend)
+    } else {
+      this.saveHorse(dataToSend)
+    }
+  }
+
+  updateResenha(editResenha: any) {
+    return this.animaisService.updateAnimal(this.idResenha, editResenha).subscribe({
+      next: () => this.router.navigateByUrl('/animais'),
+      error: (err: any) => {
+        this.sweetalertService.alert('error', 'Ops...', 'Erro: ' + err.error[0])
+      },
+      complete: () => {
+        this.sweetalertService.alert('success', 'Sucesso!', 'Resenha atualizada.')
+        this.resetForm()
+      }
+    })
   }
 
   saveHorse(newHorse: any) {
@@ -128,9 +149,13 @@ export class ResenhaComponent {
     })
   }
 
-  resetForm() {
-    this.horse_owner_attributes.reset()
-    this.horse.reset()
+  loadUserIntoForm() {
+    if (this.idResenha) {
+      this.animaisService.getAnimalById(this.idResenha).subscribe(
+        (res: any) => {
+          console.log(res, `<< RES PUT`)
+        })
+    }
   }
 
   prepareDataForApi(horseForm: any, horseOwnerForm: any) {
@@ -160,6 +185,11 @@ export class ResenhaComponent {
         }
       }
     };
+  }
+
+  resetForm() {
+    this.horse_owner_attributes.reset()
+    this.horse.reset()
   }
 
 }

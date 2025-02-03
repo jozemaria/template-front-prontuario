@@ -47,8 +47,8 @@ export class ResenhaCompletaComponent implements OnInit {
     this.router.navigateByUrl('/animais')
   }
 
-  editarResenha() {
-    this.router.navigateByUrl('animais/resenha')
+  editarResenha(id: number) {
+    this.router.navigateByUrl('animais/resenha/' + id)
   }
 
   openDialogStatus(): void {

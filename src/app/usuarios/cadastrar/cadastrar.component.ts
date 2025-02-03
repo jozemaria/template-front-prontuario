@@ -21,7 +21,7 @@ export class CadastrarComponent implements OnInit {
 
   titulo = this.route.snapshot.paramMap.get('id') === null ? 'Cadastrar usuário' : 'Editar usuário'
   subtitulopage = this.route.snapshot.paramMap.get('id') === null
-    ? 'Cadastro de novo usuário usuário.'
+    ? 'Cadastro de novo usuário.'
     : 'Edição de usuário.'
   idUser: number
 
