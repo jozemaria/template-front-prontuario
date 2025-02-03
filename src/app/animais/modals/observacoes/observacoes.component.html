@@ -2,14 +2,18 @@
   <mat-dialog-content>
     <p>Observações sobre o atendimento</p>
     <div class="mt-4">
-      <mat-form-field style="width: 500px">
-        <mat-label>Observação</mat-label>
-        <textarea matInput></textarea>
-      </mat-form-field>
+      <form [formGroup]="prescription">
+        <mat-form-field style="width: 500px">
+          <mat-label>Observação</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+      </form>
     </div>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button mat-button (click)="onNoClick()">Fechar</button>
-    <button mat-button cdkFocusInitial>Salvar</button>
+    <button mat-button cdkFocusInitial [mat-dialog-close]="prescription.value">
+      Salvar
+    </button>
   </mat-dialog-actions>
 </div>

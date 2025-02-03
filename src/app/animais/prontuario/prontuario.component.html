@@ -15,10 +15,19 @@
         style="margin-left: 25px"
       >
         <div class="">
-          <h3 class="mb-2">Nome do Cavalo ALalal - B3</h3>
-          <p class="mb-1">Nome do Propriétario</p>
-          <p class="mb-1">Sexo: M, Peso: 15k, Pelagem: Tipo</p>
-          <p class="mb-1">Data de Nascimento: 05/05/2000</p>
+          <h3 class="mb-2">{{ dadosCavalo.horse.name }}</h3>
+          <p class="mb-1">
+            <strong>Propriétario:</strong> {{ dadosCavalo.horse.owner }}
+          </p>
+          <p class="mb-1">
+            <strong>Sexo:</strong> {{ dadosCavalo.horse.gender }},
+            <strong>Peso:</strong> {{ dadosCavalo.horse.weight }},
+            <strong>Pelagem:</strong> {{ dadosCavalo.horse.hair }}
+          </p>
+          <p class="mb-1">
+            <strong>Data de Nascimento:</strong>
+            {{ dadosCavalo.horse.birthday }}
+          </p>
           <div
             class="d-flex align-items-center flex-column flex-lg-row gap-3 mt-3"
           >
@@ -34,7 +43,14 @@
               class="rounded-pill px-3"
               (click)="openDialogObservacao()"
             >
-              Observações
+              Prescrição e Orientação
+            </button>
+            <button
+              mat-stroked-button
+              class="rounded-pill px-3"
+              (click)="openDialogAlta()"
+            >
+              Fotos
             </button>
             <button
               mat-stroked-button
@@ -62,8 +78,14 @@
         <mat-card-content
           class="d-flex align-items-center justify-content-between p-4"
         >
+          @if (isData) {
+          <div class="col-12 d-flex justify-content-center">
+            <h3>Nenhum histórico disponível.</h3>
+          </div>
+          }
           <cdk-accordion class="example-accordion">
-            @for (item of items; track item; let index = $index) {
+            @for (date of getDates(dadosCavalo.informations); track date; let
+            index = $index) {
             <cdk-accordion-item
               #accordionItem="cdkAccordionItem"
               class="example-accordion-item"
@@ -77,7 +99,7 @@
                 class="example-accordion-item-header"
                 (click)="accordionItem.toggle()"
               >
-                <h6>{{ item }}</h6>
+                <h6>{{ date }}</h6>
                 <span
                   class="example-accordion-item-description material-icons-outlined fs-4"
                 >
@@ -96,21 +118,33 @@
                 [attr.aria-labelledby]="'accordion-header-' + index"
               >
                 <div>
-                  <h6>Prescrição e Orientação:</h6>
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                  Perferendis excepturi incidunt ipsum deleniti labore, tempore
-                  non nam doloribus blanditiis veritatis illo autem iure aliquid
-                  ullam rem tenetur deserunt velit culpa?
-                  <p class="mb-0 mt-2 text-green" style="font-size: small">
-                    Dr. Jomar Freitas - CRM: 2515 | 12:33h
-                  </p>
-                </div>
-                <div class="mt-4">
-                  <h6>Medicamento:</h6>
-                  Dipirona - 3x ao dia - Observação de medicação
-                  <p class="mb-0 mt-2 text-green" style="font-size: small">
-                    Dr. Jomar Freitas - CRM: 2515 | 18:43h
-                  </p>
+                  @for (item of dadosCavalo.informations[date]; track $index) {
+                  <div class="mb-4">
+                    @if (item.name) {
+                    <h6>Medicamento:</h6>
+                    {{ item.name }} - {{ item.doses }} ({{ item.hour }}) -
+                    {{ item.description }}
+                    <p class="mb-0 mt-2" style="font-size: small">
+                      <strong>Preenchido por:</strong> {{ item.user }} -
+                      <strong>CRM:</strong> {{ item.user_crm }}
+                      <strong>|</strong>
+                      {{ item.created_at }}
+                    </p>
+                    <hr />
+                    } @else {
+                    <h6>Prescrição e Orientação:</h6>
+                    <p>{{ item.description }}</p>
+                    <p class="mb-0 mt-2" style="font-size: small">
+                      <strong>Preenchido por:</strong> {{ item.user }} -
+                      <strong>CRM:</strong> {{ item.user_crm }}
+                      <strong>|</strong>
+                      {{ item.created_at }}
+                    </p>
+                    <hr />
+
+                    }
+                  </div>
+                  }
                 </div>
               </div>
             </cdk-accordion-item>
@@ -124,9 +158,10 @@
         <mat-card-content>
           <div class="d-flex align-items-center justify-content-start">
             <div class="">
-              <h6 class="mb-0">Prontuario N: 20250102-5</h6>
+              <h6 class="mb-0">Prontuario N: {{ dadosCavalo.code_number }}</h6>
               <p class="mb-0 mt-2" style="font-size: small">
-                Aberto por: Dr. Jomar Freitas - CRM: 2515
+                Aberto por: {{ dadosCavalo.user }} - CRM:
+                {{ dadosCavalo.user_crm }}
               </p>
             </div>
           </div>
@@ -137,7 +172,7 @@
           <div class="d-flex align-items-center justify-content-around">
             <div class="">
               <h6 class="mb-0">Entrada</h6>
-              <p class="mb-0 mt-2">20/05/2003</p>
+              <p class="mb-0 mt-2">{{ dadosCavalo.created_at }}</p>
             </div>
             <div class="">
               <h6 class="mb-0">Alta Clínica</h6>

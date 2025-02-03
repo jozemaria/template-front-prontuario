@@ -35,7 +35,7 @@ export class ResenhaCompletaComponent implements OnInit {
   readonly dialog = inject(MatDialog);
   readonly animaisService = inject(AnimaisService)
 
-  listagemCavalos: IFichaCavalo
+  dadosCavalo: IFichaCavalo
   idResenha: number
 
   ngOnInit(): void {
@@ -62,6 +62,6 @@ export class ResenhaCompletaComponent implements OnInit {
   }
 
   getResenha() {
-    this.animaisService.getAnimalById(this.idResenha).subscribe(res => this.listagemCavalos = res)
+    this.animaisService.getAnimalById(this.idResenha).subscribe(res => this.dadosCavalo = res)
   }
 }
