@@ -78,6 +78,7 @@ export class HeaderComponent implements OnInit {
   }
 
   sair() {
+    localStorage.clear()
     this.router.navigate(['auth/sign-in'])
   }
 

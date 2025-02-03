@@ -21,10 +21,13 @@
         class="pt-5 d-flex flex-column flex-lg-row align-items-start justify-content-between gap-4"
       >
         <div class="">
-          <h3 class="mb-2">Nome do Cavalo ALalal - B3</h3>
-          <p class="mb-1">Nome do Propriétario</p>
-          <p class="mb-1">Sexo: M, Peso: 15k, Pelagem: Tipo</p>
-          <p class="mb-1">Data de Nascimento: 05/05/2000</p>
+          <h3 class="mb-2">{{ listagemCavalos.name }}</h3>
+          <p class="mb-1">Propriétario: {{ listagemCavalos.owner }}</p>
+          <p class="mb-1">
+            Sexo: {{ listagemCavalos.gender }}, Peso:
+            {{ listagemCavalos.weight }}, Pelagem: {{ listagemCavalos.hair }}
+          </p>
+          <p class="mb-1">Data de Nascimento: {{ listagemCavalos.birthday }}</p>
           <div
             class="d-flex align-items-center flex-column flex-lg-row gap-3 mt-3"
           ></div>
@@ -34,7 +37,7 @@
             mat-flat-button
             color="primary"
             class="rounded-pill px-3"
-            (click)="editarResenha()"
+            (click)="editarResenha(listagemCavalos.id)"
           >
             Editar Resenha
           </button>
@@ -67,11 +70,7 @@
             class="d-flex flex-column align-items-start justify-content-between mb-3"
           >
             <h5>Descrição:</h5>
-            <p class="mt-2">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita
-              perspiciatis beatae architecto cum reprehenderit quae officiis
-              soluta minus nulla et nostrum quod.
-            </p>
+            <p class="mt-2">aqui vai descrição</p>
           </div>
         </mat-card-content>
       </mat-card>

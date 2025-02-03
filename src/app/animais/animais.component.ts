@@ -1,10 +1,19 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatModule } from '../appModules/mat.module';
 import { Router } from '@angular/router';
 import { SweetalertService } from '../shared/services/sweetalert.service';
 import { AnimaisService } from './service/animais.service';
-import { error } from 'jquery';
+
+export interface IFichaCavalo {
+  id: number,
+  name: string,
+  kind: string,
+  baia: string,
+  description: string,
+  status: boolean,
+  picture: string,
+}
 
 @Component({
   selector: 'app-animais',
@@ -13,17 +22,41 @@ import { error } from 'jquery';
   templateUrl: './animais.component.html',
   styleUrl: './animais.component.scss'
 })
-export class AnimaisComponent {
+export class AnimaisComponent implements OnInit {
   readonly sweetalertService = inject(SweetalertService)
   readonly animaisService = inject(AnimaisService)
   readonly router = inject(Router)
+
+  listagemCavalos: IFichaCavalo[]
+
+  ngOnInit(): void {
+    this.listarTodosCavalos()
+  }
 
   criarResenha() {
     this.router.navigateByUrl('animais/resenha')
   }
 
-  verResenha() {
-    this.router.navigateByUrl('pages/resenha')
+  verResenha(id: number) {
+    this.router.navigateByUrl('pages/resenha/' + id)
+  }
+  deletarCavalo(idHorse: number) {
+    this.sweetalertService.confirmAlert('warning', 'Deseja excluir resenha?', 'Caso clique em confirmar, resenha será excluída permanentemente!').subscribe(
+      (res: any) => {
+        if (res) {
+          this.animaisService.deleteAnimal(idHorse).subscribe({
+            next: () => this.listarTodosCavalos(),
+            error: (err: any) => {
+              this.sweetalertService.alert('error', 'Ops...', 'Erro: ' + err.error[0])
+            },
+            complete: () => {
+              this.sweetalertService.alert('success', 'Sucesso!', 'Cavalo excluído!')
+            }
+          })
+
+        }
+      }
+    )
   }
 
   verProntuario(idHorse: number) {
@@ -38,7 +71,7 @@ export class AnimaisComponent {
             }
           )
         } else {
-          this.sweetalertService.confirmAlert('warning', 'Criar novo registro!', 'Deseja atualziar o prontuário?').subscribe(
+          this.sweetalertService.confirmAlert('warning', 'Criar novo registro!', 'Deseja atualizar prontuário?').subscribe(
             (res: any) => {
               if (res) {
                 this.router.navigateByUrl('animais/prontuario')
@@ -48,13 +81,18 @@ export class AnimaisComponent {
         }
       },
       error: (res: any) => {
-        this.sweetalertService.alert('error', 'Registro não exite', 'Confirmar se existe mesmo animal informado!')
+        this.sweetalertService.alert('error', 'Registro não existe', 'Entrar em contato com suporte!')
       }
     })
   }
 
-  editarResenha() {
-    this.router.navigateByUrl('animais/resenha')
+  editarResenha(id: number) {
+    this.router.navigateByUrl('animais/resenha/' + id)
+  }
+
+
+  listarTodosCavalos() {
+    this.animaisService.getAllAnimal().subscribe(res => this.listagemCavalos = res)
   }
 
 }
