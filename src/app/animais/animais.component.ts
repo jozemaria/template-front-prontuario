@@ -37,8 +37,8 @@ export class AnimaisComponent implements OnInit {
     this.router.navigateByUrl('animais/resenha')
   }
 
-  verResenha() {
-    this.router.navigateByUrl('pages/resenha')
+  verResenha(id: number) {
+    this.router.navigateByUrl('pages/resenha/' + id)
   }
   deletarCavalo(idHorse: number) {
     this.sweetalertService.confirmAlert('warning', 'Deseja excluir resenha?', 'Caso clique em confirmar, resenha será excluída permanentemente!').subscribe(
@@ -86,8 +86,8 @@ export class AnimaisComponent implements OnInit {
     })
   }
 
-  editarResenha() {
-    this.router.navigateByUrl('animais/resenha')
+  editarResenha(id: number) {
+    this.router.navigateByUrl('animais/resenha/' + id)
   }
 
 

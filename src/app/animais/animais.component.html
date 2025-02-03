@@ -53,7 +53,7 @@
         class="mx-2"
         color="primary"
         aria-label="Visualizar Resenha"
-        (click)="verResenha()"
+        (click)="verResenha(item.id)"
       >
         <mat-icon>account_circle</mat-icon>
       </button>
@@ -62,7 +62,7 @@
         matTooltip="Editar Resenha"
         color="warn"
         class="mx-2"
-        (click)="editarResenha()"
+        (click)="editarResenha(item.id)"
       >
         <mat-icon>rebase_edit</mat-icon>
       </button>
