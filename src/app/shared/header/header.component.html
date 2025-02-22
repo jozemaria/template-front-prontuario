@@ -96,7 +96,7 @@
       >
         <div>
           <img
-            src="./../../../assets/images/app/perfil-user.png"
+            [src]="dataUser.photo"
             width="80"
             height="80"
             class="rounded-circle"
@@ -104,8 +104,8 @@
           />
         </div>
         <div>
-          <h4 class="username mb-0">Olá, Jomar!</h4>
-          <p class="mb-0">1 Tenente</p>
+          <h4 class="username mb-0">Olá, {{ dataUser.name }}!</h4>
+          <p class="mb-0">{{ dataUser.role }}</p>
         </div>
       </button>
       <!-- <mat-divider></mat-divider>

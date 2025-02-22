@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { MatModule } from 'src/app/appModules/mat.module';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { MatDialog } from '@angular/material/dialog';
@@ -46,6 +46,7 @@ export class ProntuarioComponent implements OnInit {
   readonly animaisService = inject(AnimaisService)
   readonly sweetAlertService = inject(SweetalertService)
   readonly route = inject(ActivatedRoute)
+  readonly location = inject(Location)
 
   dadosCavalo: any
   idCavalo: number
@@ -123,6 +124,6 @@ export class ProntuarioComponent implements OnInit {
   }
 
   botaoVoltar() {
-    this.router.navigateByUrl('/animais')
+    this.location.back()
   }
 }

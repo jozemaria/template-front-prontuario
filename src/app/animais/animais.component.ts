@@ -4,6 +4,8 @@ import { MatModule } from '../appModules/mat.module';
 import { Router } from '@angular/router';
 import { SweetalertService } from '../shared/services/sweetalert.service';
 import { AnimaisService } from './service/animais.service';
+import { StatusClassPipe } from '../shared/pipe/status-class.pipe';
+import { StatusTextPipe } from '../shared/pipe/status-text.pipe';
 
 export interface IFichaCavalo {
   id: number,
@@ -18,7 +20,7 @@ export interface IFichaCavalo {
 @Component({
   selector: 'app-animais',
   standalone: true,
-  imports: [CommonModule, MatModule],
+  imports: [CommonModule, MatModule, StatusClassPipe, StatusTextPipe],
   templateUrl: './animais.component.html',
   styleUrl: './animais.component.scss'
 })
@@ -41,7 +43,7 @@ export class AnimaisComponent implements OnInit {
     this.router.navigateByUrl('pages/resenha/' + id)
   }
   deletarCavalo(idHorse: number) {
-    this.sweetalertService.confirmAlert('warning', 'Deseja excluir resenha?', 'Caso clique em confirmar, resenha será excluída permanentemente!').subscribe(
+    this.sweetalertService.confirmAlert('warning', 'Deseja dar baixa na resenha?', 'Caso clique em confirmar, resenha será desativada!').subscribe(
       (res: any) => {
         if (res) {
           this.animaisService.deleteAnimal(idHorse).subscribe({
@@ -50,7 +52,7 @@ export class AnimaisComponent implements OnInit {
               this.sweetalertService.alert('error', 'Ops...', 'Erro: ' + err.error[0])
             },
             complete: () => {
-              this.sweetalertService.alert('success', 'Sucesso!', 'Cavalo excluído!')
+              this.sweetalertService.alert('success', 'Sucesso!', 'Cavalo desativado!')
             }
           })
 

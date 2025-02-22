@@ -1,10 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { MatModule } from 'src/app/appModules/mat.module';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StatusComponent } from './modal/status/status.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AnimaisService } from 'src/app/animais/service/animais.service';
+import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
 
 export interface IFichaCavalo {
   id: number,
@@ -34,6 +35,9 @@ export class ResenhaCompletaComponent implements OnInit {
   readonly route = inject(ActivatedRoute)
   readonly dialog = inject(MatDialog);
   readonly animaisService = inject(AnimaisService)
+  readonly location = inject(Location)
+  readonly sweetAlertService = inject(SweetalertService)
+
 
   dadosCavalo: IFichaCavalo
   idResenha: number
@@ -44,7 +48,7 @@ export class ResenhaCompletaComponent implements OnInit {
   }
 
   botaoVoltar() {
-    this.router.navigateByUrl('/animais')
+    this.location.back()
   }
 
   editarResenha(id: number) {
@@ -56,7 +60,16 @@ export class ResenhaCompletaComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+
+      this.animaisService.editarStatus(result, this.idResenha).subscribe({
+        error: err => {
+          this.sweetAlertService.alert('error', 'Ops...', 'Erro: ' + err.error.error)
+        },
+        complete: () => {
+          this.sweetAlertService.alert('success', 'Sucesso', 'Status atualizado com sucesso.')
+          this.getResenha()
+        }
+      })
 
     });
   }
@@ -64,4 +77,5 @@ export class ResenhaCompletaComponent implements OnInit {
   getResenha() {
     this.animaisService.getAnimalById(this.idResenha).subscribe(res => this.dadosCavalo = res)
   }
+
 }
