@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { MatModule } from 'src/app/appModules/mat.module';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -18,6 +18,7 @@ export class CadastrarComponent implements OnInit {
   readonly router = inject(Router)
   readonly usersService = inject(UsuariosService)
   readonly sweetalertService = inject(SweetalertService)
+  readonly location = inject(Location)
 
   titulo = this.route.snapshot.paramMap.get('id') === null ? 'Cadastrar usuário' : 'Editar usuário'
   subtitulopage = this.route.snapshot.paramMap.get('id') === null
@@ -44,7 +45,7 @@ export class CadastrarComponent implements OnInit {
 
 
   botaoVoltar() {
-    this.router.navigateByUrl('usuarios/listar')
+    this.location.back()
   }
 
   save() {

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { MatModule } from 'src/app/appModules/mat.module';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StatusComponent } from './modal/status/status.component';
@@ -34,6 +34,7 @@ export class ResenhaCompletaComponent implements OnInit {
   readonly route = inject(ActivatedRoute)
   readonly dialog = inject(MatDialog);
   readonly animaisService = inject(AnimaisService)
+  readonly location = inject(Location)
 
   dadosCavalo: IFichaCavalo
   idResenha: number
@@ -44,7 +45,7 @@ export class ResenhaCompletaComponent implements OnInit {
   }
 
   botaoVoltar() {
-    this.router.navigateByUrl('/animais')
+    this.location.back()
   }
 
   editarResenha(id: number) {

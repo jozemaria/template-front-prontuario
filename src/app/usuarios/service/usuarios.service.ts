@@ -29,23 +29,23 @@ export class UsuariosService {
   getAllUser(): Observable<any> {
     return this.http.get(environment.URL_BASE + 'users', {
       headers:
-        { 'Authorization': environment.TOKEN_TEST }
+        { 'Authorization': localStorage.getItem('access_token') }
     })
   }
 
   getUserById(id: number): any {
-    return this.http.get(this.urlAPI + '/' + id, { headers: { 'Authorization': environment.TOKEN_TEST } })
+    return this.http.get(this.urlAPI + '/' + id, { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
 
   saveNewUser(user: any): any {
-    return this.http.post(this.urlAPI, user, { headers: { 'Authorization': environment.TOKEN_TEST } })
+    return this.http.post(this.urlAPI, user, { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
 
   deleteUser(id: number): any {
-    return this.http.delete(this.urlAPI + '/' + id, { headers: { 'Authorization': environment.TOKEN_TEST } })
+    return this.http.delete(this.urlAPI + '/' + id, { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
 
   updateUser(idUser: number, userUpdate: any): any {
-    return this.http.put(this.urlAPI + '/' + idUser, userUpdate, { headers: { 'Authorization': environment.TOKEN_TEST } })
+    return this.http.put(this.urlAPI + '/' + idUser, userUpdate, { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
 }

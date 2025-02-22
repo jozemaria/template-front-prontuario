@@ -1,5 +1,5 @@
 import { Component, Inject, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { MatModule } from 'src/app/appModules/mat.module';
 import { FormBuilder, FormControl, FormGroup, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DateAdapter, ErrorStateMatcher, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -38,6 +38,7 @@ export class ResenhaComponent implements OnInit {
   readonly http = inject(HttpClient)
   readonly animaisService = inject(AnimaisService)
   readonly sweetalertService = inject(SweetalertService)
+  readonly location = inject(Location)
 
   matcher = new MyErrorStateMatcher();
 
@@ -89,7 +90,7 @@ export class ResenhaComponent implements OnInit {
   });
 
   botaoVoltar() {
-    this.router.navigateByUrl('/animais')
+    this.location.back()
   }
 
   populaDadosForm(dados) {
