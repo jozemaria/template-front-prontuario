@@ -34,6 +34,13 @@ const routes: Routes = [{
     title: 'Resenha Completa'
   }
 },
+{
+  path: 'resenha/:id',
+  component: ResenhaCompletaComponent,
+  data: {
+    title: 'Resenha Completa'
+  }
+}
 ];
 
 @NgModule({

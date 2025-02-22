@@ -14,7 +14,7 @@ import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
 })
 export class SignInComponent implements OnInit {
   loginUser = new FormGroup({
-    registration: new FormControl('11223344'), password: new FormControl('123456'),
+    registration: new FormControl(''), password: new FormControl(''),
   });
 
   hide = true;

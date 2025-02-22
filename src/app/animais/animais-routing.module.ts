@@ -13,7 +13,13 @@ const routes: Routes = [
   },
   {
     path: 'prontuario', component: ProntuarioComponent
-  }
+  },
+  {
+    path: 'prontuario/:id', component: ProntuarioComponent
+  },
+  {
+    path: 'resenha/:id', component: ResenhaComponent
+  },
 ];
 
 @NgModule({

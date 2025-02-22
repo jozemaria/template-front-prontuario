@@ -1,9 +1,27 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 import { MatModule } from 'src/app/appModules/mat.module';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StatusComponent } from './modal/status/status.component';
 import { MatDialog } from '@angular/material/dialog';
+import { AnimaisService } from 'src/app/animais/service/animais.service';
+import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
+
+export interface IFichaCavalo {
+  id: number,
+  name: string,
+  gender: string,
+  weight: string,
+  kind: string,
+  hair: string,
+  birthday: string,
+  baia: string,
+  description: string,
+  status: boolean,
+  owner: boolean,
+  created_at: boolean,
+  picture: string,
+}
 
 @Component({
   selector: 'app-resenha-completa',
@@ -12,16 +30,29 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './resenha-completa.component.html',
   styleUrl: './resenha-completa.component.scss'
 })
-export class ResenhaCompletaComponent {
+export class ResenhaCompletaComponent implements OnInit {
   readonly router = inject(Router)
+  readonly route = inject(ActivatedRoute)
   readonly dialog = inject(MatDialog);
+  readonly animaisService = inject(AnimaisService)
+  readonly location = inject(Location)
+  readonly sweetAlertService = inject(SweetalertService)
 
-  botaoVoltar() {
-    this.router.navigateByUrl('/animais')
+
+  dadosCavalo: IFichaCavalo
+  idResenha: number
+
+  ngOnInit(): void {
+    this.idResenha = parseInt(this.route.snapshot.paramMap.get('id'))
+    this.getResenha()
   }
 
-  editarResenha() {
-    this.router.navigateByUrl('animais/resenha')
+  botaoVoltar() {
+    this.location.back()
+  }
+
+  editarResenha(id: number) {
+    this.router.navigateByUrl('animais/resenha/' + id)
   }
 
   openDialogStatus(): void {
@@ -29,8 +60,22 @@ export class ResenhaCompletaComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+
+      this.animaisService.editarStatus(result, this.idResenha).subscribe({
+        error: err => {
+          this.sweetAlertService.alert('error', 'Ops...', 'Erro: ' + err.error.error)
+        },
+        complete: () => {
+          this.sweetAlertService.alert('success', 'Sucesso', 'Status atualizado com sucesso.')
+          this.getResenha()
+        }
+      })
 
     });
   }
+
+  getResenha() {
+    this.animaisService.getAnimalById(this.idResenha).subscribe(res => this.dadosCavalo = res)
+  }
+
 }

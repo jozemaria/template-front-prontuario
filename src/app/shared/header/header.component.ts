@@ -14,8 +14,10 @@ import { Router } from '@angular/router';
 
 export class HeaderComponent implements OnInit {
   readonly router = inject(Router)
-  constructor(public sidebarservice: SidebarService) {
+  dataUser: any
 
+  constructor(public sidebarservice: SidebarService) {
+    this.dataUser = JSON.parse(atob(localStorage.getItem('access_token').split('.')[1]))
   }
 
   theme_name = 'dark_mode'
@@ -78,6 +80,7 @@ export class HeaderComponent implements OnInit {
   }
 
   sair() {
+    localStorage.clear()
     this.router.navigate(['auth/sign-in'])
   }
 

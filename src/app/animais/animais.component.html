@@ -13,24 +13,37 @@
 
 <hr />
 
+@if (listagemCavalos?.length === 0) {
+<mat-card class="rounded-4">
+  <div
+    class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4"
+  >
+    <mat-card-header>
+      <mat-card-title class="pb-3">NENHUM CAVALO CADASTRO</mat-card-title>
+    </mat-card-header>
+  </div>
+</mat-card>
+} @for (item of listagemCavalos; track item.id) {
 <mat-card class="rounded-4">
   <div
     class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4"
   >
     <mat-card-header>
       <div mat-card-avatar class="card-avatar1"></div>
-      <mat-card-title>Cavalo Bufalo Branco - B3</mat-card-title>
-      <mat-card-subtitle class="pt-2">Espécie: Grande Cavalo</mat-card-subtitle>
+      <mat-card-title>{{ item.name }} - {{ item.baia }}</mat-card-title>
+      <mat-card-subtitle class="pt-2"
+        >Espécie: {{ item.kind }}</mat-card-subtitle
+      >
     </mat-card-header>
-    <div class="card-lable mat-light-bg-green">
-      <p class="text-green">disponivel</p>
+    <div class="card-lable" [ngClass]="item.status | statusClass">
+      <p class="uppercase-text">{{ item.status | statusText }}</p>
     </div>
     <mat-card-actions>
       <a
         mat-flat-button
         color="primary"
         class="mx-2"
-        (click)="verProntuario(1)"
+        (click)="verProntuario(item.id)"
       >
         Prontuário
       </a>
@@ -39,8 +52,8 @@
         matTooltip="Visualizar Resenha"
         class="mx-2"
         color="primary"
-        aria-label="Example icon-button with a heart icon"
-        (click)="verResenha()"
+        aria-label="Visualizar Resenha"
+        (click)="verResenha(item.id)"
       >
         <mat-icon>account_circle</mat-icon>
       </button>
@@ -49,7 +62,7 @@
         matTooltip="Editar Resenha"
         color="warn"
         class="mx-2"
-        (click)="editarResenha()"
+        (click)="editarResenha(item.id)"
       >
         <mat-icon>rebase_edit</mat-icon>
       </button>
@@ -58,7 +71,8 @@
         matTooltip="Excluir Registro"
         color="warn"
         class="mx-2"
-        aria-label="Example icon-button with a heart icon"
+        aria-label="Excluir Registro"
+        (click)="deletarCavalo(item.id)"
       >
         <mat-icon>delete</mat-icon>
       </button>
@@ -70,73 +84,9 @@
         <mat-panel-title>Observações</mat-panel-title>
       </mat-expansion-panel-header>
       <p>
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry.
+        AQUI VAI VIM A DESCRIÇÃO DO CAVALO QUE FOI PREENCHIDA NA HORA DA RESENHA
       </p>
     </mat-expansion-panel>
   </mat-accordion>
 </mat-card>
-
-<mat-card class="rounded-4">
-  <div
-    class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4"
-  >
-    <mat-card-header>
-      <div mat-card-avatar class="card-avatar1"></div>
-      <mat-card-title>Cavalo Grande Bufalo - B4</mat-card-title>
-      <mat-card-subtitle class="pt-2">Espécie: Ponei</mat-card-subtitle>
-    </mat-card-header>
-    <div class="card-lable mat-light-bg-red">
-      <p class="text-red">quarentena</p>
-    </div>
-    <mat-card-actions>
-      <button
-        mat-flat-button
-        color="primary"
-        class="mx-2"
-        (click)="verProntuario(4)"
-      >
-        Prontuário
-      </button>
-      <button
-        mat-icon-button
-        matTooltip="Visualizar Resenha"
-        class="mx-2"
-        color="primary"
-        aria-label="Example icon-button with a heart icon"
-        (click)="verResenha()"
-      >
-        <mat-icon>account_circle</mat-icon>
-      </button>
-      <button
-        mat-icon-button
-        matTooltip="Editar Resenha"
-        color="warn"
-        class="mx-2"
-        (click)="editarResenha()"
-      >
-        <mat-icon>rebase_edit</mat-icon>
-      </button>
-      <button
-        mat-icon-button
-        matTooltip="Excluir Registro"
-        color="warn"
-        class="mx-2"
-        aria-label="Example icon-button with a heart icon"
-      >
-        <mat-icon>delete</mat-icon>
-      </button>
-    </mat-card-actions>
-  </div>
-  <mat-accordion class="example-headers-align" multi>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>Observações</mat-panel-title>
-      </mat-expansion-panel-header>
-      <p>
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry.
-      </p>
-    </mat-expansion-panel>
-  </mat-accordion>
-</mat-card>
+}

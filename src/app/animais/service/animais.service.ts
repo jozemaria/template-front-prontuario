@@ -9,33 +9,53 @@ import { environment } from 'src/environment/environment';
 export class AnimaisService {
   readonly http = inject(HttpClient)
 
-  private readonly urlAPI = environment.URL_BASE + 'horse_records'
+  private readonly urlAPIHorseRecor = environment.URL_BASE + 'horse_records/'
+  private readonly urlAPIHorse = environment.URL_BASE + 'horses/'
+  private readonly urlAPIBase = environment.URL_BASE
 
 
   getAllAnimal(): Observable<any> {
-    return this.http.get(environment.URL_BASE + 'users', {
+    return this.http.get(this.urlAPIHorse, {
       headers:
-        { 'Authorization': environment.TOKEN_TEST }
+        { 'Authorization': localStorage.getItem('access_token') }
     })
   }
 
   getAnimalById(id: number): any {
-    return this.http.get(this.urlAPI + '/' + id, { headers: { 'Authorization': environment.TOKEN_TEST } })
+    return this.http.get(this.urlAPIHorse + id, { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
 
-  saveNewAnimal(user: any): any {
-    return this.http.post(this.urlAPI, user, { headers: { 'Authorization': environment.TOKEN_TEST } })
+  saveNewAnimal(horse: any): any {
+    return this.http.post(this.urlAPIHorse, horse, { headers: { 'Authorization': localStorage.getItem('access_token') } })
+  }
+
+  salvarNoProntuario(rota: string, valueModal: any): any {
+    console.log(rota, valueModal)
+    return this.http.post(this.urlAPIBase + rota, valueModal, { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
 
   deleteAnimal(id: number): any {
-    return this.http.delete(this.urlAPI + '/' + id, { headers: { 'Authorization': environment.TOKEN_TEST } })
+    return this.http.delete(this.urlAPIHorse + id, { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
 
-  updateAnimal(idUser: number, userUpdate: any): any {
-    return this.http.put(this.urlAPI + '/' + idUser, userUpdate, { headers: { 'Authorization': environment.TOKEN_TEST } })
+  updateAnimal(idHorse: number, horseUpdate: any): any {
+    return this.http.put(this.urlAPIHorse + idHorse, horseUpdate, { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
 
-  openMedicalRecord(idUser: number): any {
-    return this.http.get(this.urlAPI + '/' + idUser + '/is_active', { headers: { 'Authorization': environment.TOKEN_TEST } })
+  openMedicalRecord(idHorse: number): any {
+    return this.http.get(this.urlAPIHorseRecor + idHorse + '/is_active', { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
+
+  get baiasCadastradas(): any {
+    return this.http.get(environment.URL_BASE + 'baias', { headers: { 'Authorization': localStorage.getItem('access_token') } })
+  }
+
+  historicoProntuario(idHorse: number): any {
+    return this.http.get(this.urlAPIHorseRecor + idHorse, { headers: { 'Authorization': localStorage.getItem('access_token') } })
+  }
+
+  editarStatus(type: string, idHorse: number) {
+    return this.http.patch(this.urlAPIHorse + idHorse, type, { headers: { 'Authorization': localStorage.getItem('access_token') } })
+  }
+
 }
