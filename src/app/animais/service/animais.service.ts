@@ -54,4 +54,8 @@ export class AnimaisService {
     return this.http.get(this.urlAPIHorseRecor + idHorse, { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
 
+  editarStatus(type: string, idHorse: number) {
+    return this.http.patch(this.urlAPIHorse + idHorse, type, { headers: { 'Authorization': localStorage.getItem('access_token') } })
+  }
+
 }

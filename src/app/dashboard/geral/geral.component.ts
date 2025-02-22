@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatModule } from 'src/app/appModules/mat.module';
 import { DashboardService } from './service/dashboard.service';
 import { StatusTextPipe } from 'src/app/shared/pipe/status-text.pipe';
+import { StatusClassPipe } from 'src/app/shared/pipe/status-class.pipe';
 
 export interface IFichaCavalo {
   id: number,
@@ -15,7 +16,7 @@ export interface IFichaCavalo {
 @Component({
   selector: 'app-geral',
   standalone: true,
-  imports: [CommonModule, MatModule, StatusTextPipe],
+  imports: [CommonModule, MatModule, StatusTextPipe, StatusClassPipe],
   templateUrl: './geral.component.html',
   styleUrl: './geral.component.scss'
 })

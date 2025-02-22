@@ -105,14 +105,7 @@
             <p class="mb-0">Local: {{ item.baia }}</p>
           </div>
           <div class="text-center">
-            <div
-              class="card-lable"
-              [ngClass]="{
-                'mat-light-bg-green': item?.status === 'apto',
-                'mat-light-bg-purple': item?.status === 'inapto',
-                'mat-light-bg-teal': item?.status === 'outro'
-              }"
-            >
+            <div class="card-lable" [ngClass]="item.status | statusClass">
               <p class="mb-0 uppercase-text">
                 {{ item.status | statusText }}
               </p>
