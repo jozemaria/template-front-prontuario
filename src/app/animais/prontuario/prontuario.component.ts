@@ -87,8 +87,18 @@ export class ProntuarioComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-
+      if (result) {
+        this.animaisService.fecharAtendimento(this.idCavalo).subscribe({
+          error: err => {
+            this.sweetAlertService.alert('error', 'Ops...', 'Erro: ' + err.error.error)
+          },
+          complete: () => {
+            this.sweetAlertService.alert('success', 'Sucesso', 'Prontuário fechado com sucesso e cavalo apto para suas jornadas.')
+            this.router.navigateByUrl('animais')
+            this.carregarInformacoes()
+          }
+        })
+      }
     });
   }
   openDialogObservacao(): void {
@@ -96,9 +106,7 @@ export class ProntuarioComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result, `resulta`)
       result.horse_id = this.idCavalo
-      console.log(result, `resulta`)
       const dadosPronturaio = { "prescription": result }
       this.animaisService.salvarNoProntuario('prescriptions', dadosPronturaio).subscribe({
         error: err => {

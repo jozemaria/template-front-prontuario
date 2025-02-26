@@ -58,4 +58,12 @@ export class AnimaisService {
     return this.http.patch(this.urlAPIHorse + idHorse, type, { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
 
+  abrirAtendimento(idHorse: number) {
+    console.log(`atendimento`)
+    return this.http.get(this.urlAPIHorseRecor + idHorse + '/open', { headers: { 'Authorization': localStorage.getItem('access_token') } })
+  }
+  fecharAtendimento(idHorse: number) {
+    return this.http.get(this.urlAPIHorseRecor + idHorse + '/close', { headers: { 'Authorization': localStorage.getItem('access_token') } })
+  }
+
 }

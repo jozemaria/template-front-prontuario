@@ -17,6 +17,7 @@ export interface IFichaCavalo {
   birthday: string,
   baia: string,
   description: string,
+  active: boolean,
   status: boolean,
   owner: boolean,
   created_at: boolean,
