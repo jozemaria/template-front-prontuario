@@ -54,12 +54,19 @@ export class CadastrarComponent implements OnInit {
   }
 
   save() {
-    const userData = {
-      "user": { ...this.userForm.value, 'photo': this.selectedFile }
-    }
+    const formData = new FormData();
 
+    Object.keys(this.userForm.controls).forEach(key => {
+      formData.append(key, this.userForm.get(key)?.value);
+    });
+
+    formData.append('photo', this.selectedFile, this.selectedFile.name);
+
+    const userData = {
+      "user": { ...this.userForm.value }
+    }
     if (this.idUser) {
-      this.updateUser(userData)
+      this.updateUser(formData)
     } else {
       this.saveUser(userData)
     }
