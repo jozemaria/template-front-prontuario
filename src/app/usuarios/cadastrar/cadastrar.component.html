@@ -78,12 +78,28 @@
               </button>
             </mat-form-field>
           </div>
-          <!-- <div class="col-12 col-md-3">
-            <mat-form-field class="w-100" appearance="fill">
-              <mat-label>Enviar Foto</mat-label>
-              <input matInput type="text" />
-            </mat-form-field>
-          </div> -->
+          <div class="col-12 col-md-3">
+            <input
+              type="file"
+              (change)="onFileSelected($event)"
+              accept="image/*"
+              hidden
+              #fileInput
+            />
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="fileInput.click()"
+            >
+              <mat-icon>upload</mat-icon>
+              Selecionar Imagem
+            </button>
+
+            <div *ngIf="selectedFile" class="file-info">
+              <p>Arquivo selecionado: {{ selectedFile.name }}</p>
+              <p>Tamanho: {{ selectedFile.size | fileSize }}</p>
+            </div>
+          </div>
 
           <div class="col-12 col-md-12 d-flex justify-content-end">
             <div class="d-flex gap-3">

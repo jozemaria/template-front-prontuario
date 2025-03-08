@@ -55,6 +55,7 @@ export class AnimaisService {
   }
 
   editarStatus(type: string, idHorse: number) {
+    console.log(type, ' type')
     return this.http.patch(this.urlAPIHorse + idHorse, type, { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
 
