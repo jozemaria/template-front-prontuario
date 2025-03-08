@@ -47,6 +47,6 @@ export class UsuariosService {
   }
 
   updateUser(idUser: number, userUpdate: any): any {
-    return this.http.put(this.urlAPI + '/' + idUser, userUpdate, { headers: { 'Authorization': localStorage.getItem('access_token'), 'Content-Type': 'multipart/form-data' } })
+    return this.http.put(this.urlAPI + '/' + idUser, userUpdate, { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
 }

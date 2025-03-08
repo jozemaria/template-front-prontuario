@@ -54,10 +54,8 @@ export class CadastrarComponent implements OnInit {
   }
 
   save() {
-    console.log(this.testeFoto, `<< TESTE`)
-
     const userData = {
-      "user": { ...this.userForm.value, 'photo_url': this.selectedFile }
+      "user": { ...this.userForm.value, 'photo': this.selectedFile }
     }
 
     if (this.idUser) {
