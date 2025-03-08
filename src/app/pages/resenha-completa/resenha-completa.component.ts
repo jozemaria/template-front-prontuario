@@ -17,6 +17,7 @@ export interface IFichaCavalo {
   birthday: string,
   baia: string,
   description: string,
+  active: boolean,
   status: boolean,
   owner: boolean,
   created_at: boolean,
@@ -60,7 +61,7 @@ export class ResenhaCompletaComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-
+      console.log(result, ` result`)
       this.animaisService.editarStatus(result, this.idResenha).subscribe({
         error: err => {
           this.sweetAlertService.alert('error', 'Ops...', 'Erro: ' + err.error.error)

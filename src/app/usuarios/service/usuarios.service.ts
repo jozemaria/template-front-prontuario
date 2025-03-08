@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environment/environment';
+import imageCompression from 'browser-image-compression';
 
 export interface IDadosUsuario {
   id: number;
@@ -46,6 +47,6 @@ export class UsuariosService {
   }
 
   updateUser(idUser: number, userUpdate: any): any {
-    return this.http.put(this.urlAPI + '/' + idUser, userUpdate, { headers: { 'Authorization': localStorage.getItem('access_token') } })
+    return this.http.put(this.urlAPI + '/' + idUser, userUpdate, { headers: { 'Authorization': localStorage.getItem('access_token'), 'Content-Type': 'multipart/form-data' } })
   }
 }

@@ -5,11 +5,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UsuariosService } from '../service/usuarios.service';
 import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
+import { FileSizePipe } from 'src/app/shared/pipe/file-size.pipe';
+import imageCompression from 'browser-image-compression'
+
 
 @Component({
   selector: 'app-cadastrar',
   standalone: true,
-  imports: [CommonModule, MatModule, ReactiveFormsModule],
+  imports: [CommonModule, MatModule, ReactiveFormsModule, FileSizePipe],
   templateUrl: './cadastrar.component.html',
   styleUrl: './cadastrar.component.scss'
 })
@@ -20,11 +23,13 @@ export class CadastrarComponent implements OnInit {
   readonly sweetalertService = inject(SweetalertService)
   readonly location = inject(Location)
 
-  titulo = this.route.snapshot.paramMap.get('id') === null ? 'Cadastrar usuário' : 'Editar usuário'
+  titulo = this.route.snapshot.paramMap.get('id') === null ? 'Cadastrar' : 'Editar'
   subtitulopage = this.route.snapshot.paramMap.get('id') === null
     ? 'Cadastro de novo usuário.'
     : 'Edição de usuário.'
   idUser: number
+  selectedFile: File | null = null;
+  testeFoto: {}
 
   userForm = new FormGroup({
     name: new FormControl(''),
@@ -49,7 +54,12 @@ export class CadastrarComponent implements OnInit {
   }
 
   save() {
-    const userData = { "user": this.userForm.value }
+    console.log(this.testeFoto, `<< TESTE`)
+
+    const userData = {
+      "user": { ...this.userForm.value, 'photo_url': this.selectedFile }
+    }
+
     if (this.idUser) {
       this.updateUser(userData)
     } else {
@@ -60,9 +70,10 @@ export class CadastrarComponent implements OnInit {
     this.router.navigateByUrl('/usuarios/listar')
   }
 
-  updateUser(newUser: any) {
-    return this.usersService.updateUser(this.idUser, newUser).subscribe({
-      next: (res: any) => console.log(res.user),
+  updateUser(valueUser: any) {
+    console.log(valueUser, ` << UPDATE`)
+    return this.usersService.updateUser(this.idUser, valueUser).subscribe({
+      next: (res: any) => console.log(res.user, `<< resposta usuarioß`),
       error: (err: any) => {
         this.sweetalertService.alert('error', 'Ops...', 'Erro: ' + err.error[0])
       },
@@ -73,8 +84,9 @@ export class CadastrarComponent implements OnInit {
     })
   }
 
-  saveUser(newUser: any) {
-    return this.usersService.saveNewUser(newUser).subscribe({
+  saveUser(valueUser: any) {
+    console.log(valueUser, ` << NEW USER`)
+    return this.usersService.saveNewUser(valueUser).subscribe({
       next: () => this.listarUsuarios(),
       error: (err: any) => {
         this.sweetalertService.alert('error', 'Ops...', 'Erro: ' + err.error[0])
@@ -106,4 +118,36 @@ export class CadastrarComponent implements OnInit {
   resetForm() {
     return this.userForm.reset()
   }
+
+
+  async onFileSelected(event: any) {
+
+    const file: File = event.target.files[0];
+    this.selectedFile = file
+
+    //   if (file) {
+    //     // Verifica o tamanho do arquivo (2MB = 2 * 1024 * 1024 bytes)
+    //     if (file.size > 2 * 1024 * 1024) {
+    //       // this.snackBar.open('A imagem não pode ser maior que 2MB.', 'Fechar', {
+    //       //   duration: 3000,
+    //       // });
+    //       this.selectedFile = null;
+    //       return;
+    //     }
+
+    //     // Verifica se o arquivo é uma imagem
+    //     if (!file.type.startsWith('image/')) {
+    //       // this.snackBar.open('Por favor, selecione um arquivo de imagem.', 'Fechar', {
+    //       //   duration: 3000,
+    //       // });
+    //       this.selectedFile = null;
+    //       return;
+    //     }
+
+    //     // this.snackBar.open('Imagem selecionada com sucesso!', 'Fechar', {
+    //     //   duration: 2000,
+    //     // });
+    //   }
+  }
+
 }

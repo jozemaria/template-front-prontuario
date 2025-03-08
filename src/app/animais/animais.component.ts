@@ -76,7 +76,13 @@ export class AnimaisComponent implements OnInit {
           this.sweetalertService.confirmAlert('warning', 'Criar novo registro!', 'Deseja atualizar prontuário?').subscribe(
             (res: any) => {
               if (res) {
-                this.router.navigateByUrl('animais/prontuario')
+                console.log(res, `<< resposta`)
+                this.animaisService.abrirAtendimento(idHorse).subscribe((res: boolean) => {
+                  console.log(res, `res`)
+                  if (res) {
+                    this.router.navigateByUrl('animais/prontuario/' + idHorse)
+                  }
+                })
               }
             }
           )

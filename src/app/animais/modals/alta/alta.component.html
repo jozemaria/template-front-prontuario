@@ -3,5 +3,7 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button (click)="onNoClick()">Não, Fechar</button>
-  <button mat-button cdkFocusInitial>Sim, Salvar</button>
+  <button mat-button cdkFocusInitial [mat-dialog-close]="true">
+    Sim, Salvar
+  </button>
 </mat-dialog-actions>
