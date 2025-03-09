@@ -2,17 +2,17 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { MatModule } from 'src/app/appModules/mat.module';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsuariosService } from '../service/usuarios.service';
 import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
 import { FileSizePipe } from 'src/app/shared/pipe/file-size.pipe';
-import imageCompression from 'browser-image-compression'
+import { NgxMaskDirective } from 'ngx-mask';
 
 
 @Component({
   selector: 'app-cadastrar',
   standalone: true,
-  imports: [CommonModule, MatModule, ReactiveFormsModule, FileSizePipe],
+  imports: [CommonModule, MatModule, ReactiveFormsModule, FileSizePipe, NgxMaskDirective],
   templateUrl: './cadastrar.component.html',
   styleUrl: './cadastrar.component.scss'
 })
@@ -29,16 +29,15 @@ export class CadastrarComponent implements OnInit {
     : 'Edição de usuário.'
   idUser: number
   selectedFile: File | null = null;
-  testeFoto: {}
 
   userForm = new FormGroup({
-    name: new FormControl(''),
-    email: new FormControl(''),
-    registration: new FormControl(''),
-    cell_fone: new FormControl(''),
-    password: new FormControl(''),
+    name: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.email, Validators.required]),
+    registration: new FormControl('', [Validators.required]),
+    phone: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.minLength(7)]),
     crm: new FormControl(''),
-    graduation: new FormControl(''),
+    graduation: new FormControl('', [Validators.required]),
     role: new FormControl(''),
   });
   hide = true;
@@ -54,14 +53,17 @@ export class CadastrarComponent implements OnInit {
   }
 
   save() {
-    console.log(this.testeFoto, `<< TESTE`)
+    const formData = new FormData();
+    Object.keys(this.userForm.controls).forEach(key => {
+      formData.append(`user[${key}]`, this.userForm.get(key)?.value);
+    });
+    formData.append('user[photo]', this.selectedFile, this.selectedFile.name);
 
     const userData = {
-      "user": { ...this.userForm.value, 'photo_url': this.selectedFile }
+      "user": { ...this.userForm.value }
     }
-
     if (this.idUser) {
-      this.updateUser(userData)
+      this.updateUser(formData)
     } else {
       this.saveUser(userData)
     }
@@ -71,9 +73,7 @@ export class CadastrarComponent implements OnInit {
   }
 
   updateUser(valueUser: any) {
-    console.log(valueUser, ` << UPDATE`)
     return this.usersService.updateUser(this.idUser, valueUser).subscribe({
-      next: (res: any) => console.log(res.user, `<< resposta usuarioß`),
       error: (err: any) => {
         this.sweetalertService.alert('error', 'Ops...', 'Erro: ' + err.error[0])
       },
@@ -85,7 +85,6 @@ export class CadastrarComponent implements OnInit {
   }
 
   saveUser(valueUser: any) {
-    console.log(valueUser, ` << NEW USER`)
     return this.usersService.saveNewUser(valueUser).subscribe({
       next: () => this.listarUsuarios(),
       error: (err: any) => {
@@ -106,7 +105,7 @@ export class CadastrarComponent implements OnInit {
             name: res.name,
             email: res.email,
             registration: res.registration,
-            cell_fone: res.cell_fone,
+            phone: res.phone,
             crm: res.crm,
             graduation: res.graduation,
             role: res.role,
@@ -121,33 +120,20 @@ export class CadastrarComponent implements OnInit {
 
 
   async onFileSelected(event: any) {
-
     const file: File = event.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        this.sweetalertService.alert('warning', 'Atenção', 'A imagem não pode ser maior que 2MB.')
+        this.selectedFile = null;
+        return;
+      }
+      if (!file.type.startsWith('image/')) {
+        this.sweetalertService.alert('warning', 'Atenção', 'Por favor, selecione um arquivo de imagem.')
+        this.selectedFile = null;
+        return;
+      }
+    }
     this.selectedFile = file
-
-    //   if (file) {
-    //     // Verifica o tamanho do arquivo (2MB = 2 * 1024 * 1024 bytes)
-    //     if (file.size > 2 * 1024 * 1024) {
-    //       // this.snackBar.open('A imagem não pode ser maior que 2MB.', 'Fechar', {
-    //       //   duration: 3000,
-    //       // });
-    //       this.selectedFile = null;
-    //       return;
-    //     }
-
-    //     // Verifica se o arquivo é uma imagem
-    //     if (!file.type.startsWith('image/')) {
-    //       // this.snackBar.open('Por favor, selecione um arquivo de imagem.', 'Fechar', {
-    //       //   duration: 3000,
-    //       // });
-    //       this.selectedFile = null;
-    //       return;
-    //     }
-
-    //     // this.snackBar.open('Imagem selecionada com sucesso!', 'Fechar', {
-    //     //   duration: 2000,
-    //     // });
-    //   }
   }
 
 }

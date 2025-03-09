@@ -14,7 +14,7 @@ export interface IFichaCavalo {
   baia: string,
   description: string,
   status: boolean,
-  picture: string,
+  photo_url: string,
 }
 
 @Component({

@@ -18,11 +18,17 @@ export class HeaderComponent implements OnInit {
 
   constructor(public sidebarservice: SidebarService) {
     this.dataUser = JSON.parse(atob(localStorage.getItem('access_token').split('.')[1]))
+    this.dataUser['name'] = this.corrigirCaracteres(this.dataUser.name)
+    this.dataUser['role'] = this.corrigirCaracteres(this.dataUser.role)
   }
 
   theme_name = 'dark_mode'
 
   toggleSearch: boolean = false;
+
+  corrigirCaracteres(texto) {
+    return decodeURIComponent(escape(texto));
+  }
 
   darkMode() {
 

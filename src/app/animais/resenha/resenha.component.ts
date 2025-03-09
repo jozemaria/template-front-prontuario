@@ -8,6 +8,7 @@ import { AnimaisService } from '../service/animais.service';
 import { NgxMaskDirective } from 'ngx-mask';
 import { HttpClient } from '@angular/common/http';
 import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
+import { FileSizePipe } from 'src/app/shared/pipe/file-size.pipe';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -27,7 +28,7 @@ export interface IBaias {
 @Component({
   selector: 'app-resenha',
   standalone: true,
-  imports: [CommonModule, MatModule, FormsModule, ReactiveFormsModule, NgxMaskDirective],
+  imports: [CommonModule, MatModule, FormsModule, ReactiveFormsModule, NgxMaskDirective, FileSizePipe],
   templateUrl: './resenha.component.html',
   styleUrl: './resenha.component.scss',
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }]
@@ -41,6 +42,7 @@ export class ResenhaComponent implements OnInit {
   readonly location = inject(Location)
 
   matcher = new MyErrorStateMatcher();
+  selectedFile: File | null = null;
 
   titulo = this.route.snapshot.paramMap.get('id') === null ? 'Cadastrar Resenha' : 'Editar Resenha'
   subtitulopage = this.route.snapshot.paramMap.get('id') === null
@@ -87,6 +89,7 @@ export class ResenhaComponent implements OnInit {
     mother: ['', Validators.required],
     description: ['', Validators.required],
     baia_id: ['', Validators.required],
+    tombamento: ['', Validators.required],
   });
 
   botaoVoltar() {
@@ -160,32 +163,47 @@ export class ResenhaComponent implements OnInit {
   }
 
   prepareDataForApi(horseForm: any, horseOwnerForm: any) {
-    return {
-      horse: {
-        name: horseForm.get('name')?.value,
-        registration: horseForm.get('registration')?.value,
-        weight: horseForm.get('weight')?.value,
-        kind: horseForm.get('kind')?.value,
-        gender: horseForm.get('gender')?.value,
-        identification: horseForm.get('identification')?.value,
-        hair: horseForm.get('hair')?.value,
-        birthday: horseForm.get('birthday')?.value,
-        father: horseForm.get('father')?.value,
-        mother: horseForm.get('mother')?.value,
-        description: horseForm.get('description')?.value,
-        baia_id: horseForm.get('baia_id')?.value.toString(),
-        horse_owner_attributes: {
-          name: horseOwnerForm.get('name')?.value,
-          document: horseOwnerForm.get('document')?.value,
-          cep: horseOwnerForm.get('cep')?.value,
-          street: horseOwnerForm.get('street')?.value,
-          number: horseOwnerForm.get('number')?.value,
-          city: horseOwnerForm.get('city')?.value,
-          state: horseOwnerForm.get('state')?.value,
-          district: horseOwnerForm.get('district')?.value
-        }
+    const formData = new FormData();
+
+    // Adiciona os valores do horseForm ao FormData
+    Object.keys(horseForm.controls).forEach(key => {
+      const value = horseForm.get(key)?.value;
+      if (value !== null && value !== undefined) {
+        formData.append(`horse[${key}]`, value);
       }
-    };
+    });
+
+    // Adiciona a foto ao FormData, se existir
+    if (this.selectedFile) {
+      formData.append('horse[photo]', this.selectedFile, this.selectedFile.name);
+    }
+
+    // Adiciona os valores do horseOwnerForm ao FormData
+    Object.keys(horseOwnerForm.controls).forEach(key => {
+      const value = horseOwnerForm.get(key)?.value;
+      if (value !== null && value !== undefined) {
+        formData.append(`horse[horse_owner_attributes][${key}]`, value);
+      }
+    });
+
+    return formData;
+  }
+
+  async onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        this.sweetalertService.alert('warning', 'Atenção', 'A imagem não pode ser maior que 2MB.')
+        this.selectedFile = null;
+        return;
+      }
+      if (!file.type.startsWith('image/')) {
+        this.sweetalertService.alert('warning', 'Atenção', 'Por favor, selecione um arquivo de imagem.')
+        this.selectedFile = null;
+        return;
+      }
+    }
+    this.selectedFile = file
   }
 
   resetForm() {
