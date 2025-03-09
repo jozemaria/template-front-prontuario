@@ -1,0 +1,56 @@
+<div style="width: 550px">
+  <mat-dialog-content>
+    <p>Local para inserir fotos da evolução de feridas.</p>
+    <div class="mt-4">
+      <form [formGroup]="registration">
+        <div class="row">
+          <div class="col-12">
+            <input
+              type="file"
+              (change)="onFileSelected($event)"
+              accept="image/*"
+              hidden
+              #fileInput
+            />
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="fileInput.click()"
+            >
+              <mat-icon>upload</mat-icon>
+              Selecionar Imagem
+            </button>
+            <div *ngIf="selectedFile" class="file-info">
+              <p>
+                <strong>Arquivo selecionado:</strong> {{ selectedFile.name }} -
+                <strong>Tamanho:</strong>
+                {{ selectedFile.size | fileSize }}
+              </p>
+            </div>
+          </div>
+          <div class="col-12 mt-3">
+            <mat-form-field style="width: 500px">
+              <mat-label>Observações</mat-label>
+              <textarea matInput formControlName="description"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onNoClick()">Fechar</button>
+    <button
+      mat-flat-button
+      color="primary"
+      cdkFocusInitial
+      [mat-dialog-close]="{
+        registration: registration.value,
+        file: selectedFile
+      }"
+      [disabled]="!selectedFile"
+    >
+      Salvar
+    </button>
+  </mat-dialog-actions>
+</div>

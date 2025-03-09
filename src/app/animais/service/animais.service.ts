@@ -30,8 +30,11 @@ export class AnimaisService {
   }
 
   salvarNoProntuario(rota: string, valueModal: any): any {
-    console.log(rota, valueModal)
     return this.http.post(this.urlAPIBase + rota, valueModal, { headers: { 'Authorization': localStorage.getItem('access_token') } })
+  }
+
+  salvarFotoEvolucao(valueModal: any): any {
+    return this.http.post(this.urlAPIBase + 'horse_photos/', valueModal, { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
 
   deleteAnimal(id: number): any {
@@ -55,7 +58,18 @@ export class AnimaisService {
   }
 
   editarStatus(type: string, idHorse: number) {
+    console.log(type, ' type')
     return this.http.patch(this.urlAPIHorse + idHorse, type, { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
+
+  abrirAtendimento(idHorse: number) {
+    console.log(`atendimento`)
+    return this.http.get(this.urlAPIHorseRecor + idHorse + '/open', { headers: { 'Authorization': localStorage.getItem('access_token') } })
+  }
+  fecharAtendimento(idHorse: number) {
+    return this.http.get(this.urlAPIHorseRecor + idHorse + '/close', { headers: { 'Authorization': localStorage.getItem('access_token') } })
+  }
+
+
 
 }

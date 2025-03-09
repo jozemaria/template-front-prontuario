@@ -9,6 +9,9 @@ import { ObservacoesComponent } from '../modals/observacoes/observacoes.componen
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnimaisService } from '../service/animais.service';
 import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
+import { FotosComponent } from '../modals/fotos/fotos.component';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 export interface IFichaCavalo {
   id?: number,
@@ -56,7 +59,7 @@ export class ProntuarioComponent implements OnInit {
   readonly dialog = inject(MatDialog);
   readonly router = inject(Router)
   changeDetection: ChangeDetectionStrategy.OnPush
-
+  displayedColumns: string[] = ['id', 'open_at', 'close_at'];
 
   ngOnInit() {
     this.idCavalo = parseInt(this.route.snapshot.paramMap.get('id'))
@@ -87,8 +90,18 @@ export class ProntuarioComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-
+      if (result) {
+        this.animaisService.fecharAtendimento(this.idCavalo).subscribe({
+          error: err => {
+            this.sweetAlertService.alert('error', 'Ops...', 'Erro: ' + err.error.error)
+          },
+          complete: () => {
+            this.sweetAlertService.alert('success', 'Sucesso', 'Prontuário fechado com sucesso e cavalo apto para suas jornadas.')
+            this.router.navigateByUrl('animais')
+            this.carregarInformacoes()
+          }
+        })
+      }
     });
   }
   openDialogObservacao(): void {
@@ -96,19 +109,44 @@ export class ProntuarioComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result, `resulta`)
       result.horse_id = this.idCavalo
-      console.log(result, `resulta`)
       const dadosPronturaio = { "prescription": result }
       this.animaisService.salvarNoProntuario('prescriptions', dadosPronturaio).subscribe({
         error: err => {
           this.sweetAlertService.alert('error', 'Ops...', 'Erro: ' + err.error.error)
         },
         complete: () => {
-          this.sweetAlertService.alert('success', 'Sucesso', 'Prescrição adicionada com sucesso.')
+          this.sweetAlertService.alert('success', 'Sucesso', 'Prescrição adicionada.')
           this.carregarInformacoes()
         }
       })
+    });
+  }
+
+  openDialogFotos(): void {
+    const dialogRef = this.dialog.open(FotosComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      const id = this.idCavalo
+      const formData = new FormData();
+
+      if (result) {
+        console.log(result, `<< RESULT UP FOTO`)
+        formData.append('horse_photo[description]', result.registration.description)
+        formData.append('horse_photo[photo]', result.file)
+        formData.append('horse_photo[horse_id]', this.idCavalo.toString())
+        this.animaisService.salvarFotoEvolucao(formData).subscribe({
+          error: (err: any) => {
+            this.sweetAlertService.alert('error', 'Ops...', 'Erro: ' + err.error[0])
+          },
+          complete: () => {
+            this.sweetAlertService.alert('success', 'Sucesso!', 'Evolução registrada.')
+            this.carregarInformacoes()
+          }
+        })
+        console.log(result, ` << RESULT FOTOS`)
+      }
     });
   }
 
@@ -120,6 +158,7 @@ export class ProntuarioComponent implements OnInit {
     this.animaisService.historicoProntuario(this.idCavalo).subscribe(res => {
       if (Object.keys(res.informations).length === 0) this.isData = true
       this.dadosCavalo = res
+      this.dadosCavalo.horse['birthday'] = format(res.horse.birthday, 'dd/MM/yyyy', { locale: ptBR });
     })
   }
 
