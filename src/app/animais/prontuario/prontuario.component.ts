@@ -9,6 +9,7 @@ import { ObservacoesComponent } from '../modals/observacoes/observacoes.componen
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnimaisService } from '../service/animais.service';
 import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
+import { FotosComponent } from '../modals/fotos/fotos.component';
 
 export interface IFichaCavalo {
   id?: number,
@@ -113,10 +114,37 @@ export class ProntuarioComponent implements OnInit {
           this.sweetAlertService.alert('error', 'Ops...', 'Erro: ' + err.error.error)
         },
         complete: () => {
-          this.sweetAlertService.alert('success', 'Sucesso', 'Prescrição adicionada com sucesso.')
+          this.sweetAlertService.alert('success', 'Sucesso', 'Prescrição adicionada.')
           this.carregarInformacoes()
         }
       })
+    });
+  }
+
+  openDialogFotos(): void {
+    const dialogRef = this.dialog.open(FotosComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      const id = this.idCavalo
+      const formData = new FormData();
+
+      if (result) {
+        console.log(result, `<< RESULT UP FOTO`)
+        formData.append('horse_photo[description]', result.registration.description)
+        formData.append('horse_photo[photo]', result.file)
+        formData.append('horse_photo[horse_id]', this.idCavalo.toString())
+        this.animaisService.salvarFotoEvolucao(formData).subscribe({
+          error: (err: any) => {
+            this.sweetAlertService.alert('error', 'Ops...', 'Erro: ' + err.error[0])
+          },
+          complete: () => {
+            this.sweetAlertService.alert('success', 'Sucesso!', 'Evolução registrada.')
+            this.carregarInformacoes()
+          }
+        })
+        console.log(result, ` << RESULT FOTOS`)
+      }
     });
   }
 

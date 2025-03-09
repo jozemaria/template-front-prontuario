@@ -29,8 +29,11 @@
           <div class="col-12 col-md-3">
             <mat-form-field class="w-100" appearance="fill">
               <mat-label>Telefone</mat-label>
-              <input matInput formControlName="cell_fone" />
-              <!-- ADICIONAR NA API-->
+              <input
+                matInput
+                formControlName="cell_fone"
+                mask="(00) 00000-0000"
+              />
             </mat-form-field>
           </div>
           <div class="col-12 col-md-4">
@@ -96,8 +99,11 @@
             </button>
 
             <div *ngIf="selectedFile" class="file-info">
-              <p>Arquivo selecionado: {{ selectedFile.name }}</p>
-              <p>Tamanho: {{ selectedFile.size | fileSize }}</p>
+              <p>
+                <strong>Arquivo selecionado:</strong> {{ selectedFile.name }} -
+                <strong>Tamanho:</strong>
+                {{ selectedFile.size | fileSize }}
+              </p>
             </div>
           </div>
 
@@ -111,6 +117,7 @@
                 color="primary"
                 class="px-4"
                 (click)="save()"
+                [disabled]="!userForm.valid"
               >
                 Salvar
               </button>
@@ -118,7 +125,6 @@
           </div>
         </div>
       </form>
-      <!--end row-->
     </mat-card-content>
   </mat-card>
 </div>

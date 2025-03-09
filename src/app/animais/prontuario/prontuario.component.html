@@ -3,8 +3,9 @@
     <mat-card-content
       class="d-flex align-items-center justify-content-start p-4"
     >
+      <!--  ? dadosCavalo.horse.photo_url : https://placehold.co/110x110 -->
       <img
-        src="https://placehold.co/110x110"
+        [src]="dadosCavalo.horse.photo_url"
         width="120"
         height="120"
         class="rounded-circle raised p-1 mat-bg-white mat-elevation-z8"
@@ -48,7 +49,7 @@
             <button
               mat-stroked-button
               class="rounded-pill px-3"
-              (click)="openDialogAlta()"
+              (click)="openDialogFotos()"
             >
               Fotos
             </button>
@@ -120,7 +121,7 @@
                 <div>
                   @for (item of dadosCavalo.informations[date]; track $index) {
                   <div class="mb-4">
-                    @if (item.name) {
+                    @if (item.type === 'Medicamento') {
                     <h6>Medicamento:</h6>
                     {{ item.name }} - {{ item.doses }} ({{ item.hour }}) -
                     {{ item.description }}
@@ -131,7 +132,7 @@
                       {{ item.created_at }}
                     </p>
                     <hr />
-                    } @else {
+                    } @else if (item.type === 'Prescrição') {
                     <h6>Prescrição e Orientação:</h6>
                     <p>{{ item.description }}</p>
                     <p class="mb-0 mt-2" style="font-size: small">
@@ -141,7 +142,19 @@
                       {{ item.created_at }}
                     </p>
                     <hr />
+                    } @else if (item.type === 'Fotos') {
+                    <h6>Fotos da Evolução:</h6>
+                    <p>{{ item.description }}</p>
 
+                    <img [src]="item.photo_url" alt="" style="width: 90%" />
+
+                    <p class="mb-0 mt-2" style="font-size: small">
+                      <strong>Preenchido por:</strong> {{ item.user }} -
+                      <strong>CRM:</strong> {{ item.user_crm }}
+                      <strong>|</strong>
+                      {{ item.created_at }}
+                    </p>
+                    <hr />
                     }
                   </div>
                   }
