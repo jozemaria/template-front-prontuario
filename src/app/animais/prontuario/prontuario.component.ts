@@ -10,6 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AnimaisService } from '../service/animais.service';
 import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
 import { FotosComponent } from '../modals/fotos/fotos.component';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 export interface IFichaCavalo {
   id?: number,
@@ -57,7 +59,7 @@ export class ProntuarioComponent implements OnInit {
   readonly dialog = inject(MatDialog);
   readonly router = inject(Router)
   changeDetection: ChangeDetectionStrategy.OnPush
-
+  displayedColumns: string[] = ['id', 'open_at', 'close_at'];
 
   ngOnInit() {
     this.idCavalo = parseInt(this.route.snapshot.paramMap.get('id'))
@@ -156,6 +158,7 @@ export class ProntuarioComponent implements OnInit {
     this.animaisService.historicoProntuario(this.idCavalo).subscribe(res => {
       if (Object.keys(res.informations).length === 0) this.isData = true
       this.dadosCavalo = res
+      this.dadosCavalo.horse['birthday'] = format(res.horse.birthday, 'dd/MM/yyyy', { locale: ptBR });
     })
   }
 

@@ -28,8 +28,16 @@
   <div
     class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4"
   >
+    <div class="p-4">
+      <img
+        [src]="item.photo_url"
+        width="85"
+        height="85"
+        class="rounded-circle raised p-1 mat-bg-white mat-elevation-z8"
+        alt=""
+      />
+    </div>
     <mat-card-header>
-      <div mat-card-avatar class="card-avatar1"></div>
       <mat-card-title>{{ item.name }} - {{ item.baia }}</mat-card-title>
       <mat-card-subtitle class="pt-2"
         >Espécie: {{ item.kind }}</mat-card-subtitle

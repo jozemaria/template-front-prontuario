@@ -8,7 +8,7 @@ import { StatusClassPipe } from 'src/app/shared/pipe/status-class.pipe';
 export interface IFichaCavalo {
   id: number,
   name: string,
-  photo: string,
+  photo_url: string,
   baia: string,
   status: boolean,
 }
