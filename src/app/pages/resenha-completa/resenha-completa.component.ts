@@ -6,6 +6,8 @@ import { StatusComponent } from './modal/status/status.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AnimaisService } from 'src/app/animais/service/animais.service';
 import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 export interface IFichaCavalo {
   id: number,
@@ -21,7 +23,8 @@ export interface IFichaCavalo {
   status: boolean,
   owner: boolean,
   created_at: boolean,
-  picture: string,
+  photo_url: string,
+  cover_url: string,
 }
 
 @Component({
@@ -61,22 +64,25 @@ export class ResenhaCompletaComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result, ` result`)
-      this.animaisService.editarStatus(result, this.idResenha).subscribe({
-        error: err => {
-          this.sweetAlertService.alert('error', 'Ops...', 'Erro: ' + err.error.error)
-        },
-        complete: () => {
-          this.sweetAlertService.alert('success', 'Sucesso', 'Status atualizado com sucesso.')
-          this.getResenha()
-        }
-      })
-
+      if (result) {
+        this.animaisService.editarStatus(result, this.idResenha).subscribe({
+          error: err => {
+            this.sweetAlertService.alert('error', 'Ops...', 'Erro: ' + err.error.error)
+          },
+          complete: () => {
+            this.sweetAlertService.alert('success', 'Sucesso', 'Status atualizado com sucesso.')
+            this.getResenha()
+          }
+        })
+      }
     });
   }
 
   getResenha() {
-    this.animaisService.getAnimalById(this.idResenha).subscribe(res => this.dadosCavalo = res)
+    this.animaisService.getAnimalById(this.idResenha).subscribe(res => {
+      this.dadosCavalo = res
+      this.dadosCavalo.birthday = format(res.birthday, 'dd/MM/yyyy', { locale: ptBR })
+    })
   }
 
 }

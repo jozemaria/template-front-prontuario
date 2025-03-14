@@ -43,6 +43,7 @@ export class ResenhaComponent implements OnInit {
 
   matcher = new MyErrorStateMatcher();
   selectedFile: File | null = null;
+  selectedFileCover: File | null = null;
 
   titulo = this.route.snapshot.paramMap.get('id') === null ? 'Cadastrar Resenha' : 'Editar Resenha'
   subtitulopage = this.route.snapshot.paramMap.get('id') === null
@@ -177,6 +178,9 @@ export class ResenhaComponent implements OnInit {
     if (this.selectedFile) {
       formData.append('horse[photo]', this.selectedFile, this.selectedFile.name);
     }
+    if (this.selectedFileCover) {
+      formData.append('horse[cover]', this.selectedFileCover, this.selectedFileCover.name);
+    }
 
     // Adiciona os valores do horseOwnerForm ao FormData
     Object.keys(horseOwnerForm.controls).forEach(key => {
@@ -189,7 +193,7 @@ export class ResenhaComponent implements OnInit {
     return formData;
   }
 
-  async onFileSelected(event: any) {
+  async onFileSelected(event: any, type: string) {
     const file: File = event.target.files[0];
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
@@ -203,7 +207,8 @@ export class ResenhaComponent implements OnInit {
         return;
       }
     }
-    this.selectedFile = file
+    if (type === 'capa') this.selectedFileCover = file
+    if (type === 'perfil') this.selectedFile = file
   }
 
   resetForm() {

@@ -5,10 +5,28 @@
     <h3 class="mb-2">Animais</h3>
     <p class="mb-1">Listagem de cavalos</p>
   </div>
-  <button mat-flat-button color="primary" (click)="criarResenha()">
-    <mat-icon class="material-icon-outlined"> add </mat-icon>
-    CADASTRAR NOVA RESENHA
-  </button>
+  <div>
+    <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+      <mat-button-toggle (click)="filtrarCavalosPorStatus('')"
+        >Todos</mat-button-toggle
+      >
+      <mat-button-toggle (click)="filtrarCavalosPorStatus('apto')"
+        >Apto</mat-button-toggle
+      >
+      <mat-button-toggle (click)="filtrarCavalosPorStatus('inapto')"
+        >Inapto</mat-button-toggle
+      >
+      <mat-button-toggle (click)="filtrarCavalosPorStatus('outro')"
+        >Externos</mat-button-toggle
+      >
+    </mat-button-toggle-group>
+  </div>
+  <div>
+    <button mat-flat-button color="primary" (click)="criarResenha()">
+      <mat-icon class="material-icon-outlined"> add </mat-icon>
+      CADASTRAR NOVA RESENHA
+    </button>
+  </div>
 </div>
 
 <hr />
@@ -37,11 +55,9 @@
         alt=""
       />
     </div>
-    <mat-card-header>
+    <mat-card-header style="margin-left: -100px">
       <mat-card-title>{{ item.name }} - {{ item.baia }}</mat-card-title>
-      <mat-card-subtitle class="pt-2"
-        >Espécie: {{ item.kind }}</mat-card-subtitle
-      >
+      <mat-card-subtitle>Espécie: {{ item.kind }}</mat-card-subtitle>
     </mat-card-header>
     <div class="card-lable" [ngClass]="item.status | statusClass">
       <p class="uppercase-text">{{ item.status | statusText }}</p>
@@ -92,7 +108,7 @@
         <mat-panel-title>Observações</mat-panel-title>
       </mat-expansion-panel-header>
       <p>
-        AQUI VAI VIM A DESCRIÇÃO DO CAVALO QUE FOI PREENCHIDA NA HORA DA RESENHA
+        {{ item.description }}
       </p>
     </mat-expansion-panel>
   </mat-accordion>

@@ -13,7 +13,11 @@
       <div class="col-12 mt-3">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Observação</mat-label>
-          <input matInput formControlName="statusDescripition" />
+          <input
+            matInput
+            [disabled]="validarCampo"
+            formControlName="status_descripition"
+          />
         </mat-form-field>
       </div>
     </form>

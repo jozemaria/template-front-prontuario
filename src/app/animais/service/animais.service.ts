@@ -20,6 +20,12 @@ export class AnimaisService {
         { 'Authorization': localStorage.getItem('access_token') }
     })
   }
+  getAllAnimalByStatus(type: string = ''): Observable<any> {
+    return this.http.get(this.urlAPIBase + `horses?query_status=${type}`, {
+      headers:
+        { 'Authorization': localStorage.getItem('access_token') }
+    })
+  }
 
   getAnimalById(id: number): any {
     return this.http.get(this.urlAPIHorse + id, { headers: { 'Authorization': localStorage.getItem('access_token') } })

@@ -1,21 +1,24 @@
 <div class="container pt-2">
   <mat-card class="rounded-4">
     <mat-card-content
-      class="d-flex align-items-center justify-content-start p-4"
+      class="d-flex flex-column flex-lg-row align-items-start justify-content-start gap-4 p-4"
     >
-      <!--  ? dadosCavalo.horse.photo_url : https://placehold.co/110x110 -->
-      <img
-        [src]="dadosCavalo.horse.photo_url"
-        width="120"
-        height="120"
-        class="rounded-circle raised p-1 mat-bg-white mat-elevation-z8"
-        alt=""
-      />
+      <div
+        class="order-0 order-lg-0 d-flex align-items-center flex-column flex-row foto-perfil"
+      >
+        <img
+          [src]="dadosCavalo.horse.photo_url"
+          width="120"
+          height="120"
+          class="rounded-circle raised p-1 mat-bg-white mat-elevation-z8"
+          alt=""
+        />
+      </div>
       <div
         class="d-flex flex-column flex-lg-row align-items-start justify-content-start gap-4"
         style="margin-left: 25px"
       >
-        <div class="">
+        <div class="order-1 order-lg-1">
           <h3 class="mb-2">{{ dadosCavalo.horse.name }}</h3>
           <p class="mb-1">
             <strong>Propriétario:</strong> {{ dadosCavalo.horse.owner }}
@@ -30,7 +33,7 @@
             {{ dadosCavalo.horse.birthday }}
           </p>
           <div
-            class="d-flex align-items-center flex-column flex-lg-row gap-3 mt-3"
+            class="d-flex align-items-start flex-column flex-lg-row gap-3 mt-3"
           >
             <button
               mat-stroked-button
@@ -79,14 +82,13 @@
         <mat-card-content
           class="d-flex align-items-center justify-content-between p-4"
         >
-          @if (isData) {
+          @if (!!isData) {
           <div class="col-12 d-flex justify-content-center">
             <h3>Nenhum histórico disponível.</h3>
           </div>
-          }
+          } @for (date of getDates(dadosCavalo.informations); track date; let
+          index = $index) {
           <cdk-accordion class="example-accordion">
-            @for (date of getDates(dadosCavalo.informations); track date; let
-            index = $index) {
             <cdk-accordion-item
               #accordionItem="cdkAccordionItem"
               class="example-accordion-item"
@@ -161,8 +163,8 @@
                 </div>
               </div>
             </cdk-accordion-item>
-            }
           </cdk-accordion>
+          }
         </mat-card-content>
       </mat-card>
     </div>
@@ -183,7 +185,7 @@
       <table
         mat-table
         [dataSource]="dadosCavalo.history_horse_records"
-        class="mat-elevation-z8 rounded-4 border-3 border-start border-green"
+        class="mat-elevation-z8 border-3 border-start border-green my-3"
       >
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef>Dados</th>
@@ -208,3 +210,4 @@
     </div>
   </div>
 </div>
+<!--  ? dadosCavalo.horse.photo_url : https://placehold.co/110x110 -->
