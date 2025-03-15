@@ -98,14 +98,10 @@ export class CadastrarComponent implements OnInit {
     if (this.idUser) {
       this.usersService.getUserById(this.idUser).subscribe(
         (res: any) => {
-          this.userForm.patchValue({
-            name: res.name,
-            email: res.email,
-            registration: res.registration,
-            phone: res.phone,
-            crm: res.crm,
-            graduation: res.graduation,
-            role: res.role,
+          Object.keys(this.userForm.controls).forEach(key => {
+            if (res[key] !== undefined) {
+              this.userForm.get(key)?.patchValue(res[key])
+            }
           })
         })
     }

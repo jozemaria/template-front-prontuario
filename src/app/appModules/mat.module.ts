@@ -67,7 +67,7 @@ const material = [
   MatDialogTitle,
   MatDialogContent,
   MatDialogActions,
-  MatDialogClose
+  MatDialogClose,
 ]
 
 @NgModule({

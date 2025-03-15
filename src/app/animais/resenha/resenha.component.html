@@ -2,8 +2,8 @@
   class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4"
 >
   <div>
-    <h3 class="mb-2">Cadastrar Resenha</h3>
-    <p class="mb-1">Ficha Técnica do Animal</p>
+    <h3 class="mb-2">{{ titulo }}</h3>
+    <p class="mb-1">Ficha Técnica do Animal - {{ subtitulopage }}</p>
   </div>
   <div>
     <button
@@ -131,23 +131,23 @@
     <form [formGroup]="horse">
       <ng-template matStepLabel>Informação Sobre o Animal</ng-template>
       <div class="row g-3 mt-2">
-        <div class="col-12 col-md-5">
+        <div class="col-12 col-md-3">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Tombamento</mat-label>
             <input matInput formControlName="tombamento" />
           </mat-form-field>
         </div>
-        <div class="col-12 col-md-5 mb-3">
+        <div class="col-12 col-md-4 mb-3">
           <input
             type="file"
-            (change)="onFileSelected($event)"
+            (change)="onFileSelected($event, 'perfil')"
             accept="image/*"
             hidden
             #fileInput
           />
           <button mat-raised-button color="primary" (click)="fileInput.click()">
             <mat-icon>upload</mat-icon>
-            Selecionar foto do cavalo
+            Selecionar foto perfil
           </button>
 
           <div *ngIf="selectedFile" class="file-info">
@@ -155,6 +155,32 @@
               <strong>Arquivo selecionado:</strong> {{ selectedFile.name }} -
               <strong>Tamanho:</strong>
               {{ selectedFile.size | fileSize }}
+            </p>
+          </div>
+        </div>
+        <div class="col-12 col-md-4 mb-3">
+          <input
+            type="file"
+            (change)="onFileSelected($event, 'capa')"
+            accept="image/*"
+            hidden
+            #fileInputCover
+          />
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="fileInputCover.click()"
+          >
+            <mat-icon>upload</mat-icon>
+            Selecionar foto capa
+          </button>
+
+          <div *ngIf="selectedFileCover" class="file-info">
+            <p>
+              <strong>Arquivo selecionado:</strong>
+              {{ selectedFileCover.name }} -
+              <strong>Tamanho:</strong>
+              {{ selectedFileCover.size | fileSize }}
             </p>
           </div>
         </div>
@@ -217,7 +243,6 @@
           </mat-form-field>
         </div>
 
-        <!-- FALTA RAÇA-->
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Raça</mat-label>

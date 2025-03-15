@@ -49,3 +49,13 @@
     flex-direction: column-reverse;
   }
 }
+
+.foto-perfil {
+  width: 100% !important;
+
+}
+@media (min-width: 850px) {
+  .foto-perfil {
+    width: 20% !important;
+  }
+}

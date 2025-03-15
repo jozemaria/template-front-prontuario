@@ -17,8 +17,12 @@ export class StatusComponent {
 
   formStatus = new FormGroup({
     status: new FormControl(''),
-    statusDescripition: new FormControl('')
+    status_descripition: new FormControl('')
   });
+
+  get validarCampo(): boolean {
+    return this.formStatus.controls.status.value === 'apto' ? true : false
+  }
 
 
   onNoClick(): void {
