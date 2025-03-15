@@ -45,6 +45,8 @@ export class ResenhaComponent implements OnInit {
   selectedFile: File | null = null;
   selectedFileCover: File | null = null;
 
+  maxDate: Date;
+
   titulo = this.route.snapshot.paramMap.get('id') === null ? 'Cadastrar Resenha' : 'Editar Resenha'
   subtitulopage = this.route.snapshot.paramMap.get('id') === null
     ? 'Cadastro de nova resenha.'
@@ -57,7 +59,9 @@ export class ResenhaComponent implements OnInit {
   constructor(
     private _adapter: DateAdapter<any>,
     @Inject(MAT_DATE_LOCALE) private _locale: string,
-  ) { }
+  ) {
+    this.maxDate = new Date();
+  }
 
   ngOnInit() {
     this.idResenha = parseInt(this.route.snapshot.paramMap.get('id'))
@@ -80,9 +84,10 @@ export class ResenhaComponent implements OnInit {
   });
   horse = this._formBuilder.group({
     name: ['', Validators.required],
-    registration: ['', Validators.required],
+    registation: ['', Validators.required],
     weight: ['', Validators.required],
     kind: ['', Validators.required],
+    breed: ['', Validators.required],
     gender: ['', Validators.required],
     identification: ['', Validators.required],
     hair: ['', Validators.required],
@@ -90,7 +95,7 @@ export class ResenhaComponent implements OnInit {
     father: ['', Validators.required],
     mother: ['', Validators.required],
     description: ['', Validators.required],
-    baia_id: ['', Validators.required],
+    baia: ['', Validators.required],
     tombamento: ['', Validators.required],
   });
 
@@ -160,11 +165,8 @@ export class ResenhaComponent implements OnInit {
       this.animaisService.getAnimalById(this.idResenha).subscribe(
         (res: any) => {
           Object.keys(this.horse_owner_attributes.controls).forEach(key => {
-            if (res[key] !== undefined) {
-              this.horse_owner_attributes.get(key)?.patchValue(res[key])
-            }
-            if (key === 'name') {
-              this.horse_owner_attributes.get(key)?.patchValue(res['owner'])
+            if (res.owner[key] !== undefined) {
+              this.horse_owner_attributes.get(key)?.patchValue(res.owner[key])
             }
           })
           Object.keys(this.horse.controls).forEach(key => {
@@ -179,7 +181,6 @@ export class ResenhaComponent implements OnInit {
   prepareDataForApi(horseForm: any, horseOwnerForm: any) {
     const formData = new FormData();
 
-    // Adiciona os valores do horseForm ao FormData
     Object.keys(horseForm.controls).forEach(key => {
       const value = horseForm.get(key)?.value;
       if (value !== null && value !== undefined) {
@@ -187,7 +188,6 @@ export class ResenhaComponent implements OnInit {
       }
     });
 
-    // Adiciona a foto ao FormData, se existir
     if (this.selectedFile) {
       formData.append('horse[photo]', this.selectedFile, this.selectedFile.name);
     }
@@ -195,7 +195,6 @@ export class ResenhaComponent implements OnInit {
       formData.append('horse[cover]', this.selectedFileCover, this.selectedFileCover.name);
     }
 
-    // Adiciona os valores do horseOwnerForm ao FormData
     Object.keys(horseOwnerForm.controls).forEach(key => {
       const value = horseOwnerForm.get(key)?.value;
       if (value !== null && value !== undefined) {

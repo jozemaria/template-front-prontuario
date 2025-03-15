@@ -26,6 +26,7 @@ export interface IFichaCavalo {
     name?: string,
     gender?: string,
     weight?: string,
+    photo_url?: string,
     kind?: string,
     hair?: string,
     birthday?: string,
@@ -57,7 +58,7 @@ export class ProntuarioComponent implements OnInit {
   readonly route = inject(ActivatedRoute)
   readonly location = inject(Location)
 
-  dadosCavalo: IFichaCavalo
+  dadosCavalo: IFichaCavalo = {}
   idCavalo: number
   isData = false
 
@@ -160,9 +161,9 @@ export class ProntuarioComponent implements OnInit {
 
   carregarInformacoes() {
     this.animaisService.historicoProntuario(this.idCavalo).subscribe(res => {
-      Object.keys(res.informations).length === 0 ? this.isData = true : this.isData = false
       this.dadosCavalo = res
       this.dadosCavalo.horse['birthday'] = format(res.horse.birthday, 'dd/MM/yyyy', { locale: ptBR });
+      Object.keys(res.informations).length === 0 ? this.isData = true : this.isData = false
     })
   }
 
