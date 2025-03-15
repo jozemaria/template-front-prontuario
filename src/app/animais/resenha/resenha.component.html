@@ -193,13 +193,13 @@
         <div class="col-12 col-md-3">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Número</mat-label>
-            <input matInput formControlName="registration" />
+            <input matInput formControlName="registation" />
           </mat-form-field>
         </div>
         <div class="col-12 col-md-2">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Baia</mat-label>
-            <mat-select formControlName="baia_id">
+            <mat-select formControlName="baia">
               @for (item of baias; track item.id) {
               <mat-option [value]="item.id">{{ item.name }}</mat-option>
               }
@@ -246,7 +246,7 @@
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Raça</mat-label>
-            <input matInput />
+            <input matInput formControlName="breed" />
           </mat-form-field>
         </div>
 
@@ -257,6 +257,7 @@
               matInput
               [matDatepicker]="picker"
               formControlName="birthday"
+              [max]="maxDate"
             />
             <mat-datepicker-toggle
               matIconSuffix
