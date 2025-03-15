@@ -46,7 +46,7 @@
   <div
     class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4"
   >
-    <div class="p-4">
+    <div class="d-flex align-items-center gap-3 p-4 col-sm-5">
       <img
         [src]="item?.photo_url"
         width="85"
@@ -54,14 +54,16 @@
         class="rounded-circle raised p-1 mat-bg-white mat-elevation-z8"
         alt=""
       />
+      <div>
+        <mat-card-title>{{ item?.name }} - {{ item?.baia }}</mat-card-title>
+        <mat-card-subtitle>Espécie: {{ item?.kind }}</mat-card-subtitle>
+      </div>
     </div>
-    <mat-card-header style="margin-left: -100px">
-      <mat-card-title>{{ item?.name }} - {{ item?.baia }}</mat-card-title>
-      <mat-card-subtitle>Espécie: {{ item?.kind }}</mat-card-subtitle>
-    </mat-card-header>
+
     <div class="card-lable" [ngClass]="item?.status | statusClass">
       <p class="uppercase-text">{{ item?.status | statusText }}</p>
     </div>
+
     <mat-card-actions>
       <a
         mat-flat-button
