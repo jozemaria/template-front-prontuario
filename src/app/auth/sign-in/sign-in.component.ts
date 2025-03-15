@@ -31,7 +31,6 @@ export class SignInComponent implements OnInit {
 
   // On Signup link click
   onSignup() {
-    console.log('chamou aqui')
     this.router.navigate(['sign-up'], { relativeTo: this.route.parent });
   }
 

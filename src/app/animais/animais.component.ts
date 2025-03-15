@@ -6,8 +6,9 @@ import { SweetalertService } from '../shared/services/sweetalert.service';
 import { AnimaisService } from './service/animais.service';
 import { StatusClassPipe } from '../shared/pipe/status-class.pipe';
 import { StatusTextPipe } from '../shared/pipe/status-text.pipe';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
-export interface IFichaCavalo {
+interface IFichaCavalo {
   id: number,
   name: string,
   kind: string,
@@ -20,7 +21,7 @@ export interface IFichaCavalo {
 @Component({
   selector: 'app-animais',
   standalone: true,
-  imports: [CommonModule, MatModule, StatusClassPipe, StatusTextPipe],
+  imports: [CommonModule, MatModule, StatusClassPipe, StatusTextPipe, MatButtonToggleModule],
   templateUrl: './animais.component.html',
   styleUrl: './animais.component.scss'
 })
@@ -32,7 +33,7 @@ export class AnimaisComponent implements OnInit {
   listagemCavalos: IFichaCavalo[]
 
   ngOnInit(): void {
-    this.listarTodosCavalos()
+    this.filtrarCavalosPorStatus()
   }
 
   criarResenha() {
@@ -47,7 +48,7 @@ export class AnimaisComponent implements OnInit {
       (res: any) => {
         if (res) {
           this.animaisService.deleteAnimal(idHorse).subscribe({
-            next: () => this.listarTodosCavalos(),
+            next: () => this.filtrarCavalosPorStatus(),
             error: (err: any) => {
               this.sweetalertService.alert('error', 'Ops...', 'Erro: ' + err.error[0])
             },
@@ -76,9 +77,7 @@ export class AnimaisComponent implements OnInit {
           this.sweetalertService.confirmAlert('warning', 'Criar novo registro!', 'Deseja atualizar prontuário?').subscribe(
             (res: any) => {
               if (res) {
-                console.log(res, `<< resposta`)
                 this.animaisService.abrirAtendimento(idHorse).subscribe((res: boolean) => {
-                  console.log(res, `res`)
                   if (res) {
                     this.router.navigateByUrl('animais/prontuario/' + idHorse)
                   }
@@ -98,9 +97,10 @@ export class AnimaisComponent implements OnInit {
     this.router.navigateByUrl('animais/resenha/' + id)
   }
 
-
-  listarTodosCavalos() {
-    this.animaisService.getAllAnimal().subscribe(res => this.listagemCavalos = res)
+  filtrarCavalosPorStatus(status: string = '') {
+    this.animaisService.getAllAnimalByStatus(status).subscribe(res => {
+      this.listagemCavalos = res
+    })
   }
 
 }

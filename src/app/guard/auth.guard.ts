@@ -9,7 +9,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   const sweetAlertService = inject(SweetalertService)
 
   if (authService.isLoggedIn !== true) {
-    console.log(`dentro do if`)
     sweetAlertService.alert('error', 'Opss!', 'Faça login para continuar')
     router.navigate(['/auth/sign-in'])
     return false

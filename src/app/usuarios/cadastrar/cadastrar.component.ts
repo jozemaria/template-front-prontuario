@@ -57,15 +57,12 @@ export class CadastrarComponent implements OnInit {
     Object.keys(this.userForm.controls).forEach(key => {
       formData.append(`user[${key}]`, this.userForm.get(key)?.value);
     });
-    formData.append('user[photo]', this.selectedFile, this.selectedFile.name);
+    if (this.selectedFile) formData.append('user[photo]', this.selectedFile, this.selectedFile.name);
 
-    const userData = {
-      "user": { ...this.userForm.value }
-    }
     if (this.idUser) {
       this.updateUser(formData)
     } else {
-      this.saveUser(userData)
+      this.saveUser(formData)
     }
   }
   listarUsuarios() {
@@ -101,14 +98,10 @@ export class CadastrarComponent implements OnInit {
     if (this.idUser) {
       this.usersService.getUserById(this.idUser).subscribe(
         (res: any) => {
-          this.userForm.patchValue({
-            name: res.name,
-            email: res.email,
-            registration: res.registration,
-            phone: res.phone,
-            crm: res.crm,
-            graduation: res.graduation,
-            role: res.role,
+          Object.keys(this.userForm.controls).forEach(key => {
+            if (res[key] !== undefined) {
+              this.userForm.get(key)?.patchValue(res[key])
+            }
           })
         })
     }
