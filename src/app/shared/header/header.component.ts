@@ -18,9 +18,10 @@ export class HeaderComponent implements OnInit {
 
   constructor(public sidebarservice: SidebarService) {
     this.dataUser = JSON.parse(atob(localStorage.getItem('access_token').split('.')[1]))
+    localStorage.setItem('photo_user', this.dataUser.photo_url)
+    this.dataUser['photo_url'] = localStorage.getItem('photo_user')
     this.dataUser['name'] = this.corrigirCaracteres(this.dataUser.name)
     this.dataUser['role'] = this.corrigirCaracteres(this.dataUser.role)
-    console.log(this.dataUser, `< DATA`)
   }
 
   theme_name = 'dark_mode'

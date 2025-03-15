@@ -63,6 +63,7 @@ export class ResenhaComponent implements OnInit {
     this.idResenha = parseInt(this.route.snapshot.paramMap.get('id'))
     this._locale = 'pt-BR';
     this._adapter.setLocale(this._locale);
+    this.loadHorseIntoForm()
     this.animaisService.baiasCadastradas.subscribe((res: any) => this.baias = res)
   }
 
@@ -154,11 +155,23 @@ export class ResenhaComponent implements OnInit {
     })
   }
 
-  loadUserIntoForm() {
+  loadHorseIntoForm() {
     if (this.idResenha) {
       this.animaisService.getAnimalById(this.idResenha).subscribe(
         (res: any) => {
-          console.log(res, `<< RES PUT`)
+          Object.keys(this.horse_owner_attributes.controls).forEach(key => {
+            if (res[key] !== undefined) {
+              this.horse_owner_attributes.get(key)?.patchValue(res[key])
+            }
+            if (key === 'name') {
+              this.horse_owner_attributes.get(key)?.patchValue(res['owner'])
+            }
+          })
+          Object.keys(this.horse.controls).forEach(key => {
+            if (res[key] !== undefined) {
+              this.horse.get(key)?.patchValue(res[key])
+            }
+          })
         })
     }
   }

@@ -16,6 +16,7 @@ export interface IUsuario {
   document: string;
   graduation: string;
   created_at: string;
+  photo_url: string;
 }
 
 
@@ -34,7 +35,7 @@ export class ListarComponent implements OnInit, AfterViewInit {
   readonly http = inject(HttpClient)
 
   ELEMENT_DATA: IUsuario[]
-  displayedColumns: string[] = ['matricula', 'nome', 'cargo', 'criacao', 'actions'];
+  displayedColumns: string[] = ['photo_url', 'matricula', 'nome', 'cargo', 'criacao', 'actions'];
   dataSource = new MatTableDataSource<IUsuario>;
   lista_usuarios: IUsuario
 

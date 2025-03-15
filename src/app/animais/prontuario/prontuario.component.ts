@@ -35,6 +35,12 @@ export interface IFichaCavalo {
     owner?: boolean,
     created_at?: boolean,
     picture?: string
+  },
+  history_horse_records?: {
+    id: number,
+    open_at: string,
+    close_at: string,
+    user: string
   }
 }
 
@@ -51,7 +57,7 @@ export class ProntuarioComponent implements OnInit {
   readonly route = inject(ActivatedRoute)
   readonly location = inject(Location)
 
-  dadosCavalo: any
+  dadosCavalo: IFichaCavalo
   idCavalo: number
   isData = false
 
@@ -132,7 +138,6 @@ export class ProntuarioComponent implements OnInit {
       const formData = new FormData();
 
       if (result) {
-        console.log(result, `<< RESULT UP FOTO`)
         formData.append('horse_photo[description]', result.registration.description)
         formData.append('horse_photo[photo]', result.file)
         formData.append('horse_photo[horse_id]', this.idCavalo.toString())
@@ -145,7 +150,6 @@ export class ProntuarioComponent implements OnInit {
             this.carregarInformacoes()
           }
         })
-        console.log(result, ` << RESULT FOTOS`)
       }
     });
   }
@@ -156,9 +160,16 @@ export class ProntuarioComponent implements OnInit {
 
   carregarInformacoes() {
     this.animaisService.historicoProntuario(this.idCavalo).subscribe(res => {
-      if (Object.keys(res.informations).length === 0) this.isData = true
+      Object.keys(res.informations).length === 0 ? this.isData = true : this.isData = false
       this.dadosCavalo = res
       this.dadosCavalo.horse['birthday'] = format(res.horse.birthday, 'dd/MM/yyyy', { locale: ptBR });
+    })
+  }
+
+  pegarHistorico(id) {
+    this.animaisService.pegarHistorico(id).subscribe(res => {
+      this.dadosCavalo.informations = res
+      Object.keys(this.dadosCavalo.informations).length === 0 ? this.isData = true : this.isData = false
     })
   }
 

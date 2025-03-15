@@ -13,7 +13,6 @@ export class AnimaisService {
   private readonly urlAPIHorse = environment.URL_BASE + 'horses/'
   private readonly urlAPIBase = environment.URL_BASE
 
-
   getAllAnimal(): Observable<any> {
     return this.http.get(this.urlAPIHorse, {
       headers:
@@ -64,18 +63,17 @@ export class AnimaisService {
   }
 
   editarStatus(type: string, idHorse: number) {
-    console.log(type, ' type')
     return this.http.patch(this.urlAPIHorse + idHorse, type, { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
 
   abrirAtendimento(idHorse: number) {
-    console.log(`atendimento`)
     return this.http.get(this.urlAPIHorseRecor + idHorse + '/open', { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
   fecharAtendimento(idHorse: number) {
     return this.http.get(this.urlAPIHorseRecor + idHorse + '/close', { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
 
-
-
+  pegarHistorico(idHorse: number) {
+    return this.http.get(this.urlAPIBase + 'history_horse_records/' + idHorse + '/search', { headers: { 'Authorization': localStorage.getItem('access_token') } })
+  }
 }

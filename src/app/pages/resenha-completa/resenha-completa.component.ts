@@ -8,6 +8,7 @@ import { AnimaisService } from 'src/app/animais/service/animais.service';
 import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { StatusTextPipe } from 'src/app/shared/pipe/status-text.pipe';
 
 export interface IFichaCavalo {
   id: number,
@@ -25,12 +26,13 @@ export interface IFichaCavalo {
   created_at: boolean,
   photo_url: string,
   cover_url: string,
+  status_description: string,
 }
 
 @Component({
   selector: 'app-resenha-completa',
   standalone: true,
-  imports: [CommonModule, MatModule],
+  imports: [CommonModule, MatModule, StatusTextPipe],
   templateUrl: './resenha-completa.component.html',
   styleUrl: './resenha-completa.component.scss'
 })
@@ -42,7 +44,7 @@ export class ResenhaCompletaComponent implements OnInit {
   readonly location = inject(Location)
   readonly sweetAlertService = inject(SweetalertService)
 
-
+  displayedColumns: string[] = ['id', 'open_at', 'close_at'];
   dadosCavalo: IFichaCavalo
   idResenha: number
 

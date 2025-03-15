@@ -7,7 +7,7 @@
         class="order-0 order-lg-0 d-flex align-items-center flex-column flex-row foto-perfil"
       >
         <img
-          [src]="dadosCavalo.horse.photo_url"
+          [src]="dadosCavalo?.horse.photo_url"
           width="120"
           height="120"
           class="rounded-circle raised p-1 mat-bg-white mat-elevation-z8"
@@ -19,18 +19,18 @@
         style="margin-left: 25px"
       >
         <div class="order-1 order-lg-1">
-          <h3 class="mb-2">{{ dadosCavalo.horse.name }}</h3>
+          <h3 class="mb-2">{{ dadosCavalo?.horse.name }}</h3>
           <p class="mb-1">
-            <strong>Propriétario:</strong> {{ dadosCavalo.horse.owner }}
+            <strong>Propriétario:</strong> {{ dadosCavalo?.horse.owner }}
           </p>
           <p class="mb-1">
-            <strong>Sexo:</strong> {{ dadosCavalo.horse.gender }},
-            <strong>Peso:</strong> {{ dadosCavalo.horse.weight }},
-            <strong>Pelagem:</strong> {{ dadosCavalo.horse.hair }}
+            <strong>Sexo:</strong> {{ dadosCavalo?.horse.gender }},
+            <strong>Peso:</strong> {{ dadosCavalo?.horse.weight }},
+            <strong>Pelagem:</strong> {{ dadosCavalo?.horse.hair }}
           </p>
           <p class="mb-1">
             <strong>Data de Nascimento:</strong>
-            {{ dadosCavalo.horse.birthday }}
+            {{ dadosCavalo?.horse.birthday }}
           </p>
           <div
             class="d-flex align-items-start flex-column flex-lg-row gap-3 mt-3"
@@ -82,7 +82,7 @@
         <mat-card-content
           class="d-flex align-items-center justify-content-between p-4"
         >
-          @if (!!isData) {
+          @if (isData) {
           <div class="col-12 d-flex justify-content-center">
             <h3>Nenhum histórico disponível.</h3>
           </div>
@@ -121,40 +121,40 @@
                 [attr.aria-labelledby]="'accordion-header-' + index"
               >
                 <div>
-                  @for (item of dadosCavalo.informations[date]; track $index) {
+                  @for (item of dadosCavalo?.informations[date]; track $index) {
                   <div class="mb-4">
                     @if (item.type === 'Medicamento') {
                     <h6>Medicamento:</h6>
-                    {{ item.name }} - {{ item.doses }} ({{ item.hour }}) -
-                    {{ item.description }}
+                    {{ item?.name }} - {{ item?.doses }} ({{ item?.hour }}) -
+                    {{ item?.description }}
                     <p class="mb-0 mt-2" style="font-size: small">
-                      <strong>Preenchido por:</strong> {{ item.user }} -
-                      <strong>CRM:</strong> {{ item.user_crm }}
+                      <strong>Preenchido por:</strong> {{ item?.user }} -
+                      <strong>CRM:</strong> {{ item?.user_crm }}
                       <strong>|</strong>
-                      {{ item.created_at }}
+                      {{ item?.created_at }}
                     </p>
                     <hr />
-                    } @else if (item.type === 'Prescrição') {
+                    } @else if (item?.type === 'Prescrição') {
                     <h6>Prescrição e Orientação:</h6>
-                    <p>{{ item.description }}</p>
+                    <p>{{ item?.description }}</p>
                     <p class="mb-0 mt-2" style="font-size: small">
-                      <strong>Preenchido por:</strong> {{ item.user }} -
-                      <strong>CRM:</strong> {{ item.user_crm }}
+                      <strong>Preenchido por:</strong> {{ item?.user }} -
+                      <strong>CRM:</strong> {{ item?.user_crm }}
                       <strong>|</strong>
-                      {{ item.created_at }}
+                      {{ item?.created_at }}
                     </p>
                     <hr />
-                    } @else if (item.type === 'Fotos') {
+                    } @else if (item?.type === 'Fotos') {
                     <h6>Fotos da Evolução:</h6>
-                    <p>{{ item.description }}</p>
+                    <p>{{ item?.description }}</p>
 
-                    <img [src]="item.photo_url" alt="" style="width: 90%" />
+                    <img [src]="item?.photo_url" alt="" style="width: 90%" />
 
                     <p class="mb-0 mt-2" style="font-size: small">
-                      <strong>Preenchido por:</strong> {{ item.user }} -
-                      <strong>CRM:</strong> {{ item.user_crm }}
+                      <strong>Preenchido por:</strong> {{ item?.user }} -
+                      <strong>CRM:</strong> {{ item?.user_crm }}
                       <strong>|</strong>
-                      {{ item.created_at }}
+                      {{ item?.created_at }}
                     </p>
                     <hr />
                     }
@@ -173,10 +173,10 @@
         <mat-card-content>
           <div class="d-flex align-items-center justify-content-start">
             <div class="">
-              <h6 class="mb-0">Prontuario N: {{ dadosCavalo.code_number }}</h6>
+              <h6 class="mb-0">Prontuario N: {{ dadosCavalo?.code_number }}</h6>
               <p class="mb-0 mt-2" style="font-size: small">
-                Aberto por: {{ dadosCavalo.user }} - CRM:
-                {{ dadosCavalo.user_crm }}
+                Aberto por: {{ dadosCavalo?.user }} - CRM:
+                {{ dadosCavalo?.user_crm }}
               </p>
             </div>
           </div>
@@ -184,13 +184,15 @@
       </mat-card>
       <table
         mat-table
-        [dataSource]="dadosCavalo.history_horse_records"
+        [dataSource]="dadosCavalo?.history_horse_records"
         class="mat-elevation-z8 border-3 border-start border-green my-3"
       >
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef>Dados</th>
           <td mat-cell *matCellDef="let element">
-            <mat-icon>visibility</mat-icon>
+            <button mat-icon-button (click)="pegarHistorico(element.id)">
+              <mat-icon>visibility</mat-icon>
+            </button>
           </td>
         </ng-container>
         <ng-container matColumnDef="open_at">
@@ -210,4 +212,3 @@
     </div>
   </div>
 </div>
-<!--  ? dadosCavalo.horse.photo_url : https://placehold.co/110x110 -->
