@@ -388,7 +388,72 @@
   <mat-step>
     <ng-template matStepLabel>Finalizar</ng-template>
     <p class="my-3">Confirma que preencheu todas as informações</p>
-    <div>
+
+    <div class="mt-4">
+      <h5 class="mb-2">Clique na imagem para marcar um ponto, escreva a observação e salve o registro.</h5>
+
+      <div class="d-flex flex-column flex-md-row gap-2 mb-3">
+        @if (horseImageAnnotations.length) {
+        <span class="align-self-center text-muted">
+          {{ horseImageAnnotations.length }} observação(ões) adicionada(s)
+        </span>
+        }
+      </div>
+
+      <div class="horse-review-image-area" (click)="handleImageClick($event)">
+        <img src="assets/images/resenha/Imagem_Cavalo_Informacoes.png" alt="Imagem fixa do cavalo" />
+
+        @for (annotation of horseImageAnnotations; track annotation.id) {
+        <span
+          class="horse-review-marker"
+          [style.left.%]="annotation.x"
+          [style.top.%]="annotation.y"
+          [matTooltip]="annotation.note"
+        >
+          +
+        </span>
+        }
+      </div>
+      
+      @if (selectedAnnotationPoint) {
+      <div class="mt-3">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Observação para o ponto selecionado</mat-label>
+          <textarea matInput rows="3" [(ngModel)]="currentAnnotationText"></textarea>
+        </mat-form-field>
+        <div class="d-flex gap-2">
+          <button mat-raised-button color="primary" (click)="saveAnnotation()">
+            Salvar observação
+          </button>
+          <button mat-button (click)="clearPendingAnnotation()">Cancelar</button>
+        </div>
+      </div>
+      }
+
+      @if (horseImageAnnotations.length) {
+      <div class="mt-4">
+        <h6 class="mb-2">Observações salvas</h6>
+        <div class="horse-review-annotations-list">
+          @for (annotation of horseImageAnnotations; track annotation.id) {
+          <div class="horse-review-annotation-item">
+            <div>
+              <strong>Ponto {{ $index + 1 }}</strong>
+              <p class="mb-0 mt-1">{{ annotation.note }}</p>
+              <small class="text-muted">
+                X: {{ annotation.x | number : '1.0-0' }}% · Y: {{ annotation.y | number : '1.0-0' }}%
+              </small>
+            </div>
+            <button mat-icon-button color="warn" (click)="removeAnnotation(annotation.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+
+    <div class="mt-4">
       <button mat-button matStepperPrevious>Voltar</button>
       <button
         mat-button
