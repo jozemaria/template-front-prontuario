@@ -1,8 +1,10 @@
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, SecurityContext, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { Router } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
+import { marked } from 'marked';
 import { MatModule } from 'src/app/appModules/mat.module';
 import { FerraduraPipe } from 'src/app/shared/pipe/ferradura.pipe';
 import { FerraduraClassPipe } from 'src/app/shared/pipe/ferradura-class.pipe';
@@ -21,6 +23,7 @@ export class ChatComponent implements OnInit {
   private readonly deepseekService = inject(DeepseekService);
   readonly chatContext = inject(ChatContextService);
   private readonly router = inject(Router);
+  private readonly sanitizer = inject(DomSanitizer);
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
 
@@ -117,5 +120,17 @@ export class ChatComponent implements OnInit {
         behavior: 'smooth'
       });
     });
+  }
+
+  renderMarkdown(content: string): string {
+    if (!content) return '';
+
+    const html = marked.parse(content, { gfm: true, breaks: true }) as string;
+    const htmlSeguro = html.replace(
+      /<a href="/g,
+      '<a target="_blank" rel="noopener noreferrer" href="'
+    );
+
+    return this.sanitizer.sanitize(SecurityContext.HTML, htmlSeguro) || '';
   }
 }

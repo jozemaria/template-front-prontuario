@@ -9,7 +9,6 @@
             <mat-card-subtitle class="mb-0">
               @if (contextoCavalo) {
                 <span class="d-flex align-items-center gap-1">
-                  <mat-icon class="material-icons-outlined fs-6">pets</mat-icon>
                   Analisando {{ contextoCavalo?.horse?.name }}
                 </span>
               }
@@ -23,7 +22,6 @@
 
         @if (contextoCavalo) {
         <div class="context-banner d-flex align-items-center gap-2 px-3 py-2">
-          <mat-icon class="material-icons-outlined">pets</mat-icon>
           <span>
             <strong>Prontuário anexado:</strong>
             {{ contextoCavalo?.horse?.name }} &middot; {{ contextoCavalo?.horse?.gender }}
@@ -33,11 +31,15 @@
         }
 
         <mat-card-content class="messages-container" #messagesContainer>
-          @for (mensagem of mensagens; track $index) {
-          <div class="message" [ngClass]="mensagem.role === 'user' ? 'message--user' : 'message--assistant'">
-            <div class="message-bubble">{{ mensagem.content }}</div>
-          </div>
-          }
+      @for (mensagem of mensagens; track $index) {
+      <div class="message" [ngClass]="mensagem.role === 'user' ? 'message--user' : 'message--assistant'">
+        @if (mensagem.role === 'assistant') {
+        <div class="message-bubble markdown-content" [innerHTML]="renderMarkdown(mensagem.content)"></div>
+        } @else {
+        <div class="message-bubble">{{ mensagem.content }}</div>
+        }
+      </div>
+      }
           @if (carregando) {
           <div class="message message--assistant">
             <div class="message-bubble typing">
@@ -76,7 +78,6 @@
     <div class="col-12 col-xl-4 animal-column">
       <mat-card class="rounded-4 animal-card mat-elevation-z4">
         <mat-card-header class="animal-card-header p-3">
-          <mat-icon class="material-icons-outlined">pets</mat-icon>
           <mat-card-title class="mb-0 fs-6 ms-2">Dados do Animal</mat-card-title>
         </mat-card-header>
         <mat-card-content class="animal-card-content p-3">

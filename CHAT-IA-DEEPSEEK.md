@@ -133,6 +133,7 @@ Acesse `http://localhost:4200`.
 
 - **Enviar**: botão de envio ou tecla `Enter` no campo de texto.
 - **Novo chat**: ícone de atualizar (↻) no cabeçalho; limpa a conversa e o contexto do cavalo.
+- **Markdown**: as respostas do assistente são renderizadas como Markdown (títulos, listas, código, tabelas, citações etc.) usando a biblioteca `marked`. O HTML é sanitizado pelo Angular para remover conteúdo inseguro.
 
 ## 5. Estrutura de arquivos criada
 
