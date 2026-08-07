@@ -7,6 +7,8 @@ import { AnimaisService } from './service/animais.service';
 import { StatusClassPipe } from '../shared/pipe/status-class.pipe';
 import { StatusTextPipe } from '../shared/pipe/status-text.pipe';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { FerraduraPipe } from '../shared/pipe/ferradura.pipe';
+import { FerraduraClassPipe } from '../shared/pipe/ferradura-class.pipe';
 
 interface IFichaCavalo {
   id: number,
@@ -16,12 +18,14 @@ interface IFichaCavalo {
   description: string,
   status: boolean,
   photo_url: string,
+  last_shoe_date?: string,
+  exchange_months?: number,
 }
 
 @Component({
   selector: 'app-animais',
   standalone: true,
-  imports: [CommonModule, MatModule, StatusClassPipe, StatusTextPipe, MatButtonToggleModule],
+  imports: [CommonModule, MatModule, StatusClassPipe, StatusTextPipe, MatButtonToggleModule, FerraduraPipe, FerraduraClassPipe],
   templateUrl: './animais.component.html',
   styleUrl: './animais.component.scss'
 })

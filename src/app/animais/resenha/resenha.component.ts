@@ -183,7 +183,7 @@ export class ResenhaComponent implements OnInit {
 
     Object.keys(horseForm.controls).forEach(key => {
       const value = horseForm.get(key)?.value;
-      if (value !== null && value !== undefined) {
+      if (value !== null && value !== undefined && value !== '') {
         formData.append(`horse[${key}]`, value);
       }
     });
@@ -197,7 +197,7 @@ export class ResenhaComponent implements OnInit {
 
     Object.keys(horseOwnerForm.controls).forEach(key => {
       const value = horseOwnerForm.get(key)?.value;
-      if (value !== null && value !== undefined) {
+      if (value !== null && value !== undefined && value !== '') {
         formData.append(`horse[horse_owner_attributes][${key}]`, value);
       }
     });

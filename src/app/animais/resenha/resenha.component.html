@@ -134,7 +134,14 @@
         <div class="col-12 col-md-3">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Tombamento</mat-label>
-            <input matInput formControlName="tombamento" />
+            <input
+              matInput
+              formControlName="tombamento"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse.controls.tombamento.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col-12 col-md-4 mb-3">
@@ -187,66 +194,126 @@
         <div class="col-12 col-md-5">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Nome do Animal</mat-label>
-            <input matInput formControlName="name" />
+            <input
+              matInput
+              formControlName="name"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse.controls.name.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col-12 col-md-3">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Número</mat-label>
-            <input matInput formControlName="registation" />
+            <input
+              matInput
+              formControlName="registation"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse.controls.registation.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col-12 col-md-2">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Baia</mat-label>
-            <mat-select formControlName="baia">
+            <mat-select
+              formControlName="baia"
+              [errorStateMatcher]="matcher"
+            >
               @for (item of baias; track item.id) {
               <mat-option [value]="item.id">{{ item.name }}</mat-option>
               }
             </mat-select>
+            @if (horse.controls.baia.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col-12 col-md-2">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Peso</mat-label>
-            <input matInput formControlName="weight" />
+            <input
+              matInput
+              formControlName="weight"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse.controls.weight.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Espécie</mat-label>
-            <input matInput formControlName="kind" />
+            <input
+              matInput
+              formControlName="kind"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse.controls.kind.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Sexo</mat-label>
-            <mat-select formControlName="gender">
+            <mat-select
+              formControlName="gender"
+              [errorStateMatcher]="matcher"
+            >
               <mat-option value="masculino">Masculino</mat-option>
               <mat-option value="feminino">Feminino</mat-option>
             </mat-select>
+            @if (horse.controls.gender.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Identificação</mat-label>
-            <mat-select formControlName="identification">
+            <mat-select
+              formControlName="identification"
+              [errorStateMatcher]="matcher"
+            >
               <mat-option value="microchip">Microchip</mat-option>
               <mat-option value="brinco">Brinco</mat-option>
             </mat-select>
+            @if (horse.controls.identification.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Pelagem</mat-label>
-            <input matInput formControlName="hair" />
+            <input
+              matInput
+              formControlName="hair"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse.controls.hair.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
 
         <div class="col-12 col-md-4">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Raça</mat-label>
-            <input matInput formControlName="breed" />
+            <input
+              matInput
+              formControlName="breed"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse.controls.breed.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
 
@@ -258,32 +325,57 @@
               [matDatepicker]="picker"
               formControlName="birthday"
               [max]="maxDate"
+              [errorStateMatcher]="matcher"
             />
             <mat-datepicker-toggle
               matIconSuffix
               [for]="picker"
             ></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
+            @if (horse.controls.birthday.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
 
         <div class="col-12 col-md-6">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Pai</mat-label>
-            <input matInput formControlName="father" />
+            <input
+              matInput
+              formControlName="father"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse.controls.father.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col-12 col-md-6">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Mãe</mat-label>
-            <input matInput formControlName="mother" />
+            <input
+              matInput
+              formControlName="mother"
+              [errorStateMatcher]="matcher"
+            />
+            @if (horse.controls.mother.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
 
         <div class="col-12 col-md-12">
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Descrição</mat-label>
-            <textarea matInput formControlName="description"></textarea>
+            <textarea
+              matInput
+              formControlName="description"
+              [errorStateMatcher]="matcher"
+            ></textarea>
+            @if (horse.controls.description.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
           </mat-form-field>
         </div>
       </div>

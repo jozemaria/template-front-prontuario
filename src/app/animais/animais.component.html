@@ -64,6 +64,14 @@
       <p class="uppercase-text">{{ item?.status | statusText }}</p>
     </div>
 
+    <div
+      class="card-lable"
+      [ngClass]="item?.last_shoe_date | ferraduraClass: item?.exchange_months"
+      matTooltip="Status da ferradura"
+    >
+      <p class="mb-0">{{ item?.last_shoe_date | ferradura: item?.exchange_months }}</p>
+    </div>
+
     <mat-card-actions>
       <a
         mat-flat-button

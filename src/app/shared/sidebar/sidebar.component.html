@@ -21,12 +21,23 @@
           ><mat-icon class="material-icons-outlined">home</mat-icon>Inicio</a
         >
       </mat-nav-list>
-      <mat-nav-list>
-        <a mat-list-item routerLink="animais"
-          ><mat-icon class="material-icons-outlined">description</mat-icon
-          >Animais</a
-        >
-      </mat-nav-list>
+      <mat-expansion-panel [class.mat-elevation-z0]="true">
+        <mat-expansion-panel-header>
+          <mat-icon class="material-icons-outlined">description</mat-icon
+          >Prontuário
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="animais/resenha"
+            ><mat-icon>arrow_right</mat-icon>Nova Resenha</a
+          >
+          <a mat-list-item routerLink="animais"
+            ><mat-icon>arrow_right</mat-icon>Listar Cavalos</a
+          >
+          <a mat-list-item routerLink="assistente"
+            ><mat-icon>arrow_right</mat-icon>Chat com IA</a
+          >
+        </mat-nav-list>
+      </mat-expansion-panel>
       <mat-expansion-panel [class.mat-elevation-z0]="true">
         <mat-expansion-panel-header>
           <mat-icon class="material-icons-outlined">account_circle</mat-icon

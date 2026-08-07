@@ -17,3 +17,14 @@
     left: 0;
   }
 }
+
+.ferradura-status {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+
+  &--text {
+    font-weight: 600;
+  }
+}

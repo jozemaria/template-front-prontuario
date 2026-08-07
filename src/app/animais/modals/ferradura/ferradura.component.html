@@ -1,0 +1,67 @@
+<h2 mat-dialog-title>Ferradura</h2>
+<mat-dialog-content style="width: 500px">
+  <p class="mb-3">
+    Informe a data em que a nova ferradura foi inserida e o prazo para a
+    próxima troca.
+  </p>
+
+  <div class="row">
+    <form [formGroup]="ferradura">
+      <div class="row">
+        <div class="col-12 col-md-7">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Data da Ferradura</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="shoe_date"
+              [max]="maxDate"
+            />
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            @if (ferradura.controls.shoe_date.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-5">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Tempo de troca (meses)</mat-label>
+            <input
+              matInput
+              type="number"
+              min="1"
+              max="24"
+              formControlName="exchange_months"
+            />
+            @if (ferradura.controls.exchange_months.hasError('required')) {
+            <mat-error>Campo obrigatório</mat-error>
+            }
+            @if (ferradura.controls.exchange_months.hasError('min')) {
+            <mat-error>Mínimo de 1 mês</mat-error>
+            }
+            @if (ferradura.controls.exchange_months.hasError('max')) {
+            <mat-error>Máximo de 24 meses</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <p class="mb-0" style="font-size: small">
+        A próxima troca deverá ser feita após o tempo informado, contado a
+        partir da data da ferradura.
+      </p>
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close (click)="onNoClick()">Fechar</button>
+  <button
+    mat-flat-button
+    color="primary"
+    cdkFocusInitial
+    [mat-dialog-close]="ferradura.value"
+    [disabled]="!ferradura.valid"
+  >
+    Salvar
+  </button>
+</mat-dialog-actions>

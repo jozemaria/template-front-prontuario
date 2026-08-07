@@ -34,6 +34,15 @@
             <strong>Data de Nascimento:</strong> {{ dadosCavalo?.birthday }}
           </p>
           <div
+            class="d-flex align-items-center gap-2 mt-2 ferradura-status"
+            [ngClass]="dadosCavalo?.last_shoe_date | ferraduraClass: dadosCavalo?.exchange_months"
+          >
+            <span class="material-icons-outlined">agriculture</span>
+            <span class="ferradura-status--text">
+              Ferradura: {{ dadosCavalo?.last_shoe_date | ferradura: dadosCavalo?.exchange_months }}
+            </span>
+          </div>
+          <div
             class="d-flex align-items-center flex-column flex-lg-row gap-3 mt-3"
           ></div>
         </div>

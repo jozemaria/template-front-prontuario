@@ -9,6 +9,8 @@ import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { StatusTextPipe } from 'src/app/shared/pipe/status-text.pipe';
+import { FerraduraPipe } from 'src/app/shared/pipe/ferradura.pipe';
+import { FerraduraClassPipe } from 'src/app/shared/pipe/ferradura-class.pipe';
 
 export interface IFichaCavalo {
   id: number,
@@ -27,12 +29,14 @@ export interface IFichaCavalo {
   photo_url: string,
   cover_url: string,
   status_description: string,
+  last_shoe_date?: string,
+  exchange_months?: number,
 }
 
 @Component({
   selector: 'app-resenha-completa',
   standalone: true,
-  imports: [CommonModule, MatModule, StatusTextPipe],
+  imports: [CommonModule, MatModule, StatusTextPipe, FerraduraPipe, FerraduraClassPipe],
   templateUrl: './resenha-completa.component.html',
   styleUrl: './resenha-completa.component.scss'
 })
