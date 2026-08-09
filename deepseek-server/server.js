@@ -32,6 +32,32 @@ Regras:
 - Sua resposta é um apoio técnico e nunca substitui o exame clínico nem a conduta do médico veterinário responsável.
 `;
 
+function extrairMensagemErro(errText, status) {
+  try {
+    const parsed = JSON.parse(errText);
+    if (parsed?.error) {
+      if (typeof parsed.error === 'string') return parsed.error;
+      if (parsed.error?.message) return parsed.error.message;
+    }
+    if (parsed?.message) return parsed.message;
+  } catch {
+    // resposta não é JSON
+  }
+  return errText
+    ? errText.substring(0, 300)
+    : `Erro na API do DeepSeek (HTTP ${status}).`;
+}
+
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    if (req.path === '/api/chat') {
+      console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} → ${res.statusCode} (${Date.now() - start}ms)`);
+    }
+  });
+  next();
+});
+
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
@@ -70,8 +96,9 @@ app.post('/api/chat', async (req, res) => {
 
     if (!deepseekRes.ok) {
       const errText = await deepseekRes.text();
-      console.error('Erro na API do DeepSeek:', deepseekRes.status, errText);
-      return res.status(deepseekRes.status).json({ error: errText });
+      console.error(`[${new Date().toISOString()}] DeepSeek respondeu ${deepseekRes.status}: ${errText.substring(0, 200)}`);
+      const msg = extrairMensagemErro(errText, deepseekRes.status);
+      return res.status(deepseekRes.status).json({ error: msg });
     }
 
     if (stream) {
@@ -85,11 +112,33 @@ app.post('/api/chat', async (req, res) => {
       res.json({ content });
     }
   } catch (error) {
-    console.error('Erro ao chamar o DeepSeek:', error.message);
-    res.status(502).json({ error: 'Falha na comunicação com o DeepSeek.' });
+    console.error(`[${new Date().toISOString()}] Erro ao chamar DeepSeek: ${error.message}`);
+    res.status(502).json({
+      error: 'Falha na comunicação com o DeepSeek. Verifique a chave da API e a conectividade de rede.'
+    });
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`DeepSeek proxy rodando em http://localhost:${PORT}`);
+  console.log('══════════════════════════════════════════');
+  console.log('  DeepSeek Proxy Veterinário');
+  console.log(`  Rodando em: http://localhost:${PORT}`);
+  console.log(`  Health:     http://localhost:${PORT}/health`);
+  console.log('══════════════════════════════════════════');
+
+  if (!process.env.DEEPSEEK_API_KEY || process.env.DEEPSEEK_API_KEY === 'sk-xxxxx') {
+    console.warn('⚠  DEEPSEEK_API_KEY não configurada ou ainda é o valor de exemplo.');
+    console.warn('   Copie .env.example para .env e preencha sua chave:');
+    console.warn('   → https://platform.deepseek.com/api_keys');
+  } else {
+    console.log('  Chave da API detectada.');
+  }
+
+  if (ENABLE_TOPIC_GUARD) {
+    console.log('  Guarda de tema: ATIVADA');
+  } else {
+    console.warn('  Guarda de tema: DESATIVADA (ENABLE_TOPIC_GUARD=false)');
+  }
+
+  console.log('══════════════════════════════════════════\n');
 });
