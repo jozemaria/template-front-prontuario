@@ -14,7 +14,7 @@
         >Apto</mat-button-toggle
       >
       <mat-button-toggle (click)="filtrarCavalosPorStatus('inapto')"
-        >Inapto</mat-button-toggle
+        >Baixa</mat-button-toggle
       >
       <mat-button-toggle (click)="filtrarCavalosPorStatus('outro')"
         >Externos</mat-button-toggle
@@ -62,6 +62,14 @@
 
     <div class="card-lable" [ngClass]="item?.status | statusClass">
       <p class="uppercase-text">{{ item?.status | statusText }}</p>
+    </div>
+
+    <div
+      class="card-lable"
+      [ngClass]="item?.last_shoe_date | ferraduraClass: item?.exchange_months"
+      matTooltip="Status da ferradura"
+    >
+      <p class="mb-0">{{ item?.last_shoe_date | ferradura: item?.exchange_months }}</p>
     </div>
 
     <mat-card-actions>

@@ -59,6 +59,11 @@ export const Full_ROUTES: Routes = [
     {
         path: 'animais',
         loadChildren: () => import('../../animais/animais.module').then(m => m.AnimaisModule)
+    },
+
+    {
+        path: 'assistente',
+        loadChildren: () => import('../../deepseek/deepseek.module').then(m => m.DeepseekModule)
     }
 
 ];

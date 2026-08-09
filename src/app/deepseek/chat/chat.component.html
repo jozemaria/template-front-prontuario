@@ -1,0 +1,139 @@
+<div class="container chat-container py-3">
+  <div class="row">
+    <div class="col-12 chat-column" [ngClass]="contextoCavalo ? 'col-xl-8' : ''">
+      <mat-card class="rounded-4 chat-card mat-elevation-z4">
+        <mat-card-header class="chat-header p-3">
+          <mat-icon class="material-icons-outlined chat-avatar" color="primary">smart_toy</mat-icon>
+          <div class="d-flex flex-column">
+            <mat-card-title class="mb-0 fs-5">Assistente Veterinário IA</mat-card-title>
+            <mat-card-subtitle class="mb-0">
+              @if (contextoCavalo) {
+                <span class="d-flex align-items-center gap-1">
+                  Analisando {{ contextoCavalo?.horse?.name }}
+                </span>
+              }
+            </mat-card-subtitle>
+          </div>
+          <span class="flex-spacer"></span>
+          <button mat-icon-button matTooltip="Iniciar novo chat" (click)="novoChat()">
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </mat-card-header>
+
+        @if (contextoCavalo) {
+        <div class="context-banner d-flex align-items-center gap-2 px-3 py-2">
+          <span>
+            <strong>Prontuário anexado:</strong>
+            {{ contextoCavalo?.horse?.name }} &middot; {{ contextoCavalo?.horse?.gender }}
+            &middot; {{ contextoCavalo?.horse?.hair }} &middot; {{ contextoCavalo?.horse?.weight }} kg
+          </span>
+        </div>
+        }
+
+        <mat-card-content class="messages-container" #messagesContainer>
+      @for (mensagem of mensagens; track $index) {
+      <div class="message" [ngClass]="mensagem.role === 'user' ? 'message--user' : 'message--assistant'">
+        @if (mensagem.role === 'assistant') {
+        <div class="message-bubble markdown-content" [innerHTML]="renderMarkdown(mensagem.content)"></div>
+        } @else {
+        <div class="message-bubble">{{ mensagem.content }}</div>
+        }
+      </div>
+      }
+          @if (carregando) {
+          <div class="message message--assistant">
+            <div class="message-bubble typing">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+          }
+        </mat-card-content>
+
+        <mat-card-footer class="chat-footer p-3">
+          <mat-form-field appearance="outline" class="chat-input w-100">
+            <textarea
+              matInput
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="4"
+              placeholder="Descreva os sinais clínicos ou faça sua pergunta..."
+              [(ngModel)]="mensagemAtual"
+              (keydown.enter)="$event.preventDefault(); enviar()"
+            ></textarea>
+          </mat-form-field>
+          <button
+            mat-mini-fab
+            color="primary"
+            class="send-button"
+            [disabled]="!mensagemAtual.trim() || carregando"
+            (click)="enviar()"
+          >
+            <mat-icon>send</mat-icon>
+          </button>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+
+    @if (contextoCavalo) {
+    <div class="col-12 col-xl-4 animal-column">
+      <mat-card class="rounded-4 animal-card mat-elevation-z4">
+        <mat-card-header class="animal-card-header p-3">
+          <mat-card-title class="mb-0 fs-6 ms-2">Dados do Animal</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="animal-card-content p-3">
+          <div class="text-center mb-3">
+            <img
+              [src]="contextoCavalo?.horse?.photo_url"
+              width="110"
+              height="110"
+              class="rounded-circle raised p-1 mat-bg-white mat-elevation-z8"
+              alt=""
+            />
+            <h5 class="mb-0 mt-2">{{ contextoCavalo?.horse?.name }}</h5>
+            <p class="mb-0 text-muted">
+              Prontuário N: {{ contextoCavalo?.code_number }}
+            </p>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="animal-info mt-3">
+            <div class="animal-info__row">
+              <strong>Sexo:</strong> {{ contextoCavalo?.horse?.gender }}
+            </div>
+            <div class="animal-info__row">
+              <strong>Peso:</strong> {{ contextoCavalo?.horse?.weight }} kg
+            </div>
+            <div class="animal-info__row">
+              <strong>Pelagem:</strong> {{ contextoCavalo?.horse?.hair }}
+            </div>
+            <div class="animal-info__row">
+              <strong>Nascimento:</strong> {{ contextoCavalo?.horse?.birthday }}
+            </div>
+            @if (contextoCavalo?.horse?.owner?.name) {
+            <div class="animal-info__row">
+              <strong>Proprietário:</strong> {{ contextoCavalo?.horse?.owner?.name }}
+            </div>
+            }
+            @if (contextoCavalo?.horse?.last_shoe_date) {
+            <div class="animal-info__row">
+              <strong>Ferradura:</strong>
+              <span
+                class="ferradura-badge"
+                [ngClass]="contextoCavalo?.horse?.last_shoe_date | ferraduraClass: contextoCavalo?.horse?.exchange_months"
+              >
+                {{ contextoCavalo?.horse?.last_shoe_date | ferradura: contextoCavalo?.horse?.exchange_months }}
+              </span>
+            </div>
+            }
+          </div>
+        </mat-card-content>
+        <mat-card-actions class="p-3 animal-card-actions">
+          <button mat-flat-button color="primary" class="w-100 rounded-pill" (click)="voltarAoProntuario()">
+            <mat-icon>arrow_back</mat-icon>
+            Voltar ao Prontuário
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    }
+  </div>
+</div>

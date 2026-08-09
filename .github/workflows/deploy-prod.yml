@@ -1,0 +1,63 @@
+name: Deploy Produção
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependências Angular
+        run: npm install
+
+      - name: Build Angular (produção)
+        run: npm run build -- --configuration production
+
+      - name: Instalar rsync
+        run: sudo apt-get update && sudo apt-get install -y rsync
+
+      - name: Salvar SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DO_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy Angular via rsync
+        run: |
+          rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa" \
+            dist/* \
+            ${{ secrets.DO_USERNAME }}@${{ secrets.DO_HOST }}:/var/www/pmrn/dist
+
+      - name: Deploy servidor Node (deepseek-proxy) via rsync
+        run: |
+          rsync -avz --delete \
+            --exclude='node_modules' \
+            --exclude='.env' \
+            -e "ssh -i ~/.ssh/id_rsa" \
+            deepseek-server/ \
+            ${{ secrets.DO_USERNAME }}@${{ secrets.DO_HOST }}:/var/www/deepseek-proxy/
+
+      - name: Instalar dependências e reiniciar PM2 no servidor
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USERNAME }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          script: |
+            cd /var/www/deepseek-proxy
+            npm install --production
+            pm2 start ecosystem.config.js --only deepseek-proxy || pm2 restart deepseek-proxy
+            pm2 save
+            sudo systemctl restart nginx
+            echo "Deploy produção concluído!"
