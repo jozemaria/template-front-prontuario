@@ -76,4 +76,8 @@ export class AnimaisService {
   pegarHistorico(idHorse: number) {
     return this.http.get(this.urlAPIBase + 'history_horse_records/' + idHorse + '/search', { headers: { 'Authorization': localStorage.getItem('access_token') } })
   }
+
+  salvarFerradura(ferradura: any) {
+    return this.http.post(this.urlAPIBase + 'horseshoes', ferradura, { headers: { 'Authorization': localStorage.getItem('access_token') } })
+  }
 }

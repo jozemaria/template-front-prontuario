@@ -59,3 +59,21 @@
     width: 20% !important;
   }
 }
+
+.ferradura-status {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+
+  &--text {
+    font-weight: 600;
+  }
+}
+
+.chat-fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+}

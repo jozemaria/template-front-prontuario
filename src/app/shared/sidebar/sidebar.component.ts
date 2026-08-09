@@ -11,9 +11,19 @@ import { SidebarService } from './../sidebar/sidebar.service'
 
 export class SidebarComponent implements OnInit {
 
-  
+    dataUser: any
+
     constructor(public sidebarservice: SidebarService
-      ) { }
+      ) {
+        this.dataUser = JSON.parse(atob(localStorage.getItem('access_token').split('.')[1]))
+        this.dataUser['photo_url'] = localStorage.getItem('photo_user')
+        this.dataUser['name'] = this.corrigirCaracteres(this.dataUser.name)
+        this.dataUser['role'] = this.corrigirCaracteres(this.dataUser.role)
+      }
+
+      corrigirCaracteres(texto) {
+        return decodeURIComponent(escape(texto));
+      }
 
       getSideBarSate() {
           return this.sidebarservice.getSidebarState();

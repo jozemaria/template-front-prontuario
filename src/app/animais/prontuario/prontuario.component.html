@@ -33,6 +33,18 @@
             {{ dadosCavalo.horse.birthday }}
           </p>
           <div
+            class="d-flex align-items-center flex-column flex-lg-row gap-2 mt-2 ferradura-status"
+            [ngClass]="dadosCavalo.horse.last_shoe_date | ferraduraClass: dadosCavalo.horse.exchange_months"
+          >
+            <span class="material-icons-outlined">agriculture</span>
+            <span class="ferradura-status--text">
+              Ferradura:
+              {{
+                dadosCavalo.horse.last_shoe_date | ferradura: dadosCavalo.horse.exchange_months
+              }}
+            </span>
+          </div>
+          <div
             class="d-flex align-items-start flex-column flex-lg-row gap-3 mt-3"
           >
             <button
@@ -62,6 +74,13 @@
               (click)="openDialogAlta()"
             >
               Alta Clínica
+            </button>
+            <button
+              mat-stroked-button
+              class="rounded-pill px-3"
+              (click)="openDialogFerradura()"
+            >
+              Ferradura
             </button>
             <button
               mat-flat-button
@@ -212,3 +231,15 @@
     </div>
   </div>
 </div>
+
+<button
+  mat-fab
+  extended
+  color="primary"
+  class="chat-fab"
+  matTooltip="Perguntar à IA sobre este cavalo"
+  (click)="abrirChatIA()"
+>
+  <mat-icon>smart_toy</mat-icon>
+  Perguntar à IA
+</button>

@@ -25,6 +25,14 @@ export interface IBaias {
   updated_at: string
 }
 
+export interface IHorseImageAnnotation {
+  id: number,
+  x: number,
+  y: number,
+  note: string,
+  created_at: string
+}
+
 @Component({
   selector: 'app-resenha',
   standalone: true,
@@ -44,6 +52,10 @@ export class ResenhaComponent implements OnInit {
   matcher = new MyErrorStateMatcher();
   selectedFile: File | null = null;
   selectedFileCover: File | null = null;
+  horseImageAnnotations: IHorseImageAnnotation[] = [];
+  horseImagePreviewUrl: string | null = 'assets/images/resenha/Imagem_Cavalo_Informacoes.png';
+  selectedAnnotationPoint: { x: number; y: number } | null = null;
+  currentAnnotationText = '';
 
   maxDate: Date;
 
@@ -70,6 +82,8 @@ export class ResenhaComponent implements OnInit {
     this.loadHorseIntoForm()
     this.animaisService.baiasCadastradas.subscribe((res: any) => this.baias = res)
   }
+
+  private readonly annotationStoragePrefix = 'horse-image-annotations';
 
   private _formBuilder = inject(FormBuilder);
 
@@ -160,6 +174,65 @@ export class ResenhaComponent implements OnInit {
     })
   }
 
+  private getAnnotationStorageKey(): string {
+    const horseId = this.idResenha ? this.idResenha.toString() : 'draft';
+    return `${this.annotationStoragePrefix}:${horseId}`;
+  }
+
+  private persistAnnotations(): void {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(this.getAnnotationStorageKey(), JSON.stringify(this.horseImageAnnotations));
+  }
+
+  private restoreAnnotations(annotations: any): void {
+    if (!annotations) {
+      const storageAnnotations = window.localStorage.getItem(this.getAnnotationStorageKey());
+      if (storageAnnotations) {
+        this.horseImageAnnotations = JSON.parse(storageAnnotations);
+      }
+      return;
+    }
+
+    this.horseImageAnnotations = Array.isArray(annotations) ? annotations : JSON.parse(annotations);
+    this.persistAnnotations();
+  }
+
+  private clearStoredAnnotations(): void {
+    if (typeof window === 'undefined') return;
+    window.localStorage.removeItem(this.getAnnotationStorageKey());
+  }
+
+  private normalizeImageAnnotations(value: any): IHorseImageAnnotation[] {
+    if (Array.isArray(value)) {
+      return value as IHorseImageAnnotation[];
+    }
+
+    if (typeof value === 'string') {
+      try {
+        const parsed = JSON.parse(value);
+        return Array.isArray(parsed) ? parsed as IHorseImageAnnotation[] : [];
+      } catch {
+        return [];
+      }
+    }
+
+    return [];
+  }
+
+  private getReviewImageUrlFromResponse(response: any): string | null {
+    const candidates = [
+      response?.horse?.review_image_url,
+      response?.review_image_url,
+      response?.horse?.review_image,
+      response?.review_image,
+      response?.horse?.image_url,
+      response?.image_url,
+    ];
+
+    const value = candidates.find(candidate => typeof candidate === 'string' && candidate.trim() !== '');
+    return typeof value === 'string' ? value : null;
+  }
+
   loadHorseIntoForm() {
     if (this.idResenha) {
       this.animaisService.getAnimalById(this.idResenha).subscribe(
@@ -174,8 +247,72 @@ export class ResenhaComponent implements OnInit {
               this.horse.get(key)?.patchValue(res[key])
             }
           })
+
+          const serverAnnotations = this.normalizeImageAnnotations(res?.horse?.image_annotations || res?.image_annotations);
+          if (serverAnnotations.length) {
+            this.horseImageAnnotations = serverAnnotations;
+            this.persistAnnotations();
+          } else {
+            this.restoreAnnotations(null);
+          }
+
+          const serverReviewImageUrl = this.getReviewImageUrlFromResponse(res);
+          if (serverReviewImageUrl) {
+            this.horseImagePreviewUrl = serverReviewImageUrl;
+          } else if (res?.horse?.photo_url && !this.horseImagePreviewUrl) {
+            this.horseImagePreviewUrl = res.horse.photo_url;
+          }
         })
+    } else {
+      this.restoreAnnotations(null);
     }
+  }
+
+  handleImageClick(event: MouseEvent): void {
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+    this.selectedAnnotationPoint = { x, y };
+    this.currentAnnotationText = '';
+  }
+
+  saveAnnotation(): void {
+    if (!this.selectedAnnotationPoint) {
+      this.sweetalertService.alert('warning', 'Atenção', 'Selecione um ponto na imagem antes de salvar a observação.');
+      return;
+    }
+
+    const note = this.currentAnnotationText.trim();
+    if (!note) {
+      this.sweetalertService.alert('warning', 'Atenção', 'Escreva a observação para salvar o ponto na imagem.');
+      return;
+    }
+
+    this.horseImageAnnotations = [
+      ...this.horseImageAnnotations,
+      {
+        id: Date.now(),
+        x: this.selectedAnnotationPoint.x,
+        y: this.selectedAnnotationPoint.y,
+        note,
+        created_at: new Date().toISOString()
+      }
+    ];
+    this.selectedAnnotationPoint = null;
+    this.currentAnnotationText = '';
+    this.persistAnnotations();
+  }
+
+  removeAnnotation(annotationId: number): void {
+    this.horseImageAnnotations = this.horseImageAnnotations.filter(annotation => annotation.id !== annotationId);
+    this.persistAnnotations();
+  }
+
+  clearPendingAnnotation(): void {
+    this.selectedAnnotationPoint = null;
+    this.currentAnnotationText = '';
   }
 
   prepareDataForApi(horseForm: any, horseOwnerForm: any) {
@@ -183,7 +320,7 @@ export class ResenhaComponent implements OnInit {
 
     Object.keys(horseForm.controls).forEach(key => {
       const value = horseForm.get(key)?.value;
-      if (value !== null && value !== undefined) {
+      if (value !== null && value !== undefined && value !== '') {
         formData.append(`horse[${key}]`, value);
       }
     });
@@ -194,10 +331,18 @@ export class ResenhaComponent implements OnInit {
     if (this.selectedFileCover) {
       formData.append('horse[cover]', this.selectedFileCover, this.selectedFileCover.name);
     }
+    if (this.horseImagePreviewUrl) {
+      formData.append('horse[review_image_url]', this.horseImagePreviewUrl.toString());
+    }
+    if (this.horseImageAnnotations.length > 0) {
+      formData.append('horse[image_annotations]', JSON.stringify(this.horseImageAnnotations));
+    } else {
+      formData.append('horse[image_annotations]', JSON.stringify([]));
+    }
 
     Object.keys(horseOwnerForm.controls).forEach(key => {
       const value = horseOwnerForm.get(key)?.value;
-      if (value !== null && value !== undefined) {
+      if (value !== null && value !== undefined && value !== '') {
         formData.append(`horse[horse_owner_attributes][${key}]`, value);
       }
     });
@@ -220,12 +365,19 @@ export class ResenhaComponent implements OnInit {
       }
     }
     if (type === 'capa') this.selectedFileCover = file
-    if (type === 'perfil') this.selectedFile = file
+    if (type === 'perfil') {
+      this.selectedFile = file
+    }
   }
 
   resetForm() {
     this.horse_owner_attributes.reset()
     this.horse.reset()
+    this.horseImageAnnotations = []
+    this.selectedAnnotationPoint = null
+    this.currentAnnotationText = ''
+    this.horseImagePreviewUrl = 'assets/images/resenha/Imagem_Cavalo_Informacoes.png'
+    this.clearStoredAnnotations()
   }
 
 }

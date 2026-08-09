@@ -53,4 +53,18 @@ export class SignInComponent implements OnInit {
     })
   }
 
+    bypassLogin() {
+      const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+      const payload = btoa(unescape(encodeURIComponent(JSON.stringify({
+        name: 'Usuário Teste',
+        role: 'Administrador',
+        photo_url: 'https://pbs.twimg.com/profile_images/1633789332803682305/EzE1zTnC_400x400.jpg'
+      }))));
+      const signature = btoa('bypass');
+
+      localStorage.setItem('access_token', `${header}.${payload}.${signature}`);
+      localStorage.setItem('photo_user', 'https://pbs.twimg.com/profile_images/1633789332803682305/EzE1zTnC_400x400.jpg');
+      this.router.navigate(['/'], { relativeTo: this.route.parent });
+  }
+
 }

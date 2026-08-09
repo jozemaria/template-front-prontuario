@@ -10,8 +10,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AnimaisService } from '../service/animais.service';
 import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
 import { FotosComponent } from '../modals/fotos/fotos.component';
+import { FerraduraComponent, FerraduraData } from '../modals/ferradura/ferradura.component';
+import { FerraduraPipe } from 'src/app/shared/pipe/ferradura.pipe';
+import { FerraduraClassPipe } from 'src/app/shared/pipe/ferradura-class.pipe';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { ChatContextService } from 'src/app/deepseek/chat-context.service';
 
 export interface IFichaCavalo {
   id?: number,
@@ -35,7 +39,9 @@ export interface IFichaCavalo {
     status?: boolean,
     owner?: boolean,
     created_at?: boolean,
-    picture?: string
+    picture?: string,
+    last_shoe_date?: string,
+    exchange_months?: number
   },
   history_horse_records?: {
     id: number,
@@ -48,7 +54,7 @@ export interface IFichaCavalo {
 @Component({
   selector: 'app-prontuario',
   standalone: true,
-  imports: [CommonModule, MatModule, CdkAccordionModule],
+  imports: [CommonModule, MatModule, CdkAccordionModule, FerraduraPipe, FerraduraClassPipe],
   templateUrl: './prontuario.component.html',
   styleUrl: './prontuario.component.scss'
 })
@@ -57,6 +63,7 @@ export class ProntuarioComponent implements OnInit {
   readonly sweetAlertService = inject(SweetalertService)
   readonly route = inject(ActivatedRoute)
   readonly location = inject(Location)
+  readonly chatContext = inject(ChatContextService)
 
   dadosCavalo: IFichaCavalo = {}
   idCavalo: number
@@ -155,6 +162,35 @@ export class ProntuarioComponent implements OnInit {
     });
   }
 
+  openDialogFerradura(): void {
+    const dadosFerraduraAtual: FerraduraData = {
+      shoe_date: this.dadosCavalo.horse?.last_shoe_date ?? null,
+      exchange_months: this.dadosCavalo.horse?.exchange_months ?? 3
+    }
+    const dialogRef = this.dialog.open(FerraduraComponent, {
+      data: dadosFerraduraAtual
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.shoe_date) {
+        const dadosFerradura = {
+          horse_id: this.idCavalo,
+          shoe_date: format(result.shoe_date, 'yyyy-MM-dd'),
+          exchange_months: result.exchange_months
+        }
+        this.animaisService.salvarFerradura(dadosFerradura).subscribe({
+          error: err => {
+            this.sweetAlertService.alert('error', 'Ops...', 'Erro: ' + err.error.error)
+          },
+          complete: () => {
+            this.sweetAlertService.alert('success', 'Sucesso', 'Ferradura registrada com sucesso.')
+            this.carregarInformacoes()
+          }
+        })
+      }
+    });
+  }
+
   getDates(informations: any): string[] {
     return Object.keys(informations);
   }
@@ -176,5 +212,10 @@ export class ProntuarioComponent implements OnInit {
 
   botaoVoltar() {
     this.location.back()
+  }
+
+  abrirChatIA() {
+    this.chatContext.setHorseContext(this.dadosCavalo, this.idCavalo)
+    this.router.navigateByUrl('assistente')
   }
 }
