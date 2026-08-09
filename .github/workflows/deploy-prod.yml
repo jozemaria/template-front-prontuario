@@ -30,9 +30,9 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.DO_SSH_KEY }}" > ~/.ssh/id_rsa_tmp
+          chmod 600 ~/.ssh/id_rsa_tmp
           ssh-keygen -p -m PEM -N "" -f ~/.ssh/id_rsa_tmp
           mv ~/.ssh/id_rsa_tmp ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy Angular via rsync
