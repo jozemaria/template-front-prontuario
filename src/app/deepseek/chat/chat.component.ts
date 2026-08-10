@@ -81,7 +81,13 @@ export class ChatComponent implements OnInit {
       },
       error: (err) => {
         this.carregando = false;
-        const msgErro = err?.message || 'Não foi possível obter uma resposta. Verifique se o servidor proxy está rodando.';
+
+        let msgErro = err?.message || 'Não foi possível obter uma resposta.';
+
+        if (err instanceof TypeError && (msgErro.includes('fetch') || msgErro.includes('NetworkError'))) {
+          msgErro = 'Não foi possível conectar ao servidor proxy.\n\nCertifique-se de que o proxy está rodando:\n```\ncd deepseek-server\nnpm start\n```';
+        }
+
         const prefixo = msgErro === OFF_TOPIC_MESSAGE ? '' : 'Erro: ';
         this.mensagens.push({ role: 'assistant', content: `${prefixo}${msgErro}` });
         this.rolarParaBaixo();

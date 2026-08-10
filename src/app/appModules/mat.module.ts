@@ -30,6 +30,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepperModule } from '@angular/material/stepper';
 
 const material = [
@@ -61,6 +62,7 @@ const material = [
   MatTableModule,
   NgApexchartsModule,
   MatProgressBarModule,
+  MatProgressSpinnerModule,
   MatStepperModule,
   MatFormFieldModule,
   MatInputModule,

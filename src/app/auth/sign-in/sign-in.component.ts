@@ -1,70 +1,71 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from "@angular/router";
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from './service/auth.service';
 import { SweetalertService } from 'src/app/shared/services/sweetalert.service';
-
+import { TokenService } from 'src/app/shared/services/token.service';
 
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.scss']
-
 })
 export class SignInComponent implements OnInit {
   loginUser = new FormGroup({
-    registration: new FormControl(''), password: new FormControl(''),
+    registration: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
 
   hide = true;
+  isLoading = false;
+
   constructor(
     private authService: AuthService,
     private sweetalertService: SweetalertService,
+    private tokenService: TokenService,
     private router: Router,
-    private route: ActivatedRoute) { }
-
-  // On Forgotpassword link click
-  onForgotpassword() {
-    this.router.navigate(['forgot-password'], { relativeTo: this.route.parent });
-  }
-
-  // On Signup link click
-  onSignup() {
-    this.router.navigate(['sign-up'], { relativeTo: this.route.parent });
-  }
-
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
+    if (this.authService.isLoggedIn) {
+      this.router.navigate(['/']);
+    }
   }
 
+  get registrationControl() {
+    return this.loginUser.get('registration');
+  }
 
-  onLogin() {
+  get passwordControl() {
+    return this.loginUser.get('password');
+  }
+
+  onLogin(): void {
+    if (this.loginUser.invalid || this.isLoading) {
+      this.loginUser.markAllAsTouched();
+      return;
+    }
+
+    this.isLoading = true;
+
     this.authService.loginClient(this.loginUser.value).subscribe({
       next: (res: any) => {
-        localStorage.setItem('access_token', res.token)
+        this.tokenService.setToken(res.token);
       },
-      error: err => {
-        this.sweetalertService.alert('error', 'Ops...', 'Erro: ' + err.error.error)
+      error: () => {
+        this.isLoading = false;
+        this.sweetalertService.alert(
+          'error',
+          'Falha na autenticação',
+          'Matrícula ou senha inválidos. Tente novamente.'
+        );
       },
       complete: () => {
-        this.router.navigate(['/'], { relativeTo: this.route.parent });
-      }
-    })
+        this.isLoading = false;
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        this.router.navigateByUrl(returnUrl);
+      },
+    });
   }
-
-    bypassLogin() {
-      const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-      const payload = btoa(unescape(encodeURIComponent(JSON.stringify({
-        name: 'Usuário Teste',
-        role: 'Administrador',
-        photo_url: 'https://pbs.twimg.com/profile_images/1633789332803682305/EzE1zTnC_400x400.jpg'
-      }))));
-      const signature = btoa('bypass');
-
-      localStorage.setItem('access_token', `${header}.${payload}.${signature}`);
-      localStorage.setItem('photo_user', 'https://pbs.twimg.com/profile_images/1633789332803682305/EzE1zTnC_400x400.jpg');
-      this.router.navigate(['/'], { relativeTo: this.route.parent });
-  }
-
 }

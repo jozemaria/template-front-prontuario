@@ -14,7 +14,7 @@ export class DashboardService {
   constructor(private http: HttpClient) { }
 
   getListHorse(): Observable<any> {
-    return this.http.get(this.urlAPI, { headers: { 'Authorization': localStorage.getItem('access_token') } })
+    return this.http.get(this.urlAPI)
   }
 
 }
