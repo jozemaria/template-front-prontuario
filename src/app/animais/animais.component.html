@@ -57,19 +57,18 @@
       <div>
         <mat-card-title>{{ item?.name }} - {{ item?.baia }}</mat-card-title>
         <mat-card-subtitle>Espécie: {{ item?.kind }}</mat-card-subtitle>
+        <div
+          class="card-lable mt-1"
+          [ngClass]="item?.last_shoe_date | ferraduraClass: item?.exchange_months"
+          matTooltip="Status da ferradura"
+        >
+          <p class="mb-0">{{ item?.last_shoe_date | ferradura: item?.exchange_months }}</p>
+        </div>
       </div>
     </div>
 
     <div class="card-lable" [ngClass]="item?.status | statusClass">
       <p class="uppercase-text">{{ item?.status | statusText }}</p>
-    </div>
-
-    <div
-      class="card-lable"
-      [ngClass]="item?.last_shoe_date | ferraduraClass: item?.exchange_months"
-      matTooltip="Status da ferradura"
-    >
-      <p class="mb-0">{{ item?.last_shoe_date | ferradura: item?.exchange_months }}</p>
     </div>
 
     <mat-card-actions>
@@ -89,16 +88,16 @@
         aria-label="Visualizar Resenha"
         (click)="verResenha(item?.id)"
       >
-        <mat-icon>account_circle</mat-icon>
+        <mat-icon>visibility</mat-icon>
       </button>
       <button
         mat-icon-button
         matTooltip="Editar Resenha"
-        color="warn"
+        color="primary"
         class="mx-2"
         (click)="editarResenha(item?.id)"
       >
-        <mat-icon>rebase_edit</mat-icon>
+        <mat-icon>edit</mat-icon>
       </button>
       <button
         mat-icon-button

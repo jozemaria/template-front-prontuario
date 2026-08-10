@@ -1,4 +1,4 @@
-<div class="container pt-4 pb-5">
+<div class="container pt-4 pb-5" #fichaContent>
   <mat-card class="rounded-4 mb-4">
     <mat-card-content class="p-4">
       <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start gap-4">
@@ -22,44 +22,54 @@
             >
               <span class="material-icons-outlined ficha-ferradura-icon">agriculture</span>
               <span class="ferradura-status--text">
-                {{ dadosCavalo?.last_shoe_date | ferradura: dadosCavalo?.exchange_months }}
+                Ferradura: {{ dadosCavalo?.last_shoe_date | ferradura: dadosCavalo?.exchange_months }}
               </span>
             </div>
           </div>
         </div>
         <div class="d-flex align-items-center gap-2 flex-wrap">
-          <button
-            mat-icon-button
-            matTooltip="Editar Resenha"
-            color="primary"
-            (click)="editarResenha(dadosCavalo.id)"
-          >
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            matTooltip="Status"
-            color="warn"
-            (click)="openDialogStatus()"
-            [disabled]="dadosCavalo?.status === 'inapto'"
-          >
-            <mat-icon>info</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            matTooltip="Excluir Resenha"
-            color="warn"
-            (click)="deletarResenha(dadosCavalo.id)"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            matTooltip="Voltar"
-            (click)="botaoVoltar()"
-          >
-            <mat-icon>arrow_back</mat-icon>
-          </button>
+          <div class="d-flex align-items-center gap-2 action-buttons">
+            <button
+              mat-icon-button
+              matTooltip="Exportar PDF"
+              color="primary"
+              (click)="exportarPDF()"
+            >
+              <mat-icon>picture_as_pdf</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="Editar Resenha"
+              color="primary"
+              (click)="editarResenha(dadosCavalo.id)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="Status"
+              color="warn"
+              (click)="openDialogStatus()"
+              [disabled]="dadosCavalo?.status === 'inapto'"
+            >
+              <mat-icon>info</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="Excluir Resenha"
+              color="warn"
+              (click)="deletarResenha(dadosCavalo.id)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="Voltar"
+              (click)="botaoVoltar()"
+            >
+              <mat-icon>arrow_back</mat-icon>
+            </button>
+          </div>
           <div class="ficha-seal ms-2" [ngClass]="dadosCavalo?.status">
             <span class="ficha-seal-text">{{ dadosCavalo?.status | statusText }}</span>
           </div>
@@ -169,11 +179,18 @@
 
   <mat-card class="rounded-4 mt-4">
     <mat-card-content class="p-4">
-      <div class="section-title">
-        Situação sanitária — histórico
-        <span class="text-muted ms-2" style="font-weight: 400; font-size: 12px;">
-          (últimos 5 atendimentos)
+      <div class="section-title d-flex justify-content-between align-items-center">
+        <span>
+          Situação sanitária — histórico
+          <span class="text-muted ms-2" style="font-weight: 400; font-size: 12px;">
+            (últimos 5 atendimentos)
+          </span>
         </span>
+        @if (prontuarioCode) {
+          <span style="font-weight: 600; font-size: 13px; color: #212529;">
+            Prontuário Nº {{ prontuarioCode }}
+          </span>
+        }
       </div>
 
       @if (historicoRecords?.length) {
@@ -181,13 +198,10 @@
           @for (record of historicoRecords; track $index) {
             <div class="historico-item">
               <div class="historico-item-header">
-                <div>
-                  <strong class="historico-code">Prontuário Nº {{ record.code_number }}</strong>
-                </div>
                 <div class="historico-date">
-                  {{ record.open_at | date:'dd/MM/yyyy' }}
+                  {{ record.open_at }}
                   @if (record.close_at) {
-                    — {{ record.close_at | date:'dd/MM/yyyy' }}
+                    — {{ record.close_at }}
                   } @else {
                     — Em andamento
                   }

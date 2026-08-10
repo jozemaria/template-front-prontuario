@@ -1,3 +1,4 @@
+import { forkJoin } from 'rxjs';
 import { Component, Inject, inject, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { MatModule } from 'src/app/appModules/mat.module';
@@ -76,11 +77,11 @@ export class ResenhaComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.animaisService.baiasCadastradas.subscribe((res: any) => this.baias = res)
     this.idResenha = parseInt(this.route.snapshot.paramMap.get('id'))
     this._locale = 'pt-BR';
     this._adapter.setLocale(this._locale);
     this.loadHorseIntoForm()
-    this.animaisService.baiasCadastradas.subscribe((res: any) => this.baias = res)
   }
 
   private readonly annotationStoragePrefix = 'horse-image-annotations';
@@ -235,16 +236,29 @@ export class ResenhaComponent implements OnInit {
 
   loadHorseIntoForm() {
     if (this.idResenha) {
-      this.animaisService.getAnimalById(this.idResenha).subscribe(
-        (res: any) => {
+      forkJoin({
+        horse: this.animaisService.getAnimalById(this.idResenha),
+        baias: this.animaisService.baiasCadastradas
+      }).subscribe(({ horse: res, baias: baiasList }: { horse: any; baias: any }) => {
+        this.baias = baiasList
           Object.keys(this.horse_owner_attributes.controls).forEach(key => {
             if (res.owner[key] !== undefined) {
               this.horse_owner_attributes.get(key)?.patchValue(res.owner[key])
             }
           })
           Object.keys(this.horse.controls).forEach(key => {
+            console.log(res, ' << RES')
             if (res[key] !== undefined) {
-              this.horse.get(key)?.patchValue(res[key])
+              if (key === 'birthday') {
+                const dateValue = new Date(res[key])
+                if (!isNaN(dateValue.getTime())) {
+                  this.horse.get(key)?.patchValue(dateValue as any)
+                }
+              } else if (key === 'baia') {
+                this.baias = res[key] || res.horse?.[key] || res['baia_id']
+              } else {
+                this.horse.get(key)?.patchValue(res[key])
+              }
             }
           })
 
