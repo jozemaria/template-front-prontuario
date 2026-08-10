@@ -111,6 +111,12 @@
               </p>
             </div>
           </div>
+          <!-- Botão de ícone para ir para a resenha do cavalo -->
+          <div>
+            <button mat-icon-button aria-label="Ver resenha" [routerLink]="['/pages/resenha', item.id]">
+              <span class="material-icons-outlined">article</span>
+            </button>
+          </div>
         </div>
         } }
       </div>
