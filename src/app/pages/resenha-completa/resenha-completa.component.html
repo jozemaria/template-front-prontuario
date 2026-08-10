@@ -3,9 +3,13 @@
     <mat-card-content class="p-4">
       <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start gap-4">
         <div class="d-flex gap-3 align-items-start">
-          <div class="ficha-avatar d-flex align-items-center justify-content-center">
-            <span>{{ initials }}</span>
-          </div>
+          @if (dadosCavalo?.photo_url) {
+            <img [src]="dadosCavalo.photo_url" class="ficha-avatar-img" alt="Foto do cavalo" />
+          } @else {
+            <div class="ficha-avatar d-flex align-items-center justify-content-center">
+              <span>{{ initials }}</span>
+            </div>
+          }
           <div>
             <div class="ficha-eyebrow">Ficha individual</div>
             <h3 class="mb-1 ficha-name">{{ dadosCavalo?.name }}</h3>

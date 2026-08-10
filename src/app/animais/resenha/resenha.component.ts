@@ -331,9 +331,6 @@ export class ResenhaComponent implements OnInit {
     if (this.selectedFileCover) {
       formData.append('horse[cover]', this.selectedFileCover, this.selectedFileCover.name);
     }
-    if (this.horseImagePreviewUrl) {
-      formData.append('horse[review_image_url]', this.horseImagePreviewUrl.toString());
-    }
     if (this.horseImageAnnotations.length > 0) {
       formData.append('horse[image_annotations]', JSON.stringify(this.horseImageAnnotations));
     } else {
