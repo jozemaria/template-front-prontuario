@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environment/environment';
+import { TokenService } from 'src/app/shared/services/token.service';
 
 export interface LoginUser {
   registration?: string | unknown;
@@ -17,13 +18,16 @@ export interface Token {
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService
+  ) { }
 
   loginClient(dataUser: LoginUser): Observable<Token> {
     return this.http.post(environment.URL_BASE + 'login', dataUser)
   }
 
   get isLoggedIn(): boolean {
-    return !!localStorage.getItem('access_token');
+    return this.tokenService.isLoggedIn();
   }
 }

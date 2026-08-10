@@ -28,25 +28,22 @@ export class UsuariosService {
   constructor(private http: HttpClient) { }
 
   getAllUser(): Observable<any> {
-    return this.http.get(environment.URL_BASE + 'users', {
-      headers:
-        { 'Authorization': localStorage.getItem('access_token') }
-    })
+    return this.http.get(environment.URL_BASE + 'users')
   }
 
   getUserById(id: number): any {
-    return this.http.get(this.urlAPI + '/' + id, { headers: { 'Authorization': localStorage.getItem('access_token') } })
+    return this.http.get(this.urlAPI + '/' + id)
   }
 
   saveNewUser(user: any): any {
-    return this.http.post(this.urlAPI, user, { headers: { 'Authorization': localStorage.getItem('access_token') } })
+    return this.http.post(this.urlAPI, user)
   }
 
   deleteUser(id: number): any {
-    return this.http.delete(this.urlAPI + '/' + id, { headers: { 'Authorization': localStorage.getItem('access_token') } })
+    return this.http.delete(this.urlAPI + '/' + id)
   }
 
   updateUser(idUser: number, userUpdate: any): any {
-    return this.http.put(this.urlAPI + '/' + idUser, userUpdate, { headers: { 'Authorization': localStorage.getItem('access_token') } })
+    return this.http.put(this.urlAPI + '/' + idUser, userUpdate)
   }
 }

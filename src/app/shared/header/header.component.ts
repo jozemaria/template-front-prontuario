@@ -2,9 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { AppIcon } from './app-icon';
 import { SidebarService } from './../sidebar/sidebar.service'
 import { Router } from '@angular/router';
-
-
-
+import { TokenService } from '../services/token.service';
 
 @Component({
   selector: 'app-header',
@@ -14,10 +12,23 @@ import { Router } from '@angular/router';
 
 export class HeaderComponent implements OnInit {
   readonly router = inject(Router)
-  dataUser: any
+  dataUser: any = {}
 
-  constructor(public sidebarservice: SidebarService) {
-    this.dataUser = JSON.parse(atob(localStorage.getItem('access_token').split('.')[1]))
+  constructor(
+    public sidebarservice: SidebarService,
+    private tokenService: TokenService
+  ) {
+    this.carregarDadosUsuario()
+  }
+
+  private carregarDadosUsuario() {
+    const decoded = this.tokenService.decodeToken<any>();
+    if (!decoded) {
+      this.tokenService.removeToken();
+      this.router.navigate(['/auth/sign-in']);
+      return;
+    }
+    this.dataUser = decoded;
     localStorage.setItem('photo_user', this.dataUser.photo_url)
     this.dataUser['photo_url'] = localStorage.getItem('photo_user')
     this.dataUser['name'] = this.corrigirCaracteres(this.dataUser.name)
@@ -88,7 +99,7 @@ export class HeaderComponent implements OnInit {
   }
 
   sair() {
-    localStorage.clear()
+    this.tokenService.removeToken();
     this.router.navigate(['auth/sign-in'])
   }
 

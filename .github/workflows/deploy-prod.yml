@@ -26,16 +26,19 @@ jobs:
       - name: Instalar rsync
         run: sudo apt-get update && sudo apt-get install -y rsync
 
-      - name: Salvar SSH Key
+      - name: Configurar SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DO_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
+          echo "${{ secrets.DO_SSH_KEY }}" > ~/.ssh/id_rsa_tmp
+          chmod 600 ~/.ssh/id_rsa_tmp
+          ssh-keygen -p -m PEM -N "" -f ~/.ssh/id_rsa_tmp
+          mv ~/.ssh/id_rsa_tmp ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy Angular via rsync
         run: |
-          rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa" \
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=accept-new" \
             dist/* \
             ${{ secrets.DO_USERNAME }}@${{ secrets.DO_HOST }}:/var/www/pmrn/dist
 
@@ -44,7 +47,7 @@ jobs:
           rsync -avz --delete \
             --exclude='node_modules' \
             --exclude='.env' \
-            -e "ssh -i ~/.ssh/id_rsa" \
+            -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=accept-new" \
             deepseek-server/ \
             ${{ secrets.DO_USERNAME }}@${{ secrets.DO_HOST }}:/var/www/deepseek-proxy/
 
