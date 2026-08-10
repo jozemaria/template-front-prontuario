@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { MatModule } from 'src/app/appModules/mat.module';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,6 +13,8 @@ import { FerraduraPipe } from 'src/app/shared/pipe/ferradura.pipe';
 import { FerraduraClassPipe } from 'src/app/shared/pipe/ferradura-class.pipe';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 export interface IHorseImageAnnotation {
   id: number;
@@ -78,6 +80,8 @@ export class ResenhaCompletaComponent implements OnInit {
   idResenha: number
   imageAnnotations: IHorseImageAnnotation[] = []
   historicoRecords: IHistoricoRecord[] = []
+  prontuarioCode: string = ''
+  @ViewChild('fichaContent', { static: false }) fichaContent!: ElementRef;
 
   get initials(): string {
     return this.dadosCavalo?.name
@@ -93,6 +97,54 @@ export class ResenhaCompletaComponent implements OnInit {
 
   botaoVoltar() {
     this.location.back()
+  }
+
+  async exportarPDF() {
+    this.sweetAlertService.confirmAlert('info', 'Deseja fazer o download da ficha?', `Ficha individual de ${this.dadosCavalo?.name || 'cavalo'}`).subscribe(
+      async (res: any) => {
+        if (!res) return;
+
+        const element = this.fichaContent.nativeElement;
+        const canvas = await html2canvas(element, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          allowTaint: true,
+          onclone: (clonedDoc) => {
+            const actions = clonedDoc.querySelector('.action-buttons');
+            if (actions) {
+              (actions as HTMLElement).style.display = 'none';
+            }
+          }
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+
+        const imgWidth = pdfWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pdfHeight;
+
+        while (heightLeft > 0) {
+          position = position - pdfHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pdfHeight;
+        }
+
+        const filename = this.dadosCavalo?.name
+          ? `Ficha_${this.dadosCavalo.name.replace(/\s+/g, '_')}.pdf`
+          : 'Ficha_Cavalo.pdf';
+        pdf.save(filename);
+      }
+    );
   }
 
   editarResenha(id: number) {
@@ -157,6 +209,8 @@ export class ResenhaCompletaComponent implements OnInit {
       const records = res?.history_horse_records || []
       const lastFive = records.slice(-5)
 
+      this.prontuarioCode = res?.code_number || records?.[records.length - 1]?.id?.toString() || ''
+
       if (lastFive.length === 0) {
         this.historicoRecords = []
         return
@@ -170,21 +224,21 @@ export class ResenhaCompletaComponent implements OnInit {
 
       forkJoin(requests).subscribe((results: any[]) => {
         this.historicoRecords = results.map((result, index) => {
+          const record = lastFive[index]
           if (result) {
-            const record = lastFive[index]
             const info = this.extractRecordInfo(result)
             return {
               code_number: record.id.toString(),
-              open_at: record.open_at,
-              close_at: record.close_at,
+              open_at: record.open_at || '',
+              close_at: record.close_at || '',
               medicamentos: info.medicamentos,
               prescricoes: info.prescricoes
             }
           }
           return {
-            code_number: lastFive[index].id.toString(),
-            open_at: lastFive[index].open_at,
-            close_at: lastFive[index].close_at,
+            code_number: record.id.toString(),
+            open_at: record.open_at || '',
+            close_at: record.close_at || '',
             medicamentos: [],
             prescricoes: []
           }

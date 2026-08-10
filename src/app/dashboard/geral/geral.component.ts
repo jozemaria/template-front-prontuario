@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { MatModule } from 'src/app/appModules/mat.module';
 import { DashboardService } from './service/dashboard.service';
 import { StatusTextPipe } from 'src/app/shared/pipe/status-text.pipe';
@@ -16,7 +17,7 @@ export interface IFichaCavalo {
 @Component({
   selector: 'app-geral',
   standalone: true,
-  imports: [CommonModule, MatModule, StatusTextPipe, StatusClassPipe],
+  imports: [CommonModule, RouterModule, MatModule, StatusTextPipe, StatusClassPipe],
   templateUrl: './geral.component.html',
   styleUrl: './geral.component.scss'
 })
