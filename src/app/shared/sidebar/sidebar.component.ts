@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { SidebarService } from './../sidebar/sidebar.service'
+import { TokenService } from '../services/token.service';
 
 
 @Component({
@@ -11,11 +13,24 @@ import { SidebarService } from './../sidebar/sidebar.service'
 
 export class SidebarComponent implements OnInit {
 
-    dataUser: any
+    dataUser: any = {}
 
-    constructor(public sidebarservice: SidebarService
-      ) {
-        this.dataUser = JSON.parse(atob(localStorage.getItem('access_token').split('.')[1]))
+    constructor(
+      public sidebarservice: SidebarService,
+      private tokenService: TokenService,
+      private router: Router
+    ) {
+        this.carregarDadosUsuario()
+      }
+
+      private carregarDadosUsuario() {
+        const decoded = this.tokenService.decodeToken<any>();
+        if (!decoded) {
+          this.tokenService.removeToken();
+          this.router.navigate(['/auth/sign-in']);
+          return;
+        }
+        this.dataUser = decoded;
         this.dataUser['photo_url'] = localStorage.getItem('photo_user')
         this.dataUser['name'] = this.corrigirCaracteres(this.dataUser.name)
         this.dataUser['role'] = this.corrigirCaracteres(this.dataUser.role)

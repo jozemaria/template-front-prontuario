@@ -13,6 +13,7 @@ import { ContentLayoutComponent } from "./layouts/content/content-layout.compone
 import { FullLayoutComponent } from "./layouts/full/full-layout.component";
 import { MatModule } from './appModules/mat.module';
 import { LoadingInterceptor } from './shared/interceptor/loading.interceptor';
+import { AuthInterceptor } from './shared/interceptor/auth.interceptor';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
 
@@ -33,6 +34,7 @@ import { provideEnvironmentNgxMask } from 'ngx-mask';
     MatModule
   ],
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
     provideEnvironmentNgxMask()
   ],
