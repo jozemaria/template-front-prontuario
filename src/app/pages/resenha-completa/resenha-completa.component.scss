@@ -10,6 +10,14 @@
   flex-shrink: 0;
 }
 
+.ficha-avatar-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
 .ficha-eyebrow {
   font-family: 'Courier New', monospace;
   font-size: 11px;
