@@ -45,49 +45,57 @@
             </span>
           </div>
           <div
-            class="d-flex align-items-start flex-column flex-lg-row gap-3 mt-3"
+            class="d-flex flex-wrap align-items-start gap-3 mt-3"
           >
             <button
-              mat-stroked-button
+              mat-flat-button
+              color="primary"
               class="rounded-pill px-3"
               (click)="openDialogMedicamentos()"
             >
+              <mat-icon class="me-1">medication</mat-icon>
               Medicamentos
             </button>
             <button
-              mat-stroked-button
+              mat-flat-button
+              color="primary"
               class="rounded-pill px-3"
               (click)="openDialogObservacao()"
             >
-              Prescrição e Orientação
+              <mat-icon class="me-1">assignment</mat-icon>
+              Prescrição
             </button>
             <button
               mat-stroked-button
               class="rounded-pill px-3"
               (click)="openDialogFotos()"
             >
+              <mat-icon class="me-1">photo_camera</mat-icon>
               Fotos
-            </button>
-            <button
-              mat-stroked-button
-              class="rounded-pill px-3"
-              (click)="openDialogAlta()"
-            >
-              Alta Clínica
             </button>
             <button
               mat-stroked-button
               class="rounded-pill px-3"
               (click)="openDialogFerradura()"
             >
+              <mat-icon class="me-1">agriculture</mat-icon>
               Ferradura
             </button>
             <button
               mat-flat-button
-              color="primary"
+              color="warn"
+              class="rounded-pill px-3"
+              (click)="openDialogAlta()"
+            >
+              <mat-icon class="me-1">logout</mat-icon>
+              Alta Clínica
+            </button>
+            <button
+              mat-button
               class="rounded-pill px-3"
               (click)="botaoVoltar()"
             >
+              <mat-icon class="me-1">arrow_back</mat-icon>
               Voltar
             </button>
           </div>
@@ -178,7 +186,7 @@
                       <span class="material-icons-outlined align-middle me-1">agriculture</span>
                       Ferradura
                     </h6>
-                    <p class="clinical-card__text">{{ item.shoe_date }}</p>
+                    <p class="clinical-card__text">Data da Ferradura: {{ item.shoe_date }}</p>
                     } @else if (item.type === 'Fotos') {
                     <h6 class="clinical-card__title">
                       <span class="material-icons-outlined align-middle me-1">photo_camera</span>
