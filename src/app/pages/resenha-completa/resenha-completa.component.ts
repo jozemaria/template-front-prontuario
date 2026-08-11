@@ -175,7 +175,7 @@ export class ResenhaCompletaComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.animaisService.editarStatus(result, this.idResenha).subscribe({
+        this.animaisService.editarStatus({ horse: result }, this.idResenha).subscribe({
           error: err => {
             this.sweetAlertService.alert('error', 'Ops...', 'Erro: ' + err.error.error)
           },

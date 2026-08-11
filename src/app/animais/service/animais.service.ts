@@ -56,8 +56,8 @@ export class AnimaisService {
     return this.http.get(this.urlAPIHorseRecor + idHorse)
   }
 
-  editarStatus(type: string, idHorse: number) {
-    return this.http.patch(this.urlAPIHorse + idHorse, type)
+  editarStatus(payload: { horse: { status: string; status_description: string } }, idHorse: number) {
+    return this.http.patch(this.urlAPIHorse + idHorse, payload)
   }
 
   abrirAtendimento(idHorse: number) {
