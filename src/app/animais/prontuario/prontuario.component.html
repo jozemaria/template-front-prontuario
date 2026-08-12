@@ -45,49 +45,57 @@
             </span>
           </div>
           <div
-            class="d-flex align-items-start flex-column flex-lg-row gap-3 mt-3"
+            class="d-flex flex-wrap align-items-start gap-3 mt-3"
           >
             <button
-              mat-stroked-button
+              mat-flat-button
+              color="primary"
               class="rounded-pill px-3"
               (click)="openDialogMedicamentos()"
             >
+              <mat-icon class="me-1">medication</mat-icon>
               Medicamentos
             </button>
             <button
-              mat-stroked-button
+              mat-flat-button
+              color="primary"
               class="rounded-pill px-3"
               (click)="openDialogObservacao()"
             >
-              Prescrição e Orientação
+              <mat-icon class="me-1">assignment</mat-icon>
+              Prescrição
             </button>
             <button
               mat-stroked-button
               class="rounded-pill px-3"
               (click)="openDialogFotos()"
             >
+              <mat-icon class="me-1">photo_camera</mat-icon>
               Fotos
-            </button>
-            <button
-              mat-stroked-button
-              class="rounded-pill px-3"
-              (click)="openDialogAlta()"
-            >
-              Alta Clínica
             </button>
             <button
               mat-stroked-button
               class="rounded-pill px-3"
               (click)="openDialogFerradura()"
             >
+              <mat-icon class="me-1">agriculture</mat-icon>
               Ferradura
             </button>
             <button
               mat-flat-button
-              color="primary"
+              color="warn"
+              class="rounded-pill px-3"
+              (click)="openDialogAlta()"
+            >
+              <mat-icon class="me-1">logout</mat-icon>
+              Alta Clínica
+            </button>
+            <button
+              mat-button
               class="rounded-pill px-3"
               (click)="botaoVoltar()"
             >
+              <mat-icon class="me-1">arrow_back</mat-icon>
               Voltar
             </button>
           </div>
@@ -98,9 +106,7 @@
   <div class="row reverse-cloumn">
     <div class="col-12 col-xl-8">
       <mat-card class="rounded-4">
-        <mat-card-content
-          class="d-flex align-items-center justify-content-between p-4"
-        >
+        <mat-card-content class="p-4">
           @if (isData) {
           <div class="col-12 d-flex justify-content-center">
             <h3>Nenhum histórico disponível.</h3>
@@ -141,42 +147,66 @@
               >
                 <div>
                   @for (item of dadosCavalo.informations[date]; track $index) {
-                  <div class="mb-4">
+                  <div class="clinical-card mb-3">
                     @if (item.type === 'Medicamento') {
-                    <h6>Medicamento:</h6>
-                    {{ item.name }} - {{ item.doses }} ({{ item.hour }}) -
-                    {{ item.description }}
-                    <p class="mb-0 mt-2" style="font-size: small">
-                      <strong>Preenchido por:</strong> {{ item.user }} -
-                      <strong>CRM:</strong> {{ item.user_crm }}
-                      <strong>|</strong>
-                      {{ item.created_at }}
-                    </p>
-                    <hr />
-                    } @else if (item.type === 'Prescrição') {
-                    <h6>Prescrição e Orientação:</h6>
-                    <p>{{ item.description }}</p>
-                    <p class="mb-0 mt-2" style="font-size: small">
-                      <strong>Preenchido por:</strong> {{ item.user }} -
-                      <strong>CRM:</strong> {{ item.user_crm }}
-                      <strong>|</strong>
-                      {{ item.created_at }}
-                    </p>
-                    <hr />
-                    } @else if (item.type === 'Fotos') {
-                    <h6>Fotos da Evolução:</h6>
-                    <p>{{ item.description }}</p>
-
-                    <img [src]="item.photo_url" alt="" style="width: 90%" />
-
-                    <p class="mb-0 mt-2" style="font-size: small">
-                      <strong>Preenchido por:</strong> {{ item.user }} -
-                      <strong>CRM:</strong> {{ item.user_crm }}
-                      <strong>|</strong>
-                      {{ item.created_at }}
-                    </p>
-                    <hr />
+                    <h6 class="clinical-card__title">
+                      <span class="material-icons-outlined align-middle me-1">medication</span>
+                      Medicamento
+                    </h6>
+                    <div class="row clinical-card__info mb-2">
+                      <div class="col-12 col-md-4">
+                        <span class="clinical-card__label">Nome:</span>
+                        <span>{{ item.name }}</span>
+                      </div>
+                      <div class="col-12 col-md-4">
+                        <span class="clinical-card__label">Doses:</span>
+                        <span>{{ item.doses }}</span>
+                      </div>
+                      <div class="col-12 col-md-4">
+                        <span class="clinical-card__label">Horários:</span>
+                        <span>{{ item.hour }}</span>
+                      </div>
+                    </div>
+                    @if (item.description) {
+                    <div class="clinical-card__description">
+                      <span class="clinical-card__label">Observações:</span>
+                      <p class="clinical-card__text">{{ item.description }}</p>
+                    </div>
                     }
+                    } @else if (item.type === 'Prescrição') {
+                    <h6 class="clinical-card__title">
+                      <span class="material-icons-outlined align-middle me-1">assignment</span>
+                      Prescrição e Orientação
+                    </h6>
+                    <div class="clinical-card__description">
+                      <p class="clinical-card__text">{{ item.description }}</p>
+                    </div>
+                    } @else if (item.type === 'shoe') {
+                    <h6 class="clinical-card__title">
+                      <span class="material-icons-outlined align-middle me-1">agriculture</span>
+                      Ferradura
+                    </h6>
+                    <p class="clinical-card__text">Data da Ferradura: {{ item.shoe_date }}</p>
+                    } @else if (item.type === 'Fotos') {
+                    <h6 class="clinical-card__title">
+                      <span class="material-icons-outlined align-middle me-1">photo_camera</span>
+                      Foto da Evolução
+                    </h6>
+                    @if (item.description) {
+                    <div class="clinical-card__description">
+                      <p class="clinical-card__text">{{ item.description }}</p>
+                    </div>
+                    }
+                    <img [src]="item.photo_url" alt="" class="clinical-card__photo" />
+                    }
+                    <div class="clinical-card__footer">
+                      <span class="material-icons-outlined footer-icon">person</span>
+                      <strong>Preenchido por:</strong> {{ item.user }} &mdash;
+                      <strong>CRM:</strong> {{ item.user_crm }}
+                      <span class="mx-1">|</span>
+                      <span class="material-icons-outlined footer-icon">schedule</span>
+                      {{ item.created_at }}
+                    </div>
                   </div>
                   }
                 </div>

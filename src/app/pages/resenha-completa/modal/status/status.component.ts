@@ -17,7 +17,7 @@ export class StatusComponent {
 
   formStatus = new FormGroup({
     status: new FormControl(''),
-    status_descripition: new FormControl('')
+    status_description: new FormControl('')
   });
 
   get validarCampo(): boolean {

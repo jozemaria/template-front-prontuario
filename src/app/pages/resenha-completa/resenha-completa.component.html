@@ -167,8 +167,10 @@
               class="horse-review-marker"
               [style.left.%]="annotation.x"
               [style.top.%]="annotation.y"
-              [matTooltip]="annotation.note"
-            >+</span>
+            >
+              +
+              <span class="horse-review-marker-label">{{ annotation.note }}</span>
+            </span>
           }
         </div>
       } @else {
