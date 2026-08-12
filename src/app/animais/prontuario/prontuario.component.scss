@@ -1,6 +1,6 @@
 .example-accordion {
   display: block;
-  width: 100vw;
+  width: 100%;
 }
 
 .example-accordion-item {
@@ -10,6 +10,12 @@
 
 .example-accordion-item + .example-accordion-item {
   border-top: none;
+}
+
+.accordion-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .example-accordion-item-header {
@@ -76,4 +82,74 @@
   right: 24px;
   bottom: 24px;
   z-index: 1000;
+}
+
+.clinical-card {
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+
+  &__title {
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-bottom: 12px;
+    color: #333;
+    display: flex;
+    align-items: center;
+  }
+
+  &__info {
+    font-size: 0.92rem;
+  }
+
+  &__label {
+    font-weight: 600;
+    color: #555;
+    margin-right: 4px;
+  }
+
+  &__description {
+    background-color: #fff;
+    border-left: 3px solid #1976d2;
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+  }
+
+  &__text {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 0.94rem;
+    line-height: 1.5;
+    color: #444;
+  }
+
+  &__photo {
+    width: 90%;
+    max-width: 500px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px 6px;
+    font-size: 0.78rem;
+    color: #777;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eaeaea;
+  }
+}
+
+.footer-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
 }

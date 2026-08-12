@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ButtonsComponent } from './buttons/buttons.component';
-import { BadgesComponent } from './badges/badges.component';
-import { CardsComponent } from './cards/cards.component';
 import { ChipsComponent } from './chips/chips.component';
 import { ExpansionComponent } from './expansion/expansion.component';
 import { MenuComponent } from './menu/menu.component';
@@ -19,30 +17,6 @@ const routes: Routes = [
         component: ButtonsComponent,
         data: {
           title: 'buttons'
-        }
-      }
-    ]
-  },
-  {
-    path: '',
-    children: [
-      {
-        path: 'badges',
-        component: BadgesComponent,
-        data: {
-          title: 'badges'
-        }
-      }
-    ]
-  },
-  {
-    path: '',
-    children: [
-      {
-        path: 'cards',
-        component: CardsComponent,
-        data: {
-          title: 'cards'
         }
       }
     ]

@@ -56,8 +56,8 @@ export class AnimaisService {
     return this.http.get(this.urlAPIHorseRecor + idHorse)
   }
 
-  editarStatus(type: string, idHorse: number) {
-    return this.http.patch(this.urlAPIHorse + idHorse, type)
+  editarStatus(payload: { horse: { status: string; status_description: string } }, idHorse: number) {
+    return this.http.patch(this.urlAPIHorse + idHorse, payload)
   }
 
   abrirAtendimento(idHorse: number) {
@@ -73,5 +73,13 @@ export class AnimaisService {
 
   salvarFerradura(ferradura: any) {
     return this.http.post(this.urlAPIBase + 'horseshoes', ferradura)
+  }
+
+  saveImageAnnotations(horseId: number, annotations: any[]): Observable<any> {
+    return this.http.post(`${this.urlAPIHorse}${horseId}/image_annotations/`, { image_annotation: annotations }, { responseType: 'text' })
+  }
+
+  deleteImageAnnotation(horseId: number, annotationId: number): Observable<any> {
+    return this.http.delete(`${this.urlAPIHorse}${horseId}/image_annotations/${annotationId}`, { responseType: 'text' })
   }
 }
