@@ -54,6 +54,7 @@ export class ResenhaComponent implements OnInit {
   selectedFile: File | null = null;
   selectedFileCover: File | null = null;
   horseImageAnnotations: IHorseImageAnnotation[] = [];
+  hasServerAnnotations = false;
   horseImagePreviewUrl: string | null = 'assets/images/resenha/Imagem_Cavalo_Informacoes.png';
   selectedAnnotationPoint: { x: number; y: number } | null = null;
   currentAnnotationText = '';
@@ -255,7 +256,14 @@ export class ResenhaComponent implements OnInit {
                   this.horse.get(key)?.patchValue(dateValue as any)
                 }
               } else if (key === 'baia') {
-                this.baias = res[key] || res.horse?.[key] || res['baia_id']
+                let baiaValue = res[key] || res.horse?.[key] || res['baia_id']
+                if (typeof baiaValue === 'string') {
+                  const match = baiaValue.match(/\d+/)
+                  baiaValue = match ? Number(match[0]) : null
+                } else if (baiaValue && typeof baiaValue === 'object' && baiaValue.id !== undefined) {
+                  baiaValue = baiaValue.id
+                }
+                this.horse.get(key)?.patchValue(baiaValue)
               } else {
                 this.horse.get(key)?.patchValue(res[key])
               }
@@ -263,6 +271,7 @@ export class ResenhaComponent implements OnInit {
           })
 
           const serverAnnotations = this.normalizeImageAnnotations(res?.horse?.image_annotations || res?.image_annotations);
+          this.hasServerAnnotations = serverAnnotations.length > 0;
           if (serverAnnotations.length) {
             this.horseImageAnnotations = serverAnnotations;
             this.persistAnnotations();
@@ -317,11 +326,34 @@ export class ResenhaComponent implements OnInit {
     this.selectedAnnotationPoint = null;
     this.currentAnnotationText = '';
     this.persistAnnotations();
+
+    if (this.idResenha) {
+      this.animaisService.saveImageAnnotations(this.idResenha, this.horseImageAnnotations).subscribe({
+        next: () => {
+          this.hasServerAnnotations = true;
+        },
+        error: (err: any) => {
+          this.sweetalertService.alert('error', 'Ops...', 'Erro ao salvar observação: ' + (err.error?.[0] || err.message));
+        }
+      });
+    }
   }
 
   removeAnnotation(annotationId: number): void {
-    this.horseImageAnnotations = this.horseImageAnnotations.filter(annotation => annotation.id !== annotationId);
-    this.persistAnnotations();
+    if (this.idResenha && this.hasServerAnnotations) {
+      this.animaisService.deleteImageAnnotation(this.idResenha, annotationId).subscribe({
+        next: () => {
+          this.horseImageAnnotations = this.horseImageAnnotations.filter(annotation => annotation.id !== annotationId);
+          this.persistAnnotations();
+        },
+        error: (err: any) => {
+          this.sweetalertService.alert('error', 'Ops...', 'Erro ao excluir observação: ' + (err.error?.[0] || err.message));
+        }
+      });
+    } else {
+      this.horseImageAnnotations = this.horseImageAnnotations.filter(annotation => annotation.id !== annotationId);
+      this.persistAnnotations();
+    }
   }
 
   clearPendingAnnotation(): void {
@@ -345,10 +377,12 @@ export class ResenhaComponent implements OnInit {
     if (this.selectedFileCover) {
       formData.append('horse[cover]', this.selectedFileCover, this.selectedFileCover.name);
     }
-    if (this.horseImageAnnotations.length > 0) {
-      formData.append('horse[image_annotations]', JSON.stringify(this.horseImageAnnotations));
-    } else {
-      formData.append('horse[image_annotations]', JSON.stringify([]));
+    if (!this.idResenha) {
+      if (this.horseImageAnnotations.length > 0) {
+        formData.append('horse[image_annotations]', JSON.stringify(this.horseImageAnnotations));
+      } else {
+        formData.append('horse[image_annotations]', JSON.stringify([]));
+      }
     }
 
     Object.keys(horseOwnerForm.controls).forEach(key => {
@@ -385,6 +419,7 @@ export class ResenhaComponent implements OnInit {
     this.horse_owner_attributes.reset()
     this.horse.reset()
     this.horseImageAnnotations = []
+    this.hasServerAnnotations = false
     this.selectedAnnotationPoint = null
     this.currentAnnotationText = ''
     this.horseImagePreviewUrl = 'assets/images/resenha/Imagem_Cavalo_Informacoes.png'

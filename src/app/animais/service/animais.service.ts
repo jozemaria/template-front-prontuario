@@ -74,4 +74,12 @@ export class AnimaisService {
   salvarFerradura(ferradura: any) {
     return this.http.post(this.urlAPIBase + 'horseshoes', ferradura)
   }
+
+  saveImageAnnotations(horseId: number, annotations: any[]): Observable<any> {
+    return this.http.post(`${this.urlAPIHorse}${horseId}/image_annotations/`, { image_annotation: annotations }, { responseType: 'text' })
+  }
+
+  deleteImageAnnotation(horseId: number, annotationId: number): Observable<any> {
+    return this.http.delete(`${this.urlAPIHorse}${horseId}/image_annotations/${annotationId}`, { responseType: 'text' })
+  }
 }
