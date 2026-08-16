@@ -37,7 +37,14 @@ export class SidebarComponent implements OnInit {
       }
 
       corrigirCaracteres(texto) {
-        return decodeURIComponent(escape(texto));
+        if (!texto) {
+          return texto;
+        }
+        try {
+          return decodeURIComponent(escape(texto));
+        } catch {
+          return texto;
+        }
       }
 
       getSideBarSate() {

@@ -40,7 +40,14 @@ export class HeaderComponent implements OnInit {
   toggleSearch: boolean = false;
 
   corrigirCaracteres(texto) {
-    return decodeURIComponent(escape(texto));
+    if (!texto) {
+      return texto;
+    }
+    try {
+      return decodeURIComponent(escape(texto));
+    } catch {
+      return texto;
+    }
   }
 
   darkMode() {
