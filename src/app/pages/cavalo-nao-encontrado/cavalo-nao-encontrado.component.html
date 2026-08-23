@@ -1,0 +1,49 @@
+<div class="cavalo-nao-encontrado">
+  <div class="cavalo-nao-encontrado__bg"></div>
+
+  <div class="cavalo-nao-encontrado__content z-1 position-relative">
+    <mat-card class="cavalo-nao-encontrado__card rounded-4">
+      <mat-card-content class="p-5 text-center">
+        <div class="cavalo-nao-encontrado__brand">
+          <img
+            src="assets/images/app/logo_cavalaria.png"
+            alt="Logo Cavalaria RN"
+            class="cavalo-nao-encontrado__logo"
+          />
+          <h1 class="cavalo-nao-encontrado__title">Cavalaria RN</h1>
+          <p class="cavalo-nao-encontrado__subtitle-brand">Prontuário Eletrônico</p>
+        </div>
+
+        <mat-divider class="cavalo-nao-encontrado__divider"></mat-divider>
+
+        <div class="cavalo-nao-encontrado__icon">
+          <mat-icon>error_outline</mat-icon>
+        </div>
+
+        <h2 class="cavalo-nao-encontrado__heading">Cavalo não encontrado</h2>
+        <p class="cavalo-nao-encontrado__message">
+          Não existe cavalo cadastrado na baia informada.
+        </p>
+        <p class="cavalo-nao-encontrado__hint">
+          Verifique o link acessado ou procure a secretaria da unidade para mais informações.
+        </p>
+
+        <div class="cavalo-nao-encontrado__actions">
+          <button
+            mat-flat-button
+            color="primary"
+            class="rounded-5 px-4"
+            routerLink="/auth/sign-in"
+          >
+            <mat-icon>login</mat-icon>
+            Acessar o sistema
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="cavalo-nao-encontrado__footer">
+      Cavalaria RN &mdash; Prontuário Eletrônico
+    </div>
+  </div>
+</div>

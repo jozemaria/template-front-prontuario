@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from 'src/app/guard/auth.guard';
+import { CavaloNaoEncontradoComponent } from 'src/app/pages/cavalo-nao-encontrado/cavalo-nao-encontrado.component';
 
 //Route for content layout without sidebar, navbar and footer for pages like Login, Registration etc...
 
@@ -13,5 +14,10 @@ export const CONTENT_ROUTES: Routes = [
         path: 'pages',
         loadChildren: () => import('./../../pages/pages.module').then(m => m.PagesModule),
         canActivate: [authGuard]
+    },
+    {
+        path: 'cavalo-nao-encontrado',
+        component: CavaloNaoEncontradoComponent,
+        data: { title: 'Cavalo não encontrado' }
     }
 ];

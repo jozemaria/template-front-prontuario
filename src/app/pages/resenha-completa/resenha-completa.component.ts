@@ -92,7 +92,6 @@ export class ResenhaCompletaComponent implements OnInit {
   ngOnInit(): void {
     this.idResenha = parseInt(this.route.snapshot.paramMap.get('id'))
     this.getResenha()
-    this.loadHistorico()
   }
 
   botaoVoltar() {
@@ -189,17 +188,26 @@ export class ResenhaCompletaComponent implements OnInit {
   }
 
   getResenha() {
-    this.animaisService.getAnimalById(this.idResenha).subscribe((res: any) => {
-      this.dadosCavalo = res
-      if (res.birthday) {
-        this.dadosCavalo.birthday = format(res.birthday, 'dd/MM/yyyy', { locale: ptBR })
-      }
+    this.animaisService.getAnimalById(this.idResenha).subscribe({
+      next: (res: any) => {
+        this.dadosCavalo = res
+        if (res.birthday) {
+          this.dadosCavalo.birthday = format(res.birthday, 'dd/MM/yyyy', { locale: ptBR })
+        }
 
-      const annotations = res?.image_annotations || res?.horse?.image_annotations
-      if (annotations) {
-        this.imageAnnotations = Array.isArray(annotations) ? annotations : JSON.parse(annotations)
-      } else {
-        this.imageAnnotations = []
+        const annotations = res?.image_annotations || res?.horse?.image_annotations
+        if (annotations) {
+          this.imageAnnotations = Array.isArray(annotations) ? annotations : JSON.parse(annotations)
+        } else {
+          this.imageAnnotations = []
+        }
+
+        this.loadHistorico()
+      },
+      error: (err: any) => {
+        if (err?.status === 404) {
+          this.router.navigateByUrl('/cavalo-nao-encontrado')
+        }
       }
     })
   }
