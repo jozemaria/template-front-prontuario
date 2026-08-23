@@ -24,6 +24,22 @@ export interface IHorseImageAnnotation {
   created_at: string;
 }
 
+// Entrada individual retornada pelo search do histórico
+export interface IHistoricoEntry {
+  id: number;
+  type: string;
+  created_at?: string;
+  user?: string;
+  user_crm?: string;
+  description?: string;
+  name?: string;
+  doses?: string;
+  hour?: string;
+  shoe_date?: string;
+  exchange_months?: number;
+  photo_url?: string;
+}
+
 export interface IFichaCavalo {
   id: number;
   name: string;
@@ -53,14 +69,6 @@ export interface IFichaCavalo {
   review_image_url?: string;
 }
 
-export interface IHistoricoRecord {
-  code_number: string;
-  open_at: string;
-  close_at: string;
-  medicamentos: { name: string; doses: string; hour: string; description: string }[];
-  prescricoes: { description: string }[];
-}
-
 @Component({
   selector: 'app-resenha-completa',
   standalone: true,
@@ -79,7 +87,8 @@ export class ResenhaCompletaComponent implements OnInit {
   dadosCavalo: IFichaCavalo
   idResenha: number
   imageAnnotations: IHorseImageAnnotation[] = []
-  historicoRecords: IHistoricoRecord[] = []
+  // grouped by date, most recent first: [{ date: '23/08/2026', entries: [...] }]
+  historicoGrouped: Array<{ date: string; entries: IHistoricoEntry[] }> = []
   prontuarioCode: string = ''
   @ViewChild('fichaContent', { static: false }) fichaContent!: ElementRef;
 
@@ -213,68 +222,124 @@ export class ResenhaCompletaComponent implements OnInit {
   }
 
   loadHistorico() {
-    this.animaisService.historicoProntuario(this.idResenha).subscribe((res: any) => {
-      const records = res?.history_horse_records || []
-      const lastFive = records.slice(-5)
+    this.animaisService.historicoProntuario(this.idResenha).subscribe({
+      next: (res: any) => {
+        const records = res?.history_horse_records || []
+        this.prontuarioCode = res?.code_number || records?.[records.length - 1]?.id?.toString() || ''
 
-      this.prontuarioCode = res?.code_number || records?.[records.length - 1]?.id?.toString() || ''
+        if (records.length === 0) {
+          this.historicoGrouped = []
+          return
+        }
 
-      if (lastFive.length === 0) {
-        this.historicoRecords = []
-        return
-      }
-
-      const requests = lastFive.map((record: any) =>
-        this.animaisService.pegarHistorico(record.id).pipe(
-          catchError(() => of(null))
+        const lastFive = records.slice(-5)
+        const requests = lastFive.map((record: any) =>
+          this.animaisService.pegarHistorico(record.id).pipe(
+            catchError(() => of(null))
+          )
         )
-      )
 
-      forkJoin(requests).subscribe((results: any[]) => {
-        this.historicoRecords = results.map((result, index) => {
-          const record = lastFive[index]
-          if (result) {
-            const info = this.extractRecordInfo(result)
-            return {
-              code_number: record.id.toString(),
-              open_at: record.open_at || '',
-              close_at: record.close_at || '',
-              medicamentos: info.medicamentos,
-              prescricoes: info.prescricoes
-            }
-          }
-          return {
-            code_number: record.id.toString(),
-            open_at: record.open_at || '',
-            close_at: record.close_at || '',
-            medicamentos: [],
-            prescricoes: []
-          }
+        forkJoin(requests).subscribe((results: any[]) => {
+          this.historicoGrouped = this.buildHistorico(results)
         })
-      })
+      },
+      error: () => {
+        this.historicoGrouped = []
+      }
     })
   }
 
-  private extractRecordInfo(informations: any): { medicamentos: any[]; prescricoes: any[] } {
-    const medicamentos: any[] = []
-    const prescricoes: any[] = []
+  private buildHistorico(results: any[]): Array<{ date: string; entries: IHistoricoEntry[] }> {
+    const byDate = new Map<string, IHistoricoEntry[]>()
 
-    if (informations && typeof informations === 'object') {
-      const dates = Object.keys(informations)
-      dates.forEach(date => {
-        const items = informations[date]
-        if (Array.isArray(items)) {
-          items.forEach((item: any) => {
-            if (item.type === 'Medicamento') {
-              medicamentos.push(item)
-            } else if (item.type === 'Prescrição') {
-              prescricoes.push(item)
-            }
-          })
-        }
+    results.forEach((res: any) => {
+      if (!res || typeof res !== 'object') return
+      Object.keys(res).forEach(date => {
+        const list = res[date]
+        if (!Array.isArray(list)) return
+        const entries = list
+          .map((item: any) => this.normalizeEntry(item))
+          .filter((item: IHistoricoEntry) => item && item.type)
+        if (!entries.length) return
+        if (!byDate.has(date)) byDate.set(date, [])
+        byDate.get(date)!.push(...entries)
       })
-    }
+    })
 
-    return { medicamentos, prescricoes }
+    return Array.from(byDate.entries())
+      .sort((a, b) => this.parseDateBR(b[0]) - this.parseDateBR(a[0]))
+      .map(([date, entries]) => ({ date, entries }))
+  }
+
+  private normalizeEntry(item: any): IHistoricoEntry {
+    return {
+      id: item?.id,
+      type: item?.type || '',
+      created_at: item?.created_at,
+      user: item?.user,
+      user_crm: item?.user_crm,
+      description: item?.description,
+      name: item?.name,
+      doses: item?.doses,
+      hour: item?.hour,
+      shoe_date: item?.shoe_date,
+      exchange_months: item?.exchange_months,
+      photo_url: item?.photo_url || item?.url || item?.path
+    }
+  }
+
+  private parseDateBR(date: string): number {
+    const parts = (date || '').split('/').map(Number)
+    if (parts.length !== 3 || parts.some(isNaN)) return 0
+    return new Date(parts[2], parts[1] - 1, parts[0]).getTime()
+  }
+
+  private entryCategory(entry: IHistoricoEntry): string {
+    const t = (entry.type || '').toLowerCase()
+    if (t.includes('medicamento')) return 'medicamento'
+    if (t.includes('prescr')) return 'prescricao'
+    if (t.includes('foto') || t.includes('imagem') || t.includes('image')) return 'foto'
+    if (t.includes('shoe') || t.includes('ferradura')) return 'ferradura'
+    return 'outro'
+  }
+
+  isFoto(entry: IHistoricoEntry): boolean {
+    return this.entryCategory(entry) === 'foto'
+  }
+
+  isMedicamento(entry: IHistoricoEntry): boolean {
+    return this.entryCategory(entry) === 'medicamento'
+  }
+
+  isPrescricao(entry: IHistoricoEntry): boolean {
+    return this.entryCategory(entry) === 'prescricao'
+  }
+
+  isFerradura(entry: IHistoricoEntry): boolean {
+    return this.entryCategory(entry) === 'ferradura'
+  }
+
+  isOutro(entry: IHistoricoEntry): boolean {
+    return this.entryCategory(entry) === 'outro'
+  }
+
+  entryIcon(entry: IHistoricoEntry): string {
+    switch (this.entryCategory(entry)) {
+      case 'medicamento': return 'local_pharmacy'
+      case 'prescricao': return 'assignment'
+      case 'foto': return 'photo_library'
+      case 'ferradura': return 'agriculture'
+      default: return 'widgets'
+    }
+  }
+
+  entryTypeLabel(entry: IHistoricoEntry): string {
+    switch (this.entryCategory(entry)) {
+      case 'medicamento': return 'Medicamento'
+      case 'prescricao': return 'Prescrição'
+      case 'foto': return 'Foto'
+      case 'ferradura': return 'Ferradura'
+      default: return entry.type || 'Registro'
+    }
   }
 }
