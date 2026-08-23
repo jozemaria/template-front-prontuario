@@ -176,59 +176,6 @@
   pointer-events: none;
 }
 
-.historico-timeline {
-  display: flex;
-  flex-direction: column;
-}
-
-.historico-item {
-  padding: 14px 0;
-  border-bottom: 1px solid #dee2e6;
-
-  &:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-}
-
-.historico-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.historico-code {
-  font-size: 14px;
-  color: #212529;
-}
-
-.historico-date {
-  font-size: 12px;
-  color: #6c757d;
-  font-family: 'Courier New', monospace;
-  white-space: nowrap;
-}
-
-.historico-item-body {
-  margin-top: 8px;
-  padding-left: 4px;
-}
-
-.historico-subsection {
-  margin-bottom: 8px;
-
-  ul {
-    margin-top: 4px;
-    padding-left: 20px;
-
-    li {
-      font-size: 13.5px;
-      line-height: 1.5;
-    }
-  }
-}
 
 .mat-light-bg-green {
   background-color: rgba(63, 107, 58, 0.12);
@@ -248,4 +195,192 @@
 .mat-light-bg-dark {
   background-color: rgba(108, 117, 125, 0.1);
   color: #6c757d;
+}
+
+/* Styles added for the new historico accordion and types */
+.historico-accordion {
+ width: 100%;
+}
+
+.historico-panel-content {
+ padding: 12px 0;
+}
+
+.type-card {
+ border-radius: 8px;
+ background: #fafbfd;
+ border: 1px solid #e6e9ee;
+}
+
+.card-type-header {
+ font-weight: 600;
+ color: #2b2f36;
+}
+
+.type-title {
+ display: inline-flex;
+ align-items: center;
+ gap: 8px;
+ font-weight: 700;
+}
+
+.historico-thumb {
+ width: 96px;
+ height: 72px;
+ border-radius: 8px;
+ overflow: hidden;
+ border: 1px solid #e6e9ee;
+ background: #fff;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+}
+
+.historico-thumb img {
+ display: block;
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+}
+
+/* small responsive tweaks */
+@media (max-width: 768px) {
+ .historico-thumb { width: 72px; height: 56px; }
+ .type-card { padding: 8px; }
+}
+
+/* Date grouping and attendance cards */
+.date-group {
+ margin-bottom: 18px;
+}
+
+.date-header h6 {
+ font-size: 14px;
+ font-weight: 700;
+ margin: 0;
+}
+
+.attendance-card {
+ border-radius: 10px;
+ box-shadow: 0 6px 18px rgba(35, 47, 63, 0.06);
+ border: 1px solid rgba(34, 41, 47, 0.06);
+ background: #ffffff;
+}
+
+.attendance-meta .attendance-title {
+ font-size: 14px;
+ color: #1f2937;
+}
+
+.attendance-body .type-card {
+ background: #fbfdfe;
+}
+
+.date-header .text-muted {
+ color: #6b7280;
+}
+
+.date-actions { opacity: 0.8 }
+
+/* small screens tweaks */
+@media (max-width: 576px) {
+  .attendance-meta { gap: 8px }
+  .historico-thumb { width: 64px; height: 48px }
+}
+
+/* Entry cards for the atendimento histórico */
+.entry-card {
+  border-radius: 10px;
+  border: 1px solid rgba(34, 41, 47, 0.06);
+  box-shadow: 0 6px 18px rgba(35, 47, 63, 0.06);
+  background: #ffffff;
+  padding: 14px;
+}
+
+.entry-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eef1f5;
+}
+
+.entry-time {
+  font-size: 11px;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.entry-body {
+  font-size: 13.5px;
+  color: #1f2937;
+}
+
+.entry-photo {
+  display: block;
+  width: 250px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 8px;
+}
+
+.entry-description {
+  margin: 0;
+  color: #374151;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.entry-med strong {
+  font-size: 14px;
+}
+
+.entry-med-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.entry-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 11.5px;
+  border-radius: 20px;
+  background: #f1f3f6;
+  color: #4b5563;
+}
+
+.entry-med .entry-description {
+  margin-top: 8px;
+}
+
+.entry-ferradura {
+  line-height: 1.6;
+}
+
+.entry-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #eef1f5;
+  font-size: 11.5px;
+  color: #6b7280;
+}
+
+.entry-user {
+  font-weight: 600;
+  color: #374151;
+}
+
+.entry-crm {
+  color: #9ca3af;
 }
