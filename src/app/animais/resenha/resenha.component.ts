@@ -69,6 +69,8 @@ export class ResenhaComponent implements OnInit {
   baias: Array<IBaias>
   isLinear = false
   idResenha: number
+  baiaAtual: IBaias | null = null
+  trocarBaia = false
 
   constructor(
     private _adapter: DateAdapter<any>,
@@ -111,7 +113,7 @@ export class ResenhaComponent implements OnInit {
     father: ['', Validators.required],
     mother: ['', Validators.required],
     description: ['', Validators.required],
-    baia: ['', Validators.required],
+    baia_id: [null as number | null, Validators.required],
     tombamento: ['', Validators.required],
   });
 
@@ -248,25 +250,24 @@ export class ResenhaComponent implements OnInit {
             }
           })
           Object.keys(this.horse.controls).forEach(key => {
-            console.log(res, ' << RES')
-            if (res[key] !== undefined) {
-              if (key === 'birthday') {
-                const dateValue = new Date(res[key])
-                if (!isNaN(dateValue.getTime())) {
-                  this.horse.get(key)?.patchValue(dateValue as any)
-                }
-              } else if (key === 'baia') {
-                let baiaValue = res[key] || res.horse?.[key] || res['baia_id']
-                if (typeof baiaValue === 'string') {
-                  const match = baiaValue.match(/\d+/)
-                  baiaValue = match ? Number(match[0]) : null
-                } else if (baiaValue && typeof baiaValue === 'object' && baiaValue.id !== undefined) {
-                  baiaValue = baiaValue.id
-                }
-                this.horse.get(key)?.patchValue(baiaValue)
-              } else {
-                this.horse.get(key)?.patchValue(res[key])
+            const rawValue = key === 'baia_id'
+              ? (res['baia_id'] ?? res['baia'] ?? res.horse?.['baia_id'] ?? res.horse?.['baia'])
+              : res[key]
+
+            if (rawValue === undefined || rawValue === null) return
+
+            if (key === 'birthday') {
+              const dateValue = new Date(rawValue)
+              if (!isNaN(dateValue.getTime())) {
+                this.horse.get(key)?.patchValue(dateValue as any)
               }
+            } else if (key === 'baia_id') {
+              this.baiaAtual = this.normalizeBaia(rawValue)
+              if (this.baiaAtual) {
+                this.horse.get(key)?.patchValue(this.baiaAtual.id)
+              }
+            } else {
+              this.horse.get(key)?.patchValue(rawValue)
             }
           })
 
@@ -289,6 +290,38 @@ export class ResenhaComponent implements OnInit {
     } else {
       this.restoreAnnotations(null);
     }
+  }
+
+  exibirTrocaBaia() {
+    this.trocarBaia = true
+    this.horse.get('baia_id')?.setValue(null)
+  }
+
+  private normalizeBaia(value: any): IBaias | null {
+    if (value === null || value === undefined) return null
+
+    if (typeof value === 'object') {
+      const id = value.id ?? value.baia_id
+      if (id === null || id === undefined) return null
+      return {
+        id,
+        name: value.name ?? `Baia ${id}`,
+        created_at: value.created_at ?? '',
+        updated_at: value.updated_at ?? ''
+      }
+    }
+
+    if (typeof value === 'number') {
+      return { id: value, name: `Baia ${value}`, created_at: '', updated_at: '' }
+    }
+
+    if (typeof value === 'string') {
+      const match = value.match(/\d+/)
+      const id = match ? Number(match[0]) : null
+      return id !== null ? { id, name: value, created_at: '', updated_at: '' } : null
+    }
+
+    return null
   }
 
   handleImageClick(event: MouseEvent): void {
