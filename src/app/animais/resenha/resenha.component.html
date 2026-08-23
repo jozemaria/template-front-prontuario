@@ -218,20 +218,36 @@
           </mat-form-field>
         </div>
         <div class="col-12 col-md-2">
+          @if (idResenha && baiaAtual && !trocarBaia) {
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Baia atual</mat-label>
+            <input matInput [value]="baiaAtual.name" readonly />
+          </mat-form-field>
+          <button
+            mat-button
+            type="button"
+            color="primary"
+            (click)="exibirTrocaBaia()"
+          >
+            <mat-icon>swap_horiz</mat-icon>
+            Trocar Baia
+          </button>
+          } @else {
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Baia</mat-label>
             <mat-select
-              formControlName="baia"
+              formControlName="baia_id"
               [errorStateMatcher]="matcher"
             >
               @for (item of baias; track item.id) {
               <mat-option [value]="item.id">{{ item.name }}</mat-option>
               }
             </mat-select>
-            @if (horse.controls.baia.hasError('required')) {
+            @if (horse.controls.baia_id.hasError('required')) {
             <mat-error>Campo obrigatório</mat-error>
             }
           </mat-form-field>
+          }
         </div>
         <div class="col-12 col-md-2">
           <mat-form-field class="w-100" appearance="fill">
