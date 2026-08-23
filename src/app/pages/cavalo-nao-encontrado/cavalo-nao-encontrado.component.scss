@@ -1,0 +1,121 @@
+.cavalo-nao-encontrado {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 24px;
+
+  &__bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(150deg, #3e5720, #1b2217);
+    z-index: 0;
+  }
+
+  &__content {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  &__card {
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+  }
+
+  &__brand {
+    margin-bottom: 20px;
+  }
+
+  &__logo {
+    width: 84px;
+    height: 84px;
+    object-fit: contain;
+    margin-bottom: 12px;
+  }
+
+  &__title {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #3e5720;
+    margin-bottom: 2px;
+  }
+
+  &__subtitle-brand {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #6c757d;
+    margin-bottom: 0;
+  }
+
+  &__divider {
+    margin-bottom: 24px;
+  }
+
+  &__icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(156, 74, 46, 0.12);
+    color: #9c4a2e;
+
+    mat-icon {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  &__heading {
+    font-size: 22px;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 8px;
+  }
+
+  &__message {
+    font-size: 15px;
+    color: #495057;
+    margin-bottom: 4px;
+  }
+
+  &__hint {
+    font-size: 13px;
+    color: #6c757d;
+    margin-bottom: 24px;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    button {
+      mat-icon {
+        margin-right: 6px;
+      }
+    }
+  }
+
+  &__footer {
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #e0e5d8;
+  }
+}

@@ -127,3 +127,11 @@
   }
 }
 
+img.rounded-circle {
+  border-radius: 50% !important;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
