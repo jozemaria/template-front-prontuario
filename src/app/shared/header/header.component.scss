@@ -32,6 +32,117 @@
     }
 }
 
+::ng-deep .dropdown-userprofile {
+    border: 1px solid rgba(73, 91, 189, 0.18);
+    box-shadow: 0 20px 45px rgba(22, 28, 45, 0.16);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 246, 255, 0.98));
+    overflow: hidden;
+
+    .mat-mdc-menu-content {
+        padding: 0;
+    }
+
+    .mat-mdc-menu-item {
+        min-height: 48px;
+    }
+}
+
+.user-profile-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 240px;
+    gap: 0.85rem;
+    padding-inline: 1rem;
+    background: linear-gradient(180deg, rgba(73, 91, 189, 0.08), rgba(255, 255, 255, 0.7));
+    border-bottom: 1px solid rgba(73, 91, 189, 0.08);
+
+    .user-profile-avatar,
+    .user-profile-info {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .user-profile-avatar {
+        margin: 0 auto;
+    }
+
+    .user-profile-ring {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        padding: 4px;
+        background: linear-gradient(135deg, #495bbd 0%, #8ea0ff 100%);
+        box-shadow: 0 10px 25px rgba(73, 91, 189, 0.25);
+    }
+
+    .user-profile-info {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.2rem;
+    }
+
+    .user-profile-label {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        background: rgba(73, 91, 189, 0.08);
+        color: #495bbd;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .user-profile-image {
+        width: 80px;
+        height: 80px;
+        display: block;
+        margin: 0 auto;
+        border: 3px solid rgba(255, 255, 255, 0.9);
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .username {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #212529;
+        letter-spacing: -0.02em;
+    }
+
+    .user-role {
+        color: #5a6475;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+}
+
+.logout-item {
+    color: #475467;
+    font-weight: 600;
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    &:hover,
+    &:focus {
+        background: rgba(73, 91, 189, 0.08);
+        color: #495bbd;
+    }
+
+    .mat-icon {
+        color: inherit;
+    }
+}
+
 
 .app-name {
     color: #212529;
