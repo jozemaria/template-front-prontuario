@@ -40,6 +40,14 @@ export interface IHistoricoEntry {
   photo_url?: string;
 }
 
+// Grupo de atendimento: um histórico (history_horse_records) com seus cards
+export interface IHistoricoGroup {
+  id: number;
+  openAt: string;
+  closeAt: string;
+  entries: IHistoricoEntry[];
+}
+
 export interface IFichaCavalo {
   id: number;
   name: string;
@@ -87,8 +95,9 @@ export class ResenhaCompletaComponent implements OnInit {
   dadosCavalo: IFichaCavalo
   idResenha: number
   imageAnnotations: IHorseImageAnnotation[] = []
-  // grouped by date, most recent first: [{ date: '23/08/2026', entries: [...] }]
-  historicoGrouped: Array<{ date: string; entries: IHistoricoEntry[] }> = []
+  // grupos de atendimento, mais recentes primeiro
+  historicoGrouped: IHistoricoGroup[] = []
+  historicoLoading = false
   prontuarioCode: string = ''
   @ViewChild('fichaContent', { static: false }) fichaContent!: ElementRef;
 
@@ -222,6 +231,7 @@ export class ResenhaCompletaComponent implements OnInit {
   }
 
   loadHistorico() {
+    this.historicoLoading = true
     this.animaisService.historicoProntuario(this.idResenha).subscribe({
       next: (res: any) => {
         const records = res?.history_horse_records || []
@@ -229,46 +239,81 @@ export class ResenhaCompletaComponent implements OnInit {
 
         if (records.length === 0) {
           this.historicoGrouped = []
+          this.historicoLoading = false
           return
         }
 
-        const lastFive = records.slice(-5)
-        const requests = lastFive.map((record: any) =>
+        const lastThree = records.slice(-3)
+        const requests = lastThree.map((record: any) =>
           this.animaisService.pegarHistorico(record.id).pipe(
             catchError(() => of(null))
           )
         )
 
-        forkJoin(requests).subscribe((results: any[]) => {
-          this.historicoGrouped = this.buildHistorico(results)
+        forkJoin(requests).subscribe({
+          next: (results: any[]) => {
+            this.historicoGrouped = this.buildHistorico(lastThree, results)
+            this.historicoLoading = false
+          },
+          error: () => {
+            this.historicoGrouped = []
+            this.historicoLoading = false
+          }
         })
       },
       error: () => {
         this.historicoGrouped = []
+        this.historicoLoading = false
       }
     })
   }
 
-  private buildHistorico(results: any[]): Array<{ date: string; entries: IHistoricoEntry[] }> {
-    const byDate = new Map<string, IHistoricoEntry[]>()
+  private buildHistorico(records: any[], results: any[]): IHistoricoGroup[] {
+    const groups = records.map((record: any, index: number) => {
+      const res = results[index]
+      const entries: IHistoricoEntry[] = []
 
-    results.forEach((res: any) => {
-      if (!res || typeof res !== 'object') return
-      Object.keys(res).forEach(date => {
-        const list = res[date]
-        if (!Array.isArray(list)) return
-        const entries = list
-          .map((item: any) => this.normalizeEntry(item))
-          .filter((item: IHistoricoEntry) => item && item.type)
-        if (!entries.length) return
-        if (!byDate.has(date)) byDate.set(date, [])
-        byDate.get(date)!.push(...entries)
-      })
+      if (res && typeof res === 'object') {
+        Object.keys(res).forEach(date => {
+          const list = res[date]
+          if (!Array.isArray(list)) return
+          list.forEach((item: any) => {
+            const entry = this.normalizeEntry(item)
+            if (entry && entry.type) entries.push(entry)
+          })
+        })
+      }
+
+      return {
+        id: record.id,
+        openAt: record.open_at,
+        closeAt: record.close_at,
+        entries
+      }
     })
 
-    return Array.from(byDate.entries())
-      .sort((a, b) => this.parseDateBR(b[0]) - this.parseDateBR(a[0]))
-      .map(([date, entries]) => ({ date, entries }))
+    return groups.sort((a, b) => {
+      const aOpen = !a.closeAt
+      const bOpen = !b.closeAt
+      if (aOpen !== bOpen) return aOpen ? -1 : 1
+      return this.parseGroupDate(a.openAt) - this.parseGroupDate(b.openAt)
+    })
+  }
+
+  private parseGroupDate(value: string): number {
+    if (!value) return 0
+    const parsed = Date.parse(value)
+    if (!isNaN(parsed)) return parsed
+    return this.parseDateBR(value)
+  }
+
+  formatGroupDate(value?: string): string {
+    if (!value) return '—'
+    const parsed = Date.parse(value)
+    if (!isNaN(parsed)) {
+      return format(new Date(value), 'dd/MM/yyyy HH:mm', { locale: ptBR })
+    }
+    return value
   }
 
   private normalizeEntry(item: any): IHistoricoEntry {
