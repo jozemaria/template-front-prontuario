@@ -185,7 +185,7 @@
         <span>
           Histórico de atendimentos
           <span class="text-muted ms-2" style="font-weight: 400; font-size: 12px;">
-            (últimos 5 atendimentos)
+            (últimos 3 atendimentos)
           </span>
         </span>
         @if (prontuarioCode) {
@@ -195,83 +195,91 @@
         }
       </div>
 
-      @if (historicoGrouped?.length) {
+      @if (historicoLoading) {
+        <div class="d-flex justify-content-center py-5">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      } @else if (historicoGrouped?.length) {
         @for (group of historicoGrouped; track $index) {
           <div class="date-group mb-4">
-            <div class="date-header mb-3">
-              <h6 class="mb-0">{{ group.date }}</h6>
-              <div class="text-muted small">{{ group.entries.length }} registro(s)</div>
-            </div>
+            @if (historicoGrouped.length > 1) {
+              <div class="date-header mb-3">
+                <h6 class="mb-1">Atendimento</h6>
+                <div class="text-muted small">
+                  Abertura da ficha: {{ formatGroupDate(group.openAt) }}
+                  &nbsp;·&nbsp;
+                  Finalização: {{ formatGroupDate(group.closeAt) }}
+                </div>
+              </div>
+            }
 
-            <div class="row g-3">
+            <div class="d-flex flex-column gap-3">
               @for (entry of group.entries; track $index) {
-                <div class="col-12 col-md-6 col-xxl-4">
-                  <mat-card class="entry-card h-100">
-                    <div class="entry-header">
-                      <span class="type-title">
-                        <mat-icon>{{ entryIcon(entry) }}</mat-icon>
-                        {{ entryTypeLabel(entry) }}
-                      </span>
-                      <span class="entry-time">{{ entry.created_at }}</span>
-                    </div>
+                <mat-card class="entry-card">
+                  <div class="entry-header">
+                    <span class="type-title">
+                      <mat-icon>{{ entryIcon(entry) }}</mat-icon>
+                      {{ entryTypeLabel(entry) }}
+                    </span>
+                    <span class="entry-time">{{ entry.created_at }}</span>
+                  </div>
 
-                    <div class="entry-body">
-                      @if (isFoto(entry)) {
-                        @if (entry.photo_url) {
-                          <img [src]="entry.photo_url" class="entry-photo" alt="Foto do atendimento" />
-                        }
+                  <div class="entry-body">
+                    @if (isFoto(entry)) {
+                      @if (entry.photo_url) {
+                        <img [src]="entry.photo_url" class="entry-photo" alt="Foto do atendimento" />
+                      }
+                      @if (entry.description) {
+                        <p class="entry-description">{{ entry.description }}</p>
+                      }
+                    }
+
+                    @if (isMedicamento(entry)) {
+                      <div class="entry-med">
+                        <strong>{{ entry.name || '—' }}</strong>
+                        <div class="entry-med-info">
+                          @if (entry.doses) {
+                            <span class="entry-chip">Doses: {{ entry.doses }}</span>
+                          }
+                          @if (entry.hour) {
+                            <span class="entry-chip">Horário: {{ entry.hour }}</span>
+                          }
+                        </div>
                         @if (entry.description) {
                           <p class="entry-description">{{ entry.description }}</p>
                         }
-                      }
+                      </div>
+                    }
 
-                      @if (isMedicamento(entry)) {
-                        <div class="entry-med">
-                          <strong>{{ entry.name || '—' }}</strong>
-                          <div class="entry-med-info">
-                            @if (entry.doses) {
-                              <span class="entry-chip">Doses: {{ entry.doses }}</span>
-                            }
-                            @if (entry.hour) {
-                              <span class="entry-chip">Horário: {{ entry.hour }}</span>
-                            }
-                          </div>
-                          @if (entry.description) {
-                            <p class="entry-description">{{ entry.description }}</p>
-                          }
-                        </div>
-                      }
+                    @if (isPrescricao(entry)) {
+                      <p class="entry-description">{{ entry.description || 'Sem descrição.' }}</p>
+                    }
 
-                      @if (isPrescricao(entry)) {
-                        <p class="entry-description">{{ entry.description || 'Sem descrição.' }}</p>
-                      }
-
-                      @if (isFerradura(entry)) {
-                        <div class="entry-ferradura">
-                          @if (entry.shoe_date) {
-                            <div>Data: {{ entry.shoe_date }}</div>
-                          }
-                          @if (entry.exchange_months) {
-                            <div>Troca em {{ entry.exchange_months }} mês(es)</div>
-                          }
-                        </div>
-                      }
-
-                      @if (isOutro(entry)) {
-                        <p class="entry-description">{{ entry.description || entry.type }}</p>
-                      }
-                    </div>
-
-                    @if (entry.user) {
-                      <div class="entry-footer">
-                        <span class="entry-user">{{ entry.user }}</span>
-                        @if (entry.user_crm) {
-                          <span class="entry-crm">{{ entry.user_crm }}</span>
+                    @if (isFerradura(entry)) {
+                      <div class="entry-ferradura">
+                        @if (entry.shoe_date) {
+                          <div>Data: {{ entry.shoe_date }}</div>
+                        }
+                        @if (entry.exchange_months) {
+                          <div>Troca em {{ entry.exchange_months }} mês(es)</div>
                         }
                       </div>
                     }
-                  </mat-card>
-                </div>
+
+                    @if (isOutro(entry)) {
+                      <p class="entry-description">{{ entry.description || entry.type }}</p>
+                    }
+                  </div>
+
+                  @if (entry.user) {
+                    <div class="entry-footer">
+                      <span class="entry-user">{{ entry.user }}</span>
+                      @if (entry.user_crm) {
+                        <span class="entry-crm">{{ entry.user_crm }}</span>
+                      }
+                    </div>
+                  }
+                </mat-card>
               }
             </div>
           </div>
